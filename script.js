@@ -1,13 +1,13 @@
 /* =========================================
    NEXUS // AZ — SYSTEM CORE
-   ========================================= */
-
-const $ = (id) => document.getElementById(id);
+========================================= */
 
 
-/* ---------- CLOCK ---------- */
+/* =========================================
+   SAAT
+========================================= */
 
-function updateClock(){
+function updateClock() {
 
     const now = new Date();
 
@@ -17,310 +17,480 @@ function updateClock(){
         second: "2-digit"
     });
 
-    const date = now.toLocaleDateString("az-AZ", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
+    const shortTime = now.toLocaleTimeString("az-AZ", {
+        hour: "2-digit",
+        minute: "2-digit"
     });
 
-    if($("clock")) $("clock").textContent = time;
-    if($("date")) $("date").textContent = date;
+    const clock = document.getElementById("clock");
+    const heroTime = document.getElementById("heroTime");
+
+    if (clock) {
+        clock.textContent = time;
+    }
+
+    if (heroTime) {
+        heroTime.textContent = shortTime;
+    }
 }
 
-setInterval(updateClock,1000);
+setInterval(updateClock, 1000);
 updateClock();
 
 
-/* ---------- SCROLL ---------- */
 
-function scrollTools(){
+/* =========================================
+   KATEQORİYA SİSTEMİ
+========================================= */
 
-    const target = $("tools");
+const categoryNames = {
 
-    if(target){
-        target.scrollIntoView({
-            behavior:"smooth"
-        });
+    network: {
+        label: "01 / ŞƏBƏKƏ",
+        title: "Şəbəkə Mərkəzi"
+    },
+
+    security: {
+        label: "02 / TƏHLÜKƏSİZLİK",
+        title: "Təhlükəsizlik Mərkəzi"
+    },
+
+    developer: {
+        label: "03 / TƏRTİBATÇI",
+        title: "Tərtibatçı Mərkəzi"
+    },
+
+    world: {
+        label: "04 / DÜNYA",
+        title: "Dünya Mərkəzi"
+    },
+
+    media: {
+        label: "05 / MEDİA",
+        title: "Media Mərkəzi"
+    },
+
+    ai: {
+        label: "06 / İNTELLEKT",
+        title: "NEXUS Süni İntellekt"
+    },
+
+    office: {
+        label: "07 / OFİS",
+        title: "Ofis Alətləri"
+    },
+
+    system: {
+        label: "08 / SİSTEM",
+        title: "Sistem Monitoru"
     }
-}
+
+};
 
 
-/* ---------- PASSWORD ---------- */
+function openCategory(category) {
 
-function generatePassword(){
+    const overlay =
+        document.getElementById("categoryOverlay");
 
-    const chars =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}";
+    const label =
+        document.getElementById("moduleLabel");
 
-    let password = "";
+    const title =
+        document.getElementById("moduleTitle");
 
-    for(let i=0;i<20;i++){
 
-        password += chars.charAt(
-            Math.floor(Math.random()*chars.length)
+    if (!overlay) return;
+
+
+    /* bütün modulları bağla */
+
+    document
+        .querySelectorAll(".module-content")
+        .forEach(module => {
+
+            module.classList.remove("active");
+
+        });
+
+
+    /* seçilən modul */
+
+    const selected =
+        document.getElementById(
+            "module-" + category
         );
 
+
+    if (selected) {
+
+        selected.classList.add("active");
+
     }
 
-    if($("password")){
-        $("password").textContent = password;
+
+    /* başlıq */
+
+    if (categoryNames[category]) {
+
+        label.textContent =
+            categoryNames[category].label;
+
+        title.textContent =
+            categoryNames[category].title;
+
     }
+
+
+    overlay.classList.add("active");
+
+    document.body.style.overflow = "hidden";
 }
 
 
-/* ---------- IP ---------- */
+function closeCategory() {
 
-async function getIP(){
+    const overlay =
+        document.getElementById("categoryOverlay");
 
-    try{
+    if (!overlay) return;
+
+    overlay.classList.remove("active");
+
+    document.body.style.overflow = "";
+
+}
+
+
+/* overlay-in boş hissəsinə klik */
+
+document.addEventListener("click", function(event) {
+
+    const overlay =
+        document.getElementById("categoryOverlay");
+
+    if (
+        overlay &&
+        event.target === overlay
+    ) {
+
+        closeCategory();
+
+    }
+
+});
+
+
+/* ESC ilə bağlama */
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+
+        closeCategory();
+
+        closeTerminal();
+
+    }
+
+});
+
+
+
+/* =========================================
+   IP
+========================================= */
+
+async function getIP() {
+
+    const ipElements = [
+        document.getElementById("ip")
+    ];
+
+    ipElements.forEach(element => {
+
+        if (element) {
+            element.textContent =
+                "Yoxlanılır...";
+        }
+
+    });
+
+
+    try {
 
         const response =
-            await fetch("https://api.ipify.org?format=json");
+            await fetch(
+                "https://api.ipify.org?format=json"
+            );
 
         const data =
             await response.json();
 
-        if($("ip"))
-            $("ip").textContent = data.ip;
 
-        if($("ip2"))
-            $("ip2").textContent = data.ip;
+        ipElements.forEach(element => {
 
-    }catch(error){
+            if (element) {
+                element.textContent =
+                    data.ip;
+            }
 
-        if($("ip"))
-            $("ip").textContent = "UNAVAILABLE";
+        });
 
-        if($("ip2"))
-            $("ip2").textContent = "UNAVAILABLE";
     }
+
+    catch (error) {
+
+        ipElements.forEach(element => {
+
+            if (element) {
+                element.textContent =
+                    "Müəyyən edilmədi";
+            }
+
+        });
+
+    }
+
 }
 
 getIP();
 
 
-/* ---------- LATENCY ---------- */
 
-async function checkLatency(){
+/* =========================================
+   GECİKMƏ
+========================================= */
+
+async function measureLatency() {
+
+    const latencyElement =
+        document.getElementById("latency");
+
+    if (!latencyElement) return;
+
 
     const start = performance.now();
 
-    try{
+
+    try {
 
         await fetch(
-            "https://www.cloudflare.com/cdn-cgi/trace",
+            "https://www.google.com/generate_204",
             {
-                method:"HEAD",
-                cache:"no-store"
+                mode: "no-cors",
+                cache: "no-store"
             }
         );
 
-        const latency =
-            Math.round(performance.now()-start);
 
-        if($("latency"))
-            $("latency").textContent = latency + " ms";
-
-    }catch{
-
-        if($("latency"))
-            $("latency").textContent = "-- ms";
-    }
-}
-
-checkLatency();
-
-setInterval(checkLatency,15000);
-
-
-/* ---------- QR GENERATOR ---------- */
-
-function generateQR(){
-
-    const text =
-        $("qrText")?.value.trim();
-
-    if(!text){
-
-        alert("Please enter text or URL.");
-
-        return;
-    }
-
-    const qr =
-        $("qr");
-
-    if(!qr) return;
-
-    const encoded =
-        encodeURIComponent(text);
-
-    qr.innerHTML = `
-        <img
-            src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encoded}"
-            alt="QR Code"
-            style="
-                width:220px;
-                height:220px;
-                border-radius:12px;
-                background:white;
-                padding:10px;
-            "
-        >
-    `;
-}
-
-
-/* ---------- URL ANALYZER ---------- */
-
-function analyzeURL(){
-
-    const input =
-        $("urlInput")?.value.trim();
-
-    const result =
-        $("urlResult");
-
-    if(!result) return;
-
-    if(!input){
-
-        result.textContent =
-            "Enter a URL to analyze.";
-
-        return;
-    }
-
-    try{
-
-        const url =
-            new URL(
-                input.startsWith("http")
-                ? input
-                : "https://" + input
+        const result =
+            Math.round(
+                performance.now() - start
             );
 
-        result.innerHTML = `
-            <div class="generated-value">
 
-                <strong>URL ANALYSIS</strong>
+        latencyElement.textContent =
+            result + " ms";
 
-                <br><br>
-
-                PROTOCOL:
-                ${url.protocol}
-
-                <br>
-
-                HOST:
-                ${url.hostname}
-
-                <br>
-
-                PATH:
-                ${url.pathname || "/"}
-
-                <br>
-
-                PORT:
-                ${url.port || "DEFAULT"}
-
-                <br>
-
-                SECURE:
-                ${
-                    url.protocol === "https:"
-                    ? '<span class="green">YES</span>'
-                    : '<span style="color:#ff7777">NO</span>'
-                }
-
-            </div>
-        `;
-
-    }catch{
-
-        result.textContent =
-            "Invalid URL.";
     }
+
+    catch {
+
+        latencyElement.textContent =
+            "-- ms";
+
+    }
+
 }
+
+measureLatency();
+
+setInterval(
+    measureLatency,
+    15000
+);
+
 
 
 /* =========================================
    TERMINAL
-   ========================================= */
+========================================= */
 
-function openTerminal(){
+function openTerminal() {
 
     const terminal =
-        $("terminalWindow");
+        document.getElementById(
+            "terminalWindow"
+        );
 
-    if(!terminal) return;
+    if (!terminal) return;
+
+    closeCategory();
 
     terminal.classList.add("active");
 
     setTimeout(() => {
 
-        $("terminalInput")?.focus();
+        const input =
+            document.getElementById(
+                "terminalInput"
+            );
 
-    },100);
+        if (input) {
+            input.focus();
+        }
+
+    }, 350);
+
 }
 
 
-function closeTerminal(){
+function closeTerminal() {
 
     const terminal =
-        $("terminalWindow");
+        document.getElementById(
+            "terminalWindow"
+        );
 
-    if(terminal){
+    if (!terminal) return;
 
-        terminal.classList.remove("active");
+    terminal.classList.remove("active");
 
-    }
 }
 
 
-function terminalCommand(event){
 
-    if(event.key !== "Enter") return;
+/* =========================================
+   TERMİNAL ƏMRLƏRİ
+========================================= */
+
+function terminalCommand(event) {
+
+    if (event.key !== "Enter") {
+        return;
+    }
+
 
     const input =
-        $("terminalInput");
+        document.getElementById(
+            "terminalInput"
+        );
 
     const output =
-        $("terminalOutput");
+        document.getElementById(
+            "terminalOutput"
+        );
 
-    if(!input || !output) return;
+
+    if (!input || !output) return;
+
 
     const command =
         input.value.trim().toLowerCase();
 
-    if(!command) return;
 
-    const line =
+    if (!command) return;
+
+
+    /* istifadəçi əmri */
+
+    const commandLine =
         document.createElement("div");
 
-    line.innerHTML =
-        `<span style="color:#9d7cff">nexus@az:~$</span> ${escapeHTML(command)}`;
+    commandLine.innerHTML =
+        `<span style="color:#7c9cff">
+        nexus@az:~$
+        </span> ${escapeHTML(command)}`;
 
-    output.appendChild(line);
-
-    let response = "";
+    output.appendChild(commandLine);
 
 
-    switch(command){
+    /* cavab */
+
+    const response =
+        document.createElement("div");
+
+
+    switch (command) {
 
         case "help":
 
-            response = `
-                <div class="ok">AVAILABLE COMMANDS</div>
-                <div>help — show commands</div>
-                <div>clear — clear terminal</div>
-                <div>status — system status</div>
-                <div>network — network information</div>
-                <div>time — current time</div>
-                <div>whoami — identify system</div>
-                <div>neofetch — NEXUS system info</div>
+            response.innerHTML = `
+                <br>
+                <div style="color:#54e6a8">
+                Mövcud əmrlər:
+                </div>
+
+                <div>help — əmrləri göstər</div>
+                <div>ip — ictimai IP-ni göstər</div>
+                <div>time — cari vaxtı göstər</div>
+                <div>status — sistem vəziyyəti</div>
+                <div>clear — terminalı təmizlə</div>
+                <div>about — NEXUS haqqında</div>
+            `;
+
+            break;
+
+
+        case "ip":
+
+            const ip =
+                document.getElementById(
+                    "ip"
+                )?.textContent
+                || "Müəyyən edilmədi";
+
+            response.innerHTML =
+                `İctimai IP: ${escapeHTML(ip)}`;
+
+            break;
+
+
+        case "time":
+
+            response.textContent =
+                "Cari vaxt: " +
+                new Date().toLocaleTimeString(
+                    "az-AZ"
+                );
+
+            break;
+
+
+        case "status":
+
+            response.innerHTML = `
+                <div style="color:#54e6a8">
+                    ŞƏBƏKƏ ............... ONLAYN
+                </div>
+
+                <div style="color:#54e6a8">
+                    TƏHLÜKƏSİZLİK ........ AKTİV
+                </div>
+
+                <div style="color:#54e6a8">
+                    SİSTEM ............... STABİL
+                </div>
+            `;
+
+            break;
+
+
+        case "about":
+
+            response.innerHTML = `
+                <div>
+                    NEXUS // AZ
+                </div>
+
+                <div>
+                    Rəqəmsal İdarəetmə Mərkəzi
+                </div>
+
+                <div>
+                    Versiya: 3.0
+                </div>
             `;
 
             break;
@@ -335,420 +505,154 @@ function terminalCommand(event){
             return;
 
 
-        case "status":
-
-            response = `
-                <div class="ok">
-                SYSTEM ........ ONLINE
-                </div>
-
-                <div class="ok">
-                NETWORK ....... CONNECTED
-                </div>
-
-                <div class="ok">
-                SECURITY ....... ACTIVE
-                </div>
-
-                <div class="ok">
-                NEXUS CORE ..... RUNNING
-                </div>
-            `;
-
-            break;
-
-
-        case "network":
-
-            response = `
-                <div>
-                NETWORK CENTER
-                </div>
-
-                <div>
-                PUBLIC IP: ${$("ip")?.textContent || "UNKNOWN"}
-                </div>
-
-                <div>
-                LATENCY: ${$("latency")?.textContent || "--"}
-                </div>
-            `;
-
-            break;
-
-
-        case "time":
-
-            response =
-                `<div>${new Date().toLocaleString()}</div>`;
-
-            break;
-
-
-        case "whoami":
-
-            response =
-                `<div>USER: NEXUS OPERATOR</div>`;
-
-            break;
-
-
-        case "neofetch":
-
-            response = `
-                <div style="color:#9d7cff">
-                ███╗   ██╗███████╗██╗  ██╗
-                ████╗  ██║██╔════╝╚██╗██╔╝
-                ██╔██╗ ██║█████╗   ╚███╔╝
-                ██║╚██╗██║██╔══╝   ██╔██╗
-                ██║ ╚████║███████╗██╔╝ ██╗
-                ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝
-                </div>
-
-                <div>
-                NEXUS // AZ
-                </div>
-
-                <div>
-                DIGITAL COMMAND CENTER
-                </div>
-
-                <div>
-                VERSION: 3.0
-                </div>
-
-                <div>
-                STATUS: ONLINE
-                </div>
-            `;
-
-            break;
-
-
-        case "sudo":
-
-            response =
-                `<div style="color:#ff7777">
-                ACCESS DENIED — NICE TRY :)
-                </div>`;
-
-            break;
-
-
         default:
 
-            response =
-                `<div style="color:#777">
-                Command not found.
-                Type <b>help</b>.
-                </div>`;
+            response.innerHTML =
+                `Əmr tapılmadı: <b>${escapeHTML(command)}</b>
+                <br>
+                Mövcud əmrlər üçün <b>help</b> yazın.`;
+
     }
 
 
-    const responseElement =
-        document.createElement("div");
+    output.appendChild(response);
 
-    responseElement.innerHTML =
-        response;
-
-    output.appendChild(responseElement);
 
     output.scrollTop =
         output.scrollHeight;
 
+
     input.value = "";
+
 }
 
 
-function escapeHTML(text){
+
+/* =========================================
+   TƏHLÜKƏSİZ MƏTN
+========================================= */
+
+function escapeHTML(text) {
 
     return text
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
 }
+
 
 
 /* =========================================
-   CALCULATOR
-   ========================================= */
+   ONLINE / OFFLINE
+========================================= */
 
-let calculatorValue = "";
+function updateNetworkStatus() {
 
-
-function calcPress(value){
-
-    if(value === "C"){
-
-        calculatorValue = "";
-
-    }else if(value === "="){
-
-        try{
-
-            calculatorValue =
-                String(
-                    Function(
-                        `"use strict";return (${calculatorValue})`
-                    )()
-                );
-
-        }catch{
-
-            calculatorValue = "ERROR";
-        }
-
-    }else{
-
-        calculatorValue += value;
-
-    }
-
-    if($("calcDisplay"))
-        $("calcDisplay").value =
-            calculatorValue;
-}
-
-
-/* =========================================
-   CATEGORY SYSTEM
-   ========================================= */
-
-function openCategory(category){
-
-    const overlay =
-        $("categoryOverlay");
-
-    if(!overlay) return;
-
-    overlay.classList.add("active");
-
-    showModule(category);
-}
-
-
-function closeCategory(){
-
-    const overlay =
-        $("categoryOverlay");
-
-    if(overlay)
-        overlay.classList.remove("active");
-}
-
-
-function showModule(category){
-
-    document
-        .querySelectorAll(".module-content")
-        .forEach(module => {
-
-            module.classList.remove("active");
-
-        });
-
-
-    const target =
-        document.getElementById(
-            "module-" + category
+    const connection =
+        document.querySelector(
+            ".connection span"
         );
 
-    if(target)
-        target.classList.add("active");
+    if (!connection) return;
+
+
+    if (navigator.onLine) {
+
+        connection.textContent =
+            "SİSTEM ONLAYNDIR";
+
+    }
+
+    else {
+
+        connection.textContent =
+            "İNTERNET YOXDUR";
+
+    }
+
 }
 
 
-/* =========================================
-   AI DEMO
-   ========================================= */
-
-function sendAI(){
-
-    const input =
-        $("aiInput");
-
-    const messages =
-        $("aiMessages");
-
-    if(!input || !messages) return;
-
-    const text =
-        input.value.trim();
-
-    if(!text) return;
-
-
-    const userMessage =
-        document.createElement("div");
-
-    userMessage.className =
-        "ai-message";
-
-    userMessage.style.marginBottom =
-        "16px";
-
-    userMessage.innerHTML = `
-        <span>YOU</span>
-        <p>${escapeHTML(text)}</p>
-    `;
-
-    messages.appendChild(userMessage);
-
-
-    const thinking =
-        document.createElement("div");
-
-    thinking.className =
-        "ai-message";
-
-    thinking.innerHTML = `
-        <span>AI</span>
-        <p>Processing request...</p>
-    `;
-
-    messages.appendChild(thinking);
-
-    messages.scrollTop =
-        messages.scrollHeight;
-
-    input.value = "";
-
-
-    setTimeout(() => {
-
-        thinking.querySelector("p").textContent =
-            aiLocalResponse(text);
-
-        messages.scrollTop =
-            messages.scrollHeight;
-
-    },700);
-}
-
-
-function aiLocalResponse(text){
-
-    const lower =
-        text.toLowerCase();
-
-    if(
-        lower.includes("salam") ||
-        lower.includes("hello")
-    ){
-
-        return "Salam. NEXUS AI hazırdır. Sualını ver.";
-
-    }
-
-    if(lower.includes("nexus")){
-
-        return "NEXUS // AZ rəqəmsal command center sistemidir.";
-
-    }
-
-    if(
-        lower.includes("ip") ||
-        lower.includes("network")
-    ){
-
-        return "Network məlumatlarını Network Center modulundan yoxlaya bilərsən.";
-
-    }
-
-    if(lower.includes("github")){
-
-        return "GitHub üzərində işləyən NEXUS sisteminin lokal AI interfeysindəsən.";
-
-    }
-
-    return "Sorğun qəbul edildi. Hazırda NEXUS AI demo rejimindədir. Tam AI cavab sistemi üçün təhlükəsiz API bağlantısı əlavə etmək mümkündür.";
-}
-
-
-/* =========================================
-   SYSTEM MONITOR
-   ========================================= */
-
-function updateSystem(){
-
-    const cpu =
-        Math.floor(
-            20 + Math.random()*55
-        );
-
-    if($("cpu"))
-        $("cpu").textContent =
-            cpu + "%";
-
-
-    document
-        .querySelectorAll(".bars span")
-        .forEach(bar => {
-
-            const height =
-                15 + Math.random()*85;
-
-            bar.style.height =
-                height + "%";
-
-        });
-}
-
-setInterval(updateSystem,1000);
-updateSystem();
-
-
-/* =========================================
-   KEYBOARD SHORTCUT
-   ========================================= */
-
-document.addEventListener(
-    "keydown",
-    event => {
-
-        if(
-            event.ctrlKey &&
-            event.key.toLowerCase() === "k"
-        ){
-
-            event.preventDefault();
-
-            openTerminal();
-        }
-
-
-        if(event.key === "Escape"){
-
-            closeTerminal();
-            closeCategory();
-
-        }
-
-    }
+window.addEventListener(
+    "online",
+    updateNetworkStatus
 );
 
+window.addEventListener(
+    "offline",
+    updateNetworkStatus
+);
+
+updateNetworkStatus();
+
+
 
 /* =========================================
-   OUTSIDE CLICK
-   ========================================= */
+   KATEQORİYA KARTLARINA KLİKLƏR
+========================================= */
 
-document.addEventListener(
-    "click",
-    event => {
+document
+    .querySelectorAll(".category-card")
+    .forEach(card => {
 
-        const overlay =
-            $("categoryOverlay");
+        card.addEventListener(
+            "click",
+            function() {
 
-        if(
-            overlay &&
-            event.target === overlay
-        ){
+                this.blur();
 
-            closeCategory();
+            }
+        );
 
-        }
+    });
 
-    }
+
+
+/* =========================================
+   MODUL AÇILANDA SCROLL
+========================================= */
+
+document
+    .querySelectorAll(".category-card")
+    .forEach(card => {
+
+        card.addEventListener(
+            "click",
+            function() {
+
+                window.setTimeout(() => {
+
+                    const panel =
+                        document.querySelector(
+                            ".module-panel"
+                        );
+
+                    if (panel) {
+                        panel.scrollTop = 0;
+                    }
+
+                }, 50);
+
+            }
+        );
+
+    });
+
+
+
+/* =========================================
+   STARTUP
+========================================= */
+
+console.log(
+    "%c NEXUS // AZ ",
+    "color:#7c9cff;font-size:20px;font-weight:bold"
+);
+
+console.log(
+    "%cRəqəmsal İdarəetmə Mərkəzi v3.0",
+    "color:#8b93a5;font-size:12px"
 );
