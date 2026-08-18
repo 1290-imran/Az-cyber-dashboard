@@ -1,105 +1,58 @@
 <!DOCTYPE html>
 <html lang="az">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07090f">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
->
-
-<meta
-name="theme-color"
-content="#05050a"
->
-
-<title>NEXUS // AZ</title>
+<title>NEXUS // AZ — Rəqəmsal İdarəetmə Mərkəzi</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link
-rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin
->
-
-<link
-href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
-rel="stylesheet"
->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
-
 </head>
-
 
 <body>
 
-
-<!-- LOADER -->
-
-<div id="loader">
-
-    <div class="loader-logo">
-        NEXUS<span>//</span>AZ
-    </div>
-
-    <div class="loader-line">
-        <div></div>
-    </div>
-
-    <small>
-        INITIALIZING SYSTEM
-    </small>
-
-</div>
-
-
-<div class="aurora"></div>
-
+<div class="ambient ambient-1"></div>
+<div class="ambient ambient-2"></div>
+<div class="grid"></div>
 <div class="noise"></div>
 
-<div class="grid"></div>
 
+<!-- YUXARI PANEL -->
 
-
-<!-- HEADER -->
-
-<header>
+<header class="topbar">
 
     <div class="brand">
 
-        <div class="brand-mark">
-
+        <div class="brand-symbol">
             <span></span>
             <span></span>
             <span></span>
-
         </div>
 
-
-        <div>
-
-            <strong>
-                NEXUS<span>//</span>AZ
-            </strong>
-
-            <small>
-                DIGITAL COMMAND CENTER
-            </small>
-
+        <div class="brand-text">
+            <strong>NEXUS<span>//</span>AZ</strong>
+            <small>RƏQƏMSAL İDARƏETMƏ MƏRKƏZİ</small>
         </div>
 
     </div>
 
 
-    <div class="online">
+    <div class="top-status">
 
-        <i></i>
+        <div class="connection">
+            <i></i>
+            <span>SİSTEM ONLAYNDIR</span>
+        </div>
 
-        SYSTEM ONLINE
+        <div class="top-time" id="clock">
+            00:00:00
+        </div>
 
     </div>
 
@@ -107,1217 +60,577 @@ rel="stylesheet"
 
 
 
-<main>
+<main class="dashboard">
 
 
-<!-- HERO -->
+<!-- GİRİŞ -->
 
 <section class="hero">
 
-
-    <div class="hero-text">
-
+    <div class="hero-copy">
 
         <div class="eyebrow">
-
             <span></span>
-
-            SECURE DIGITAL ENVIRONMENT
-
+            TƏHLÜKƏSİZ RƏQƏMSAL MÜHİT
         </div>
-
 
         <h1>
-
-            Everything<br>
-
-            <span>connected.</span>
-
+            Hər şey
+            <span>bir yerdə.</span>
         </h1>
 
-
         <p>
-
-            Your personal digital command center
-            for tools, network, security,
-            development and everyday work.
-
+            Şəbəkə, təhlükəsizlik, tərtibat, media,
+            süni intellekt və gündəlik iş alətləri
+            üçün vahid rəqəmsal mərkəz.
         </p>
 
-
-        <div class="hero-buttons">
-
-            <button
-            class="primary"
-            onclick="openCategory('tools')"
-            >
-
-                EXPLORE SYSTEM
-
-                <b>↗</b>
-
-            </button>
-
-
-            <button
-            class="ghost"
-            onclick="openTerminal()"
-            >
-
-                OPEN TERMINAL
-
-            </button>
-
-        </div>
-
-
     </div>
 
 
+    <div class="hero-console">
 
-    <!-- STATUS PANEL -->
+        <div class="console-top">
 
-    <div class="hero-status">
+            <span>NEXUS NÜVƏSİ</span>
 
-        <div class="time-label">
-            LOCAL TIME
-        </div>
-
-
-        <div id="clock">
-            00:00
-        </div>
-
-
-        <div id="date">
-            Loading...
-        </div>
-
-
-        <div class="status-bar">
-
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+            <span class="core-state">
+                <i></i>
+                AKTİV
+            </span>
 
         </div>
 
 
-        <small>
-            SECURE CONNECTION ESTABLISHED
-        </small>
+        <div class="core-lines">
+
+            <div>
+                <span>ŞƏBƏKƏ</span>
+                <b>ONLAYN</b>
+            </div>
+
+            <div>
+                <span>TƏHLÜKƏSİZLİK</span>
+                <b>AKTİV</b>
+            </div>
+
+            <div>
+                <span>GECİKMƏ</span>
+                <b id="latency">-- ms</b>
+            </div>
+
+            <div>
+                <span>YERLİ SAAT</span>
+                <b id="heroTime">--:--</b>
+            </div>
+
+        </div>
 
     </div>
-
 
 </section>
 
 
 
-<!-- SYSTEM STATS -->
+<!-- KATEQORİYALAR -->
 
-<section class="stats">
+<section class="command-section">
 
+    <div class="section-heading">
 
-    <div>
+        <div>
+
+            <span>İDARƏETMƏ MƏRKƏZİ</span>
+
+            <h2>Bölmə seç.</h2>
+
+        </div>
 
         <small>
-            NETWORK
+            08 MODUL
         </small>
-
-        <strong id="networkStatus">
-            ONLINE
-        </strong>
 
     </div>
 
 
-    <div>
 
-        <small>
-            YOUR IP
-        </small>
+    <div class="category-grid">
+
+
+        <!-- ŞƏBƏKƏ -->
+
+        <button class="category-card"
+                onclick="openCategory('network')">
+
+            <div class="category-icon">
+
+                <svg viewBox="0 0 64 64">
+
+                    <circle cx="32" cy="14" r="5"/>
+                    <circle cx="14" cy="47" r="5"/>
+                    <circle cx="50" cy="47" r="5"/>
+
+                    <path d="M29 19 L17 42"/>
+                    <path d="M35 19 L47 42"/>
+                    <path d="M19 47 H45"/>
+
+                </svg>
+
+            </div>
+
+
+            <div class="category-content">
+
+                <span>01 / ŞƏBƏKƏ</span>
+
+                <strong>Şəbəkə Mərkəzi</strong>
+
+                <p>
+                    IP, DNS, Ping və bağlantı alətləri.
+                </p>
+
+            </div>
+
+
+            <div class="open-arrow">↗</div>
+
+        </button>
+
+
+
+        <!-- TƏHLÜKƏSİZLİK -->
+
+        <button class="category-card"
+                onclick="openCategory('security')">
+
+            <div class="category-icon">
+
+                <svg viewBox="0 0 64 64">
+
+                    <path d="
+                    M32 6
+                    L52 14
+                    V29
+                    C52 42 44 52 32 58
+                    C20 52 12 42 12 29
+                    V14
+                    Z"/>
+
+                    <path d="M23 31 L29 37 L42 23"/>
+
+                </svg>
+
+            </div>
+
+
+            <div class="category-content">
+
+                <span>02 / TƏHLÜKƏSİZLİK</span>
+
+                <strong>Təhlükəsizlik Mərkəzi</strong>
+
+                <p>
+                    Şifrələr, hash və təhlükəsizlik alətləri.
+                </p>
+
+            </div>
+
+
+            <div class="open-arrow">↗</div>
+
+        </button>
+
+
+
+        <!-- TƏRTİBATÇI -->
+
+        <button class="category-card"
+                onclick="openCategory('developer')">
+
+            <div class="category-icon">
+
+                <svg viewBox="0 0 64 64">
+
+                    <path d="M25 17 L10 32 L25 47"/>
+                    <path d="M39 17 L54 32 L39 47"/>
+                    <path d="M36 10 L28 54"/>
+
+                </svg>
+
+            </div>
+
+
+            <div class="category-content">
+
+                <span>03 / TƏRTİBATÇI</span>
+
+                <strong>Tərtibatçı Mərkəzi</strong>
+
+                <p>
+                    Terminal, JSON, Base64 və kod alətləri.
+                </p>
+
+            </div>
+
+
+            <div class="open-arrow">↗</div>
+
+        </button>
+
+
+
+        <!-- DÜNYA -->
+
+        <button class="category-card"
+                onclick="openCategory('world')">
+
+            <div class="category-icon">
+
+                <svg viewBox="0 0 64 64">
+
+                    <circle cx="32" cy="32" r="23"/>
+
+                    <path d="M9 32 H55"/>
+                    <path d="M32 9 C23 18 23 46 32 55"/>
+                    <path d="M32 9 C41 18 41 46 32 55"/>
+
+                </svg>
+
+            </div>
+
+
+            <div class="category-content">
+
+                <span>04 / DÜNYA</span>
+
+                <strong>Dünya Mərkəzi</strong>
+
+                <p>
+                    Canlı xəritə, naviqasiya və dünya məlumatları.
+                </p>
+
+            </div>
+
+
+            <div class="open-arrow">↗</div>
+
+        </button>
+
+
+
+        <!-- MEDİA -->
+
+        <button class="category-card"
+                onclick="openCategory('media')">
+
+            <div class="category-icon">
+
+                <svg viewBox="0 0 64 64">
+
+                    <circle cx="32" cy="32" r="23"/>
+                    <path d="M27 21 L45 32 L27 43 Z"/>
+
+                </svg>
+
+            </div>
+
+
+            <div class="category-content">
+
+                <span>05 / MEDİA</span>
+
+                <strong>Media Mərkəzi</strong>
+
+                <p>
+                    Musiqi pleyeri və media alətləri.
+                </p>
+
+            </div>
+
+
+            <div class="open-arrow">↗</div>
+
+        </button>
+
+
+
+        <!-- SÜNİ İNTELLEKT -->
+
+        <button class="category-card"
+                onclick="openCategory('ai')">
+
+            <div class="category-icon">
+
+                <svg viewBox="0 0 64 64">
+
+                    <circle cx="32" cy="32" r="20"/>
+
+                    <circle cx="23" cy="27" r="3"/>
+                    <circle cx="41" cy="27" r="3"/>
+
+                    <path d="M22 39 C27 44 37 44 42 39"/>
+
+                    <path d="M32 12 V6"/>
+
+                </svg>
+
+            </div>
+
+
+            <div class="category-content">
+
+                <span>06 / İNTELLEKT</span>
+
+                <strong>NEXUS Süni İntellekt</strong>
+
+                <p>
+                    Sual-cavab və ağıllı rəqəmsal köməkçi.
+                </p>
+
+            </div>
+
+
+            <div class="open-arrow">↗</div>
+
+        </button>
+
+
+
+        <!-- OFİS -->
+
+        <button class="category-card"
+                onclick="openCategory('office')">
+
+            <div class="category-icon">
+
+                <svg viewBox="0 0 64 64">
+
+                    <rect x="10" y="10"
+                          width="44"
+                          height="44"
+                          rx="5"/>
+
+                    <path d="M21 22 H43"/>
+                    <path d="M21 32 H43"/>
+                    <path d="M21 42 H35"/>
+
+                </svg>
+
+            </div>
+
+
+            <div class="category-content">
+
+                <span>07 / OFİS</span>
+
+                <strong>Ofis Alətləri</strong>
+
+                <p>
+                    Kalkulyator, QR, qeydlər və gündəlik alətlər.
+                </p>
+
+            </div>
+
+
+            <div class="open-arrow">↗</div>
+
+        </button>
+
+
+
+        <!-- SİSTEM -->
+
+        <button class="category-card"
+                onclick="openCategory('system')">
+
+            <div class="category-icon">
+
+                <svg viewBox="0 0 64 64">
+
+                    <rect x="10"
+                          y="14"
+                          width="44"
+                          height="30"
+                          rx="4"/>
+
+                    <path d="M24 54 H40"/>
+                    <path d="M32 44 V54"/>
+
+                    <path d="M18 35 L25 28 L31 33 L39 23 L46 28"/>
+
+                </svg>
+
+            </div>
+
+
+            <div class="category-content">
+
+                <span>08 / SİSTEM</span>
+
+                <strong>Sistem Monitoru</strong>
+
+                <p>
+                    Cihaz, brauzer və sistem məlumatları.
+                </p>
+
+            </div>
+
+
+            <div class="open-arrow">↗</div>
+
+        </button>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- SÜRƏTLİ MƏLUMAT -->
+
+<section class="quick-status">
+
+    <div class="quick-card">
+
+        <span>İCTİMAİ IP</span>
 
         <strong id="ip">
-            Detecting...
+            Axtarılır...
         </strong>
 
     </div>
 
 
-    <div>
+    <div class="quick-card">
 
-        <small>
-            LATENCY
-        </small>
+        <span>ŞƏBƏKƏ</span>
 
-        <strong id="latency">
-            -- ms
+        <strong class="online-text">
+            BAĞLIDIR
         </strong>
 
     </div>
 
 
-    <div>
+    <div class="quick-card">
 
-        <small>
-            SYSTEM
-        </small>
+        <span>SİSTEM</span>
 
-        <strong class="green">
-            STABLE
+        <strong>
+            STABİL
         </strong>
 
     </div>
 
 
-</section>
+    <div class="quick-card">
 
+        <span>VERSİYA</span>
 
-
-<!-- CATEGORY HEADER -->
-
-<section class="section-title">
-
-    <div>
-
-        <small>
-            NEXUS MODULES
-        </small>
-
-        <h2>
-            Digital command.
-        </h2>
+        <strong>
+            NEXUS 3.0
+        </strong>
 
     </div>
-
-
-    <span>
-        08 MODULES
-    </span>
 
 </section>
 
 
+</main>
 
-<!-- CATEGORY GRID -->
 
-<section class="category-grid">
 
+<!-- MODUL PƏNCƏRƏSİ -->
 
+<div class="module-overlay"
+     id="categoryOverlay">
 
-<!-- TOOLS -->
+    <div class="module-panel">
 
-<article
-class="category-card"
-onclick="openCategory('tools')"
->
 
-    <div class="category-icon tools-icon">
-
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-
-    </div>
-
-
-    <div class="category-meta">
-
-        <small>
-            01 / UTILITY
-        </small>
-
-        <span>
-            READY
-        </span>
-
-    </div>
-
-
-    <h3>
-        Tools
-    </h3>
-
-
-    <p>
-        QR, calculator, converter,
-        timer and everyday utilities.
-    </p>
-
-
-    <div class="category-arrow">
-        ↗
-    </div>
-
-</article>
-
-
-
-<!-- NETWORK -->
-
-<article
-class="category-card"
-onclick="openCategory('network')"
->
-
-    <div class="category-icon network-icon">
-
-        <div></div>
-
-    </div>
-
-
-    <div class="category-meta">
-
-        <small>
-            02 / NETWORK
-        </small>
-
-        <span class="live">
-            LIVE
-        </span>
-
-    </div>
-
-
-    <h3>
-        Network
-    </h3>
-
-
-    <p>
-        IP, DNS, connection,
-        latency and navigator.
-    </p>
-
-
-    <div class="category-arrow">
-        ↗
-    </div>
-
-</article>
-
-
-
-<!-- SECURITY -->
-
-<article
-class="category-card"
-onclick="openCategory('security')"
->
-
-    <div class="category-icon security-icon">
-
-        <div class="shield-shape">
-            N
-        </div>
-
-    </div>
-
-
-    <div class="category-meta">
-
-        <small>
-            03 / SECURITY
-        </small>
-
-        <span>
-            LOCAL
-        </span>
-
-    </div>
-
-
-    <h3>
-        Security
-    </h3>
-
-
-    <p>
-        Passwords, hashes,
-        encoding and security tools.
-    </p>
-
-
-    <div class="category-arrow">
-        ↗
-    </div>
-
-</article>
-
-
-
-<!-- DEV LAB -->
-
-<article
-class="category-card"
-onclick="openCategory('devlab')"
->
-
-    <div class="category-icon dev-icon">
-
-        <span>_</span>
-
-        <span>›</span>
-
-    </div>
-
-
-    <div class="category-meta">
-
-        <small>
-            04 / DEVELOPMENT
-        </small>
-
-        <span>
-            LAB
-        </span>
-
-    </div>
-
-
-    <h3>
-        Dev Lab
-    </h3>
-
-
-    <p>
-        Terminal, JSON, regex,
-        timestamps and developer tools.
-    </p>
-
-
-    <div class="category-arrow">
-        ↗
-    </div>
-
-</article>
-
-
-
-<!-- MEDIA -->
-
-<article
-class="category-card"
-onclick="openCategory('media')"
->
-
-    <div class="category-icon media-icon">
-
-        <div></div>
-
-    </div>
-
-
-    <div class="category-meta">
-
-        <small>
-            05 / MEDIA
-        </small>
-
-        <span>
-            PLAYER
-        </span>
-
-    </div>
-
-
-    <h3>
-        Media
-    </h3>
-
-
-    <p>
-        Music player with
-        AZ & TR playlists.
-    </p>
-
-
-    <div class="category-arrow">
-        ↗
-    </div>
-
-</article>
-
-
-
-<!-- WORLD -->
-
-<article
-class="category-card"
-onclick="openCategory('world')"
->
-
-    <div class="category-icon world-icon">
-
-        <div class="world-ring"></div>
-
-        <div class="world-line"></div>
-
-    </div>
-
-
-    <div class="category-meta">
-
-        <small>
-            06 / WORLD
-        </small>
-
-        <span>
-            MAP
-        </span>
-
-    </div>
-
-
-    <h3>
-        World
-    </h3>
-
-
-    <p>
-        Live map, location,
-        timezone and navigator.
-    </p>
-
-
-    <div class="category-arrow">
-        ↗
-    </div>
-
-</article>
-
-
-
-<!-- OFFICE -->
-
-<article
-class="category-card"
-onclick="openCategory('office')"
->
-
-    <div class="category-icon office-icon">
-
-        <div></div>
-
-        <div></div>
-
-    </div>
-
-
-    <div class="category-meta">
-
-        <small>
-            07 / WORK
-        </small>
-
-        <span>
-            OFFICE
-        </span>
-
-    </div>
-
-
-    <h3>
-        Office
-    </h3>
-
-
-    <p>
-        Notes, tasks, Pomodoro,
-        meeting and work utilities.
-    </p>
-
-
-    <div class="category-arrow">
-        ↗
-    </div>
-
-</article>
-
-
-
-<!-- AI -->
-
-<article
-class="category-card ai-card"
-onclick="openCategory('ai')"
->
-
-    <div class="category-icon ai-icon">
-
-        <div class="ai-core">
-            N
-        </div>
-
-        <span></span>
-        <span></span>
-        <span></span>
-
-    </div>
-
-
-    <div class="category-meta">
-
-        <small>
-            08 / INTELLIGENCE
-        </small>
-
-        <span class="ai-status">
-            AI
-        </span>
-
-    </div>
-
-
-    <h3>
-        NEXUS AI
-    </h3>
-
-
-    <p>
-        Intelligent assistant for
-        questions, ideas and work.
-    </p>
-
-
-    <div class="category-arrow">
-        ↗
-    </div>
-
-</article>
-
-
-</section>
-
-
-
-<!-- CATEGORY MODAL -->
-
-<div
-id="categoryOverlay"
-class="category-overlay"
-onclick="closeCategory(event)"
->
-
-
-    <div
-    class="category-panel"
-    onclick="event.stopPropagation()"
-    >
-
-
-        <div class="panel-header">
-
+        <div class="module-header">
 
             <div>
 
-                <small id="panelNumber">
-                    MODULE
-                </small>
+                <span id="moduleLabel">
+                    SİSTEM MODULU
+                </span>
 
-                <h2 id="panelTitle">
-                    NEXUS
+                <h2 id="moduleTitle">
+                    Modul
                 </h2>
 
             </div>
 
 
-            <button
-            class="panel-close"
-            onclick="closeCategory()"
-            >
+            <button class="close-module"
+                    onclick="closeCategory()">
+
                 ×
+
             </button>
 
-
         </div>
 
 
 
-        <!-- TOOLS PANEL -->
+        <!-- ŞƏBƏKƏ -->
 
-        <div
-        class="module-content"
-        id="module-tools"
-        >
+        <div class="module-content"
+             id="module-network">
 
-            <div class="module-grid">
+            <div class="tool-grid">
 
+                <button class="tool-card">
 
-                <button
-                class="tool-item"
-                onclick="openTool('qr')"
-                >
+                    <div class="tool-icon">◎</div>
 
-                    <div class="mini-icon">
-                        ⌗
-                    </div>
+                    <strong>İctimai IP</strong>
 
-                    <strong>
-                        QR Generator
-                    </strong>
-
-                    <small>
-                        CREATE QR CODE
-                    </small>
-
-                </button>
-
-
-                <button
-                class="tool-item"
-                onclick="openTool('calculator')"
-                >
-
-                    <div class="mini-icon">
-                        +
-                    </div>
-
-                    <strong>
-                        Calculator
-                    </strong>
-
-                    <small>
-                        QUICK CALCULATOR
-                    </small>
-
-                </button>
-
-
-                <button
-                class="tool-item"
-                >
-
-                    <div class="mini-icon">
-                        ⇄
-                    </div>
-
-                    <strong>
-                        Converter
-                    </strong>
-
-                    <small>
-                        UNIT CONVERTER
-                    </small>
-
-                </button>
-
-
-                <button
-                class="tool-item"
-                >
-
-                    <div class="mini-icon">
-                        ◷
-                    </div>
-
-                    <strong>
-                        Timer
-                    </strong>
-
-                    <small>
-                        TIMER & STOPWATCH
-                    </small>
-
-                </button>
-
-
-                <button
-                class="tool-item"
-                >
-
-                    <div class="mini-icon">
-                        #
-                    </div>
-
-                    <strong>
-                        UUID Generator
-                    </strong>
-
-                    <small>
-                        RANDOM UUID
-                    </small>
-
-                </button>
-
-
-                <button
-                class="tool-item"
-                >
-
-                    <div class="mini-icon">
-                        %
-                    </div>
-
-                    <strong>
-                        Percentage
-                    </strong>
-
-                    <small>
-                        QUICK CALCULATION
-                    </small>
-
-                </button>
-
-
-            </div>
-
-        </div>
-
-
-
-        <!-- NETWORK PANEL -->
-
-        <div
-        class="module-content"
-        id="module-network"
-        >
-
-            <div class="network-dashboard">
-
-
-                <div class="network-big">
-
-                    <small>
-                        PUBLIC IP
-                    </small>
-
-                    <strong id="networkIP">
-                        Detecting...
-                    </strong>
-
-                    <span class="green">
-                        ● CONNECTION ACTIVE
+                    <span>
+                        Xarici IP ünvanınıza baxın
                     </span>
 
-                </div>
-
-
-                <div class="network-grid">
-
-
-                    <div>
-                        <small>
-                            LATENCY
-                        </small>
-
-                        <strong id="networkLatency">
-                            -- ms
-                        </strong>
-                    </div>
-
-
-                    <div>
-                        <small>
-                            STATUS
-                        </small>
-
-                        <strong class="green">
-                            ONLINE
-                        </strong>
-                    </div>
-
-
-                    <div>
-                        <small>
-                            BROWSER
-                        </small>
-
-                        <strong id="browserInfo">
-                            DETECTING
-                        </strong>
-                    </div>
-
-
-                    <div>
-                        <small>
-                            PLATFORM
-                        </small>
-
-                        <strong id="platformInfo">
-                            DETECTING
-                        </strong>
-                    </div>
-
-
-                </div>
-
-
-                <button
-                class="panel-action"
-                onclick="getIP()"
-                >
-                    REFRESH NETWORK →
                 </button>
 
 
-            </div>
+                <button class="tool-card">
 
-        </div>
+                    <div class="tool-icon">◇</div>
 
+                    <strong>DNS Yoxlaması</strong>
 
-
-        <!-- SECURITY PANEL -->
-
-        <div
-        class="module-content"
-        id="module-security"
-        >
-
-            <div class="module-grid">
-
-
-                <button
-                class="tool-item"
-                onclick="openTool('password')"
-                >
-
-                    <div class="mini-icon">
-                        ◈
-                    </div>
-
-                    <strong>
-                        Password Generator
-                    </strong>
-
-                    <small>
-                        SECURE PASSWORD
-                    </small>
+                    <span>
+                        DNS məlumatlarını yoxlayın
+                    </span>
 
                 </button>
 
 
-                <button
-                class="tool-item"
-                >
+                <button class="tool-card">
 
-                    <div class="mini-icon">
-                        #
-                    </div>
+                    <div class="tool-icon">↔</div>
 
-                    <strong>
-                        SHA-256 Hash
-                    </strong>
+                    <strong>Ping</strong>
 
-                    <small>
-                        HASH TEXT LOCALLY
-                    </small>
+                    <span>
+                        Şəbəkə gecikməsini ölçün
+                    </span>
 
                 </button>
 
 
-                <button
-                class="tool-item"
-                >
+                <button class="tool-card">
 
-                    <div class="mini-icon">
-                        ⇄
-                    </div>
+                    <div class="tool-icon">⌁</div>
 
-                    <strong>
-                        Base64
-                    </strong>
+                    <strong>Sürət Testi</strong>
 
-                    <small>
-                        ENCODE / DECODE
-                    </small>
+                    <span>
+                        İnternet bağlantısını ölçün
+                    </span>
 
-                </button>
-
-
-                <button
-                class="tool-item"
-                >
-
-                    <div class="mini-icon">
-                        ◇
-                    </div>
-
-                    <strong>
-                        Token Generator
-                    </strong>
-
-                    <small>
-                        RANDOM TOKEN
-                    </small>
-
-                </button>
-
-
-                <button
-                class="tool-item"
-                >
-
-                    <div class="mini-icon">
-                        JWT
-                    </div>
-
-                    <strong>
-                        JWT Decoder
-                    </strong>
-
-                    <small>
-                        INSPECT JWT
-                    </small>
-
-                </button>
-
-
-                <button
-                class="tool-item"
-                >
-
-                    <div class="mini-icon">
-                        @
-                    </div>
-
-                    <strong>
-                        URL Encoder
-                    </strong>
-
-                    <small>
-                        ENCODE / DECODE
-                    </small>
-
-                </button>
-
-
-            </div>
-
-        </div>
-
-
-
-        <!-- DEV LAB -->
-
-        <div
-        class="module-content"
-        id="module-devlab"
-        >
-
-            <div class="module-grid">
-
-
-                <button
-                class="tool-item"
-                onclick="openTerminal()"
-                >
-
-                    <div class="mini-icon">
-                        >_
-                    </div>
-
-                    <strong>
-                        NEXUS Terminal
-                    </strong>
-
-                    <small>
-                        COMMAND INTERFACE
-                    </small>
-
-                </button>
-
-
-                <button
-                class="tool-item"
-                >
-
-                    <div class="mini-icon">
-                        {}
-                    </div>
-
-                    <strong>
-                        JSON Lab
-                    </strong>
-
-                    <small>
-                        FORMAT / VALIDATE
-                    </small>
-
-                </button>
-
-
-                <button
-                class="tool-item"
-                >
-
-                    <div class="mini-icon">
-                        /_
-                    </div>
-
-                    <strong>
-                        Regex Tester
-                    </strong>
-
-                    <small>
-                        TEST EXPRESSIONS
-                    </small>
-
-                </button>
-
-
-                <button
-                class="tool-item"
-                >
-
-                    <div class="mini-icon">
-                        T
-                    </div>
-
-                    <strong>
-                        Timestamp
-                    </strong>
-
-                    <small>
-                        TIME CONVERTER
-                    </small>
-
-                </button>
-
-
-                <button
-                class="tool-item"
-                >
-
-                    <div class="mini-icon">
-                        &lt;/&gt;
-                    </div>
-
-                    <strong>
-                        HTML Tools
-                    </strong>
-
-                    <small>
-                        FORMAT / ESCAPE
-                    </small>
-
-                </button>
-
-
-                <button
-                class="tool-item"
-                >
-
-                    <div class="mini-icon">
-                        RGB
-                    </div>
-
-                    <strong>
-                        Color Lab
-                    </strong>
-
-                    <small>
-                        COLOR CONVERTER
-                    </small>
-
-                </button>
-
-
-            </div>
-
-        </div>
-
-
-
-        <!-- MEDIA -->
-
-        <div
-        class="module-content"
-        id="module-media"
-        >
-
-            <div class="music-player">
-
-
-                <div class="album-art">
-
-                    <div class="music-orbit"></div>
-
-                    <div class="music-core">
-                        N
-                    </div>
-
-                </div>
-
-
-                <div class="music-info">
-
-                    <small>
-                        NEXUS RADIO
-                    </small>
-
-                    <h3 id="songTitle">
-                        NEXUS MIX
-                    </h3>
-
-                    <p id="songArtist">
-                        AZ / TR TRENDING
-                    </p>
-
-
-                    <div class="music-progress">
-
-                        <div></div>
-
-                    </div>
-
-
-                    <div class="music-time">
-
-                        <span>
-                            00:00
-                        </span>
-
-                        <span>
-                            LIVE
-                        </span>
-
-                    </div>
-
-
-                    <div class="music-controls">
-
-                        <button>
-                            ↶
-                        </button>
-
-                        <button class="play-button">
-                            ▶
-                        </button>
-
-                        <button>
-                            ↷
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-            </div>
-
-
-            <div class="music-categories">
-
-                <button class="active">
-                    AZ POP
-                </button>
-
-                <button>
-                    AZ RAP
-                </button>
-
-                <button>
-                    TR POP
-                </button>
-
-                <button>
-                    TR RAP
                 </button>
 
             </div>
@@ -1326,264 +639,351 @@ onclick="closeCategory(event)"
 
 
 
-        <!-- WORLD -->
+        <!-- TƏHLÜKƏSİZLİK -->
 
-        <div
-        class="module-content"
-        id="module-world"
-        >
+        <div class="module-content"
+             id="module-security">
 
-            <div class="world-preview">
+            <div class="tool-grid">
+
+                <button class="tool-card">
+
+                    <div class="tool-icon">▣</div>
+
+                    <strong>Şifrə Generatoru</strong>
+
+                    <span>
+                        Güclü və təsadüfi şifrə yaradın
+                    </span>
+
+                </button>
 
 
-                <div class="fake-map">
+                <button class="tool-card">
 
-                    <div class="map-grid"></div>
+                    <div class="tool-icon">#</div>
 
-                    <div class="map-line line-one"></div>
+                    <strong>Hash Generatoru</strong>
 
-                    <div class="map-line line-two"></div>
+                    <span>
+                        Mətn üçün hash yaradın
+                    </span>
 
-                    <div class="map-point">
-                        <span></span>
-                    </div>
+                </button>
 
-                    <div class="map-label">
-                        BAKU / AZ
-                    </div>
+
+                <button class="tool-card">
+
+                    <div class="tool-icon">✓</div>
+
+                    <strong>URL Təhlükəsizliyi</strong>
+
+                    <span>
+                        Link strukturunu yoxlayın
+                    </span>
+
+                </button>
+
+
+                <button class="tool-card">
+
+                    <div class="tool-icon">◇</div>
+
+                    <strong>UUID Generatoru</strong>
+
+                    <span>
+                        Unikal identifikator yaradın
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- TƏRTİBATÇI -->
+
+        <div class="module-content"
+             id="module-developer">
+
+            <div class="tool-grid">
+
+                <button class="tool-card"
+                        onclick="openTerminal()">
+
+                    <div class="tool-icon">&gt;_</div>
+
+                    <strong>NEXUS Terminal</strong>
+
+                    <span>
+                        İnteraktiv əmr sətri
+                    </span>
+
+                </button>
+
+
+                <button class="tool-card">
+
+                    <div class="tool-icon">{ }</div>
+
+                    <strong>JSON Formatlayıcı</strong>
+
+                    <span>
+                        JSON məlumatlarını formatlayın
+                    </span>
+
+                </button>
+
+
+                <button class="tool-card">
+
+                    <div class="tool-icon">64</div>
+
+                    <strong>Base64</strong>
+
+                    <span>
+                        Məlumatları kodlaşdırın və açın
+                    </span>
+
+                </button>
+
+
+                <button class="tool-card">
+
+                    <div class="tool-icon">&lt;/&gt;</div>
+
+                    <strong>Kod Alətləri</strong>
+
+                    <span>
+                        Gündəlik proqramlaşdırma alətləri
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- DÜNYA -->
+
+        <div class="module-content"
+             id="module-world">
+
+            <div class="tool-grid">
+
+                <button class="tool-card">
+
+                    <div class="tool-icon">◎</div>
+
+                    <strong>Canlı Dünya Xəritəsi</strong>
+
+                    <span>
+                        Dünyanı xəritədə araşdırın
+                    </span>
+
+                </button>
+
+
+                <button class="tool-card">
+
+                    <div class="tool-icon">⌖</div>
+
+                    <strong>Naviqator</strong>
+
+                    <span>
+                        Ünvan və marşrut axtarın
+                    </span>
+
+                </button>
+
+
+                <button class="tool-card">
+
+                    <div class="tool-icon">◷</div>
+
+                    <strong>Dünya Saatı</strong>
+
+                    <span>
+                        Müxtəlif şəhərlərin vaxtına baxın
+                    </span>
+
+                </button>
+
+
+                <button class="tool-card">
+
+                    <div class="tool-icon">⊕</div>
+
+                    <strong>Koordinatlar</strong>
+
+                    <span>
+                        Məkan koordinatlarını yoxlayın
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- MEDİA -->
+
+        <div class="module-content"
+             id="module-media">
+
+            <div class="tool-grid">
+
+                <button class="tool-card">
+
+                    <div class="tool-icon">▶</div>
+
+                    <strong>Musiqi Pleyeri</strong>
+
+                    <span>
+                        Musiqilərinizi burada idarə edin
+                    </span>
+
+                </button>
+
+
+                <button class="tool-card">
+
+                    <div class="tool-icon">♫</div>
+
+                    <strong>Musiqi Siyahısı</strong>
+
+                    <span>
+                        Seçilmiş musiqilərə baxın
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- SÜNİ İNTELLEKT -->
+
+        <div class="module-content"
+             id="module-ai">
+
+            <div class="ai-panel">
+
+                <div class="ai-orb">
+
+                    <svg viewBox="0 0 100 100">
+
+                        <circle cx="50"
+                                cy="50"
+                                r="34"/>
+
+                        <circle cx="36"
+                                cy="44"
+                                r="5"/>
+
+                        <circle cx="64"
+                                cy="44"
+                                r="5"/>
+
+                        <path d="
+                        M35 61
+                        C42 68 58 68 65 61"/>
+
+                    </svg>
 
                 </div>
 
 
-                <div class="world-info">
+                <div>
 
-                    <small>
-                        CURRENT LOCATION
-                    </small>
-
-                    <h3>
-                        Azerbaijan
-                    </h3>
+                    <strong>NEXUS SÜNİ İNTELLEKT</strong>
 
                     <p>
-                        Location permission can be
-                        enabled from your browser.
+                        Suallarınıza cavab verən
+                        ağıllı rəqəmsal köməkçi.
                     </p>
 
+                    <button class="primary-button">
 
-                    <button
-                    class="panel-action"
-                    onclick="requestLocation()"
-                    >
-                        LOCATE ME →
+                        SÜNİ İNTELLEKTİ AÇ
+
+                        <span>↗</span>
+
                     </button>
 
                 </div>
 
-
             </div>
 
         </div>
 
 
 
-        <!-- OFFICE -->
+        <!-- OFİS -->
 
-        <div
-        class="module-content"
-        id="module-office"
-        >
+        <div class="module-content"
+             id="module-office">
 
-            <div class="module-grid">
+            <div class="tool-grid">
 
+                <button class="tool-card">
 
-                <button class="tool-item">
+                    <div class="tool-icon">＋</div>
 
-                    <div class="mini-icon">
-                        □
-                    </div>
+                    <strong>Kalkulyator</strong>
 
-                    <strong>
-                        Quick Notes
-                    </strong>
-
-                    <small>
-                        PERSONAL NOTES
-                    </small>
-
-                </button>
-
-
-                <button class="tool-item">
-
-                    <div class="mini-icon">
-                        ✓
-                    </div>
-
-                    <strong>
-                        To-Do
-                    </strong>
-
-                    <small>
-                        TASK MANAGER
-                    </small>
-
-                </button>
-
-
-                <button class="tool-item">
-
-                    <div class="mini-icon">
-                        ◷
-                    </div>
-
-                    <strong>
-                        Pomodoro
-                    </strong>
-
-                    <small>
-                        FOCUS TIMER
-                    </small>
-
-                </button>
-
-
-                <button class="tool-item">
-
-                    <div class="mini-icon">
-                        %
-                    </div>
-
-                    <strong>
-                        VAT Calculator
-                    </strong>
-
-                    <small>
-                        BUSINESS TOOL
-                    </small>
-
-                </button>
-
-
-                <button class="tool-item">
-
-                    <div class="mini-icon">
-                        ₼
-                    </div>
-
-                    <strong>
-                        Salary Calculator
-                    </strong>
-
-                    <small>
-                        WORK CALCULATOR
-                    </small>
-
-                </button>
-
-
-                <button class="tool-item">
-
-                    <div class="mini-icon">
-                        ⏱
-                    </div>
-
-                    <strong>
-                        Meeting Timer
-                    </strong>
-
-                    <small>
-                        TIME TRACKER
-                    </small>
-
-                </button>
-
-
-            </div>
-
-        </div>
-
-
-
-        <!-- AI -->
-
-        <div
-        class="module-content"
-        id="module-ai"
-        >
-
-            <div class="ai-interface">
-
-
-                <div class="ai-header">
-
-                    <div class="ai-avatar">
-                        N
-                    </div>
-
-
-                    <div>
-
-                        <small>
-                            NEXUS INTELLIGENCE
-                        </small>
-
-                        <h3>
-                            How can I help?
-                        </h3>
-
-                    </div>
-
-
-                    <span class="ai-online">
-                        ● ONLINE
+                    <span>
+                        Sürətli hesablamalar aparın
                     </span>
 
-                </div>
+                </button>
 
 
-                <div
-                class="ai-messages"
-                id="aiMessages"
-                >
+                <button class="tool-card">
 
-                    <div class="ai-message">
+                    <div class="tool-icon">▦</div>
 
-                        <span>
-                            N
-                        </span>
+                    <strong>QR Generatoru</strong>
 
-                        <p>
-                            NEXUS AI hazırdır.
-                            Sualını, ideyanı və ya
-                            tapşırığını yaz.
-                        </p>
+                    <span>
+                        Mətn və linklərdən QR yaradın
+                    </span>
 
-                    </div>
-
-                </div>
+                </button>
 
 
-                <div class="ai-input">
+                <button class="tool-card">
 
-                    <input
-                    id="aiInput"
-                    placeholder="Ask NEXUS anything..."
-                    >
+                    <div class="tool-icon">▤</div>
 
-                    <button
-                    onclick="sendAIMessage()"
-                    >
-                        →
-                    </button>
+                    <strong>Qeydlər</strong>
 
-                </div>
+                    <span>
+                        Sürətli qeydlərinizi saxlayın
+                    </span>
+
+                </button>
 
 
-                <small class="ai-note">
-                    AI connection will be secured
-                    through a backend endpoint.
-                </small>
+                <button class="tool-card">
+
+                    <div class="tool-icon">↔</div>
+
+                    <strong>Çevirici</strong>
+
+                    <span>
+                        Ölçü vahidlərini çevirin
+                    </span>
+
+                </button>
 
             </div>
 
@@ -1591,200 +991,54 @@ onclick="closeCategory(event)"
 
 
 
-        <!-- QR TOOL -->
+        <!-- SİSTEM -->
 
-        <div
-        class="tool-screen"
-        id="tool-qr"
-        >
+        <div class="module-content"
+             id="module-system">
 
-            <button
-            class="back-tool"
-            onclick="backToModule()"
-            >
-                ← BACK
-            </button>
+            <div class="tool-grid">
 
+                <button class="tool-card">
 
-            <h3>
-                QR Generator
-            </h3>
+                    <div class="tool-icon">⌁</div>
 
+                    <strong>Sistem Performansı</strong>
 
-            <p>
-                Convert text or links into a QR code.
-            </p>
+                    <span>
+                        Sistem fəaliyyətinə baxın
+                    </span>
+
+                </button>
 
 
-            <input
-            id="qrText"
-            class="large-input"
-            placeholder="Enter URL or text..."
-            >
+                <button class="tool-card">
+
+                    <div class="tool-icon">▣</div>
+
+                    <strong>Cihaz Məlumatları</strong>
+
+                    <span>
+                        Cihazınız haqqında məlumat
+                    </span>
+
+                </button>
 
 
-            <button
-            class="panel-action"
-            onclick="generateQR()"
-            >
-                GENERATE QR →
-            </button>
+                <button class="tool-card">
 
+                    <div class="tool-icon">◉</div>
 
-            <div id="qr"></div>
+                    <strong>Brauzer Məlumatları</strong>
 
-        </div>
+                    <span>
+                        Brauzer və platforma məlumatları
+                    </span>
 
-
-
-        <!-- CALCULATOR -->
-
-        <div
-        class="tool-screen"
-        id="tool-calculator"
-        >
-
-            <button
-            class="back-tool"
-            onclick="backToModule()"
-            >
-                ← BACK
-            </button>
-
-
-            <h3>
-                Calculator
-            </h3>
-
-
-            <div class="calculator">
-
-                <input
-                id="calcDisplay"
-                readonly
-                value="0"
-                >
-
-
-                <div class="calc-buttons">
-
-                    <button onclick="calcClear()">
-                        C
-                    </button>
-
-                    <button onclick="calcInput('/')">
-                        ÷
-                    </button>
-
-                    <button onclick="calcInput('*')">
-                        ×
-                    </button>
-
-                    <button onclick="calcInput('-')">
-                        −
-                    </button>
-
-
-                    <button onclick="calcInput('7')">
-                        7
-                    </button>
-
-                    <button onclick="calcInput('8')">
-                        8
-                    </button>
-
-                    <button onclick="calcInput('9')">
-                        9
-                    </button>
-
-                    <button onclick="calcInput('+')">
-                        +
-                    </button>
-
-
-                    <button onclick="calcInput('4')">
-                        4
-                    </button>
-
-                    <button onclick="calcInput('5')">
-                        5
-                    </button>
-
-                    <button onclick="calcInput('6')">
-                        6
-                    </button>
-
-                    <button onclick="calcResult()">
-                        =
-                    </button>
-
-
-                    <button onclick="calcInput('1')">
-                        1
-                    </button>
-
-                    <button onclick="calcInput('2')">
-                        2
-                    </button>
-
-                    <button onclick="calcInput('3')">
-                        3
-                    </button>
-
-                    <button onclick="calcInput('0')">
-                        0
-                    </button>
-
-                </div>
+                </button>
 
             </div>
 
         </div>
-
-
-
-        <!-- PASSWORD -->
-
-        <div
-        class="tool-screen"
-        id="tool-password"
-        >
-
-            <button
-            class="back-tool"
-            onclick="backToModule()"
-            >
-                ← BACK
-            </button>
-
-
-            <h3>
-                Password Generator
-            </h3>
-
-
-            <p>
-                Generate a secure random password locally.
-            </p>
-
-
-            <div
-            id="securePassword"
-            class="generated-value"
-            >
-                ••••••••••••••••••••
-            </div>
-
-
-            <button
-            class="panel-action"
-            onclick="generateSecurePassword()"
-            >
-                GENERATE PASSWORD →
-            </button>
-
-        </div>
-
 
 
     </div>
@@ -1795,55 +1049,40 @@ onclick="closeCategory(event)"
 
 <!-- TERMINAL -->
 
-<section
-class="terminal-window"
-id="terminalWindow"
->
-
+<div class="terminal-window"
+     id="terminalWindow">
 
     <div class="terminal-top">
 
-        <span>
-            NEXUS TERMINAL
-        </span>
+        <span>NEXUS TERMİNAL</span>
 
-
-        <button
-        onclick="closeTerminal()"
-        >
-            ×
-        </button>
+        <button onclick="closeTerminal()">×</button>
 
     </div>
 
 
     <div id="terminalOutput">
 
-        <div>
-            NEXUS OS v3.0
+        <div>NEXUS NÜVƏSİ v3.0</div>
+
+        <div>Terminal başladılır...</div>
+
+        <div class="terminal-ok">
+            ŞƏBƏKƏ ............... TAMAM
         </div>
 
-        <div>
-            Initializing environment...
+        <div class="terminal-ok">
+            TƏHLÜKƏSİZLİK ........ TAMAM
         </div>
 
-        <div class="ok">
-            NETWORK ............... OK
-        </div>
-
-        <div class="ok">
-            SECURITY .............. OK
-        </div>
-
-        <div class="ok">
-            SYSTEM ................ OK
+        <div class="terminal-ok">
+            SİSTEM ............... TAMAM
         </div>
 
         <br>
 
         <div>
-            Type <b>help</b>
-            to see available commands.
+            Mövcud əmrlər üçün <b>help</b> yazın.
         </div>
 
     </div>
@@ -1851,29 +1090,19 @@ id="terminalWindow"
 
     <div class="terminal-input">
 
-        <span>
-            nexus@az:~$
-        </span>
-
+        <span>nexus@az:~$</span>
 
         <input
-        id="terminalInput"
-        autocomplete="off"
-        onkeydown="terminalCommand(event)"
+            id="terminalInput"
+            autocomplete="off"
+            onkeydown="terminalCommand(event)"
         >
 
     </div>
 
-
-</section>
-
+</div>
 
 
-</main>
-
-
-
-<!-- FOOTER -->
 
 <footer>
 
@@ -1881,25 +1110,14 @@ id="terminalWindow"
         NEXUS<span>//</span>AZ
     </strong>
 
-
-    <div>
-
-        SYSTEM v3.0
-
-        <span>
-            •
-        </span>
-
-        DIGITAL COMMAND CENTER
-
-    </div>
+    <span>
+        RƏQƏMSAL İDARƏETMƏ MƏRKƏZİ · v3.0
+    </span>
 
 </footer>
-
 
 
 <script src="script.js"></script>
 
 </body>
-
 </html>
