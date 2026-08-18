@@ -1,158 +1,402 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEXUS // AZ</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color" content="#05050a">
+
+<title>NEXUS // AZ</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="background">
-  <div class="orb orb1"></div>
-  <div class="orb orb2"></div>
-  <div class="grid"></div>
+<div id="loader">
+    <div class="loader-logo">NEXUS<span>//</span>AZ</div>
+    <div class="loader-line">
+        <div></div>
+    </div>
+    <small>INITIALIZING SYSTEM</small>
 </div>
 
-<header>
-  <div class="logo">
-    <span class="logo-dot"></span>
-    NEXUS<span>//</span>AZ
-  </div>
+<div class="aurora"></div>
+<div class="noise"></div>
+<div class="grid"></div>
 
-  <div class="status">
-    <span></span> SYSTEM ONLINE
-  </div>
+<header>
+
+    <div class="brand">
+        <div class="brand-mark">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div>
+            <strong>NEXUS<span>//</span>AZ</strong>
+            <small>DIGITAL COMMAND CENTER</small>
+        </div>
+    </div>
+
+    <div class="online">
+        <i></i>
+        SYSTEM ONLINE
+    </div>
+
 </header>
+
 
 <main>
 
-  <section class="hero">
+<section class="hero">
+
+    <div class="hero-text">
+
+        <div class="eyebrow">
+            <span></span>
+            SECURE DIGITAL ENVIRONMENT
+        </div>
+
+        <h1>
+            Everything<br>
+            <span>connected.</span>
+        </h1>
+
+        <p>
+            A modern digital command center for network tools,
+            utilities and real-time information.
+        </p>
+
+        <div class="hero-buttons">
+
+            <button class="primary" onclick="scrollTools()">
+                EXPLORE SYSTEM
+                <b>↗</b>
+            </button>
+
+            <button class="ghost" onclick="openTerminal()">
+                OPEN TERMINAL
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="hero-status">
+
+        <div class="time-label">LOCAL TIME</div>
+
+        <div id="clock">00:00</div>
+
+        <div id="date">Loading...</div>
+
+        <div class="status-bar">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <small>SECURE CONNECTION ESTABLISHED</small>
+
+    </div>
+
+</section>
+
+
+<section class="stats">
+
     <div>
-      <p class="eyebrow">DIGITAL COMMAND CENTER</p>
-
-      <h1>
-        Your digital world,
-        <span>one place.</span>
-      </h1>
-
-      <p class="subtitle">
-        Tools, information and utilities built into one futuristic dashboard.
-      </p>
+        <small>NETWORK</small>
+        <strong id="networkStatus">ONLINE</strong>
     </div>
 
-    <div class="clock-card">
-      <div id="clock">00:00:00</div>
-      <small id="date">Loading...</small>
+    <div>
+        <small>YOUR IP</small>
+        <strong id="ip">Detecting...</strong>
     </div>
-  </section>
+
+    <div>
+        <small>LATENCY</small>
+        <strong id="latency">-- ms</strong>
+    </div>
+
+    <div>
+        <small>SYSTEM</small>
+        <strong class="green">STABLE</strong>
+    </div>
+
+</section>
 
 
-  <section class="dashboard">
+<div id="tools"></div>
 
-    <div class="card large-card">
-      <div class="card-top">
-        <span>NETWORK</span>
-        <span class="icon">◉</span>
-      </div>
 
-      <h2>Connection</h2>
+<section class="section-title">
 
-      <div class="network-info">
-        <div>
-          <small>YOUR IP</small>
-          <strong id="ip">Detecting...</strong>
+    <div>
+        <small>AVAILABLE MODULES</small>
+        <h2>Digital tools.</h2>
+    </div>
+
+    <span>06 MODULES</span>
+
+</section>
+
+
+<section class="cards">
+
+
+    <article class="card network-card">
+
+        <div class="card-icon">◉</div>
+
+        <div class="card-head">
+            <small>01 / NETWORK</small>
+            <span>LIVE</span>
         </div>
 
-        <div>
-          <small>STATUS</small>
-          <strong class="online">CONNECTED</strong>
+        <h3>Connection</h3>
+
+        <p>
+            Check your public IP and connection status.
+        </p>
+
+        <div class="network-details">
+
+            <div>
+                <small>IP ADDRESS</small>
+                <b id="ip2">Detecting...</b>
+            </div>
+
+            <div>
+                <small>STATUS</small>
+                <b class="green">CONNECTED</b>
+            </div>
+
         </div>
-      </div>
 
-      <button onclick="getIP()">Refresh connection</button>
-    </div>
+        <button onclick="getIP()">REFRESH →</button>
 
-
-    <div class="card">
-      <div class="card-top">
-        <span>SECURITY</span>
-        <span class="icon">⌁</span>
-      </div>
-
-      <h2>Password</h2>
-
-      <div class="password-box">
-        <span id="password">••••••••••••</span>
-        <button onclick="generatePassword()">GENERATE</button>
-      </div>
-    </div>
+    </article>
 
 
-    <div class="card">
-      <div class="card-top">
-        <span>QUICK TOOL</span>
-        <span class="icon">⌗</span>
-      </div>
+    <article class="card">
 
-      <h2>QR Generator</h2>
+        <div class="card-icon">⌁</div>
 
-      <input id="qrText" placeholder="Enter text or URL">
+        <div class="card-head">
+            <small>02 / SECURITY</small>
+            <span>LOCAL</span>
+        </div>
 
-      <button onclick="generateQR()">CREATE QR</button>
+        <h3>Password</h3>
 
-      <div id="qr"></div>
-    </div>
+        <p>
+            Generate a secure random password.
+        </p>
 
+        <div class="password">
 
-    <div class="card large-card">
-      <div class="card-top">
-        <span>URL ANALYZER</span>
-        <span class="icon">↗</span>
-      </div>
+            <div id="password">
+                ••••••••••••••••
+            </div>
 
-      <h2>Analyze a URL</h2>
+            <button onclick="generatePassword()">
+                GENERATE
+            </button>
 
-      <div class="url-input">
-        <input id="urlInput" placeholder="https://example.com">
-        <button onclick="analyzeURL()">SCAN</button>
-      </div>
+        </div>
 
-      <div id="urlResult" class="result">
-        Waiting for target...
-      </div>
-    </div>
+    </article>
 
 
-    <div class="card terminal-card">
+    <article class="card">
 
-      <div class="card-top">
+        <div class="card-icon">⌗</div>
+
+        <div class="card-head">
+            <small>03 / UTILITY</small>
+            <span>READY</span>
+        </div>
+
+        <h3>QR Generator</h3>
+
+        <p>
+            Convert text or links into a QR code.
+        </p>
+
+        <input
+            id="qrText"
+            placeholder="Enter URL or text..."
+        >
+
+        <button onclick="generateQR()">
+            CREATE QR →
+        </button>
+
+        <div id="qr"></div>
+
+    </article>
+
+
+    <article class="card">
+
+        <div class="card-icon">↗</div>
+
+        <div class="card-head">
+            <small>04 / ANALYZER</small>
+            <span>SCANNER</span>
+        </div>
+
+        <h3>URL Analyzer</h3>
+
+        <p>
+            Inspect the structure of any URL.
+        </p>
+
+        <div class="url-box">
+
+            <input
+                id="urlInput"
+                placeholder="https://example.com"
+            >
+
+            <button onclick="analyzeURL()">
+                SCAN
+            </button>
+
+        </div>
+
+        <div id="urlResult">
+            Waiting for target...
+        </div>
+
+    </article>
+
+
+    <article class="card terminal-module">
+
+        <div class="card-icon">_</div>
+
+        <div class="card-head">
+            <small>05 / TERMINAL</small>
+            <span>INTERACTIVE</span>
+        </div>
+
+        <h3>NEXUS Terminal</h3>
+
+        <p>
+            Interactive command interface.
+        </p>
+
+        <button onclick="openTerminal()">
+            OPEN TERMINAL →
+        </button>
+
+    </article>
+
+
+    <article class="card">
+
+        <div class="card-icon">✦</div>
+
+        <div class="card-head">
+            <small>06 / SYSTEM</small>
+            <span>REALTIME</span>
+        </div>
+
+        <h3>System Monitor</h3>
+
+        <p>
+            Real-time simulated system activity.
+        </p>
+
+        <div class="bars">
+
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </div>
+
+        <div class="monitor">
+            <span>CPU</span>
+            <b id="cpu">--%</b>
+        </div>
+
+    </article>
+
+</section>
+
+
+<section class="terminal-window" id="terminalWindow">
+
+    <div class="terminal-top">
+
         <span>NEXUS TERMINAL</span>
-        <span class="icon">_</span>
-      </div>
 
-      <div class="terminal" id="terminal">
-
-        <p> NEXUS OS v1.0</p>
-        <p> Initializing system...</p>
-        <p> Network module ........ <b>OK</b></p>
-        <p> Security module ...... <b>OK</b></p>
-        <p> Interface ............ <b>OK</b></p>
-        <p class="cursor">▋</p>
-
-      </div>
+        <button onclick="closeTerminal()">×</button>
 
     </div>
 
-  </section>
+    <div id="terminalOutput">
+
+        <div>NEXUS OS v2.0</div>
+        <div>Initializing environment...</div>
+        <div class="ok">NETWORK ............... OK</div>
+        <div class="ok">SECURITY .............. OK</div>
+        <div class="ok">SYSTEM ................ OK</div>
+        <br>
+        <div>Type <b>help</b> to see available commands.</div>
+
+    </div>
+
+    <div class="terminal-input">
+
+        <span>nexus@az:~$</span>
+
+        <input
+            id="terminalInput"
+            autocomplete="off"
+            onkeydown="terminalCommand(event)"
+        >
+
+    </div>
+
+</section>
 
 </main>
 
+
 <footer>
-  <span>NEXUS // AZ</span>
-  <span>BUILT FOR THE WEB</span>
+
+    <strong>NEXUS<span>//</span>AZ</strong>
+
+    <div>
+        SYSTEM v2.0
+        <span>•</span>
+        BUILT ON GITHUB
+    </div>
+
 </footer>
+
 
 <script src="script.js"></script>
 
