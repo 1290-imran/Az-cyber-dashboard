@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <meta name="theme-color" content="#07090f">
 
 <title>NEXUS // AZ — Rəqəmsal İdarəetmə Mərkəzi</title>
@@ -10,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
 </head>
@@ -23,7 +24,9 @@
 <div class="noise"></div>
 
 
-<!-- YUXARI PANEL -->
+<!-- =========================
+     TOP BAR
+========================= -->
 
 <header class="topbar">
 
@@ -36,8 +39,15 @@
         </div>
 
         <div class="brand-text">
-            <strong>NEXUS<span>//</span>AZ</strong>
-            <small>RƏQƏMSAL İDARƏETMƏ MƏRKƏZİ</small>
+
+            <strong>
+                NEXUS<span>//</span>AZ
+            </strong>
+
+            <small>
+                RƏQƏMSAL İDARƏETMƏ MƏRKƏZİ
+            </small>
+
         </div>
 
     </div>
@@ -50,8 +60,8 @@
             <span>SİSTEM ONLAYNDIR</span>
         </div>
 
-        <div class="top-time" id="clock">
-            00:00:00
+        <div class="top-time" id="heroTime">
+            00:00
         </div>
 
     </div>
@@ -63,7 +73,9 @@
 <main class="dashboard">
 
 
-<!-- GİRİŞ -->
+<!-- =========================
+     HERO
+========================= -->
 
 <section class="hero">
 
@@ -74,30 +86,35 @@
             TƏHLÜKƏSİZ RƏQƏMSAL MÜHİT
         </div>
 
+
         <h1>
             Hər şey
-            <span>bir yerdə.</span>
+            <span>bir mərkəzdə.</span>
         </h1>
 
+
         <p>
-            Şəbəkə, təhlükəsizlik, tərtibat, media,
-            süni intellekt və gündəlik iş alətləri
-            üçün vahid rəqəmsal mərkəz.
+            Şəbəkə, təhlükəsizlik, tərtibat, dünya,
+            media, süni intellekt və gündəlik ofis
+            alətlərini bir yerdə idarə et.
         </p>
 
     </div>
+
 
 
     <div class="hero-console">
 
         <div class="console-top">
 
-            <span>NEXUS NÜVƏSİ</span>
+            <span>
+                NEXUS CORE
+            </span>
 
-            <span class="core-state">
+            <div class="core-state">
                 <i></i>
                 AKTİV
-            </span>
+            </div>
 
         </div>
 
@@ -111,17 +128,17 @@
 
             <div>
                 <span>TƏHLÜKƏSİZLİK</span>
-                <b>AKTİV</b>
+                <b>QORUNUR</b>
             </div>
 
             <div>
-                <span>GECİKMƏ</span>
-                <b id="latency">-- ms</b>
+                <span>SİSTEM</span>
+                <b>STABİL</b>
             </div>
 
             <div>
-                <span>YERLİ SAAT</span>
-                <b id="heroTime">--:--</b>
+                <span>SAAT</span>
+                <b id="clock">00:00:00</b>
             </div>
 
         </div>
@@ -132,7 +149,9 @@
 
 
 
-<!-- KATEQORİYALAR -->
+<!-- =========================
+     CATEGORIES
+========================= -->
 
 <section class="command-section">
 
@@ -140,9 +159,13 @@
 
         <div>
 
-            <span>İDARƏETMƏ MƏRKƏZİ</span>
+            <span>
+                İDARƏETMƏ PANELİ
+            </span>
 
-            <h2>Bölmə seç.</h2>
+            <h2>
+                Xidmət kateqoriyaları
+            </h2>
 
         </div>
 
@@ -157,23 +180,23 @@
     <div class="category-grid">
 
 
-        <!-- ŞƏBƏKƏ -->
+        <!-- NETWORK -->
 
-        <button class="category-card"
-                onclick="openCategory('network')">
+        <button
+            class="category-card"
+            onclick="openCategory('network')"
+        >
 
             <div class="category-icon">
 
-                <svg viewBox="0 0 64 64">
-
-                    <circle cx="32" cy="14" r="5"/>
-                    <circle cx="14" cy="47" r="5"/>
-                    <circle cx="50" cy="47" r="5"/>
-
-                    <path d="M29 19 L17 42"/>
-                    <path d="M35 19 L47 42"/>
-                    <path d="M19 47 H45"/>
-
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 12h4"/>
+                    <path d="M17 12h4"/>
+                    <path d="M7 8h10"/>
+                    <path d="M7 16h10"/>
+                    <circle cx="5" cy="12" r="2"/>
+                    <circle cx="19" cy="12" r="2"/>
+                    <circle cx="12" cy="12" r="3"/>
                 </svg>
 
             </div>
@@ -183,41 +206,37 @@
 
                 <span>01 / ŞƏBƏKƏ</span>
 
-                <strong>Şəbəkə Mərkəzi</strong>
+                <strong>
+                    Şəbəkə Mərkəzi
+                </strong>
 
                 <p>
-                    IP, DNS, Ping və bağlantı alətləri.
+                    IP, bağlantı, DNS və şəbəkə
+                    analiz alətləri.
                 </p>
 
             </div>
 
-
-            <div class="open-arrow">↗</div>
+            <div class="open-arrow">
+                ↗
+            </div>
 
         </button>
 
 
 
-        <!-- TƏHLÜKƏSİZLİK -->
+        <!-- SECURITY -->
 
-        <button class="category-card"
-                onclick="openCategory('security')">
+        <button
+            class="category-card"
+            onclick="openCategory('security')"
+        >
 
             <div class="category-icon">
 
-                <svg viewBox="0 0 64 64">
-
-                    <path d="
-                    M32 6
-                    L52 14
-                    V29
-                    C52 42 44 52 32 58
-                    C20 52 12 42 12 29
-                    V14
-                    Z"/>
-
-                    <path d="M23 31 L29 37 L42 23"/>
-
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 3l8 4v5c0 5-3.4 8-8 9-4.6-1-8-4-8-9V7l8-4z"/>
+                    <path d="M9 12l2 2 4-4"/>
                 </svg>
 
             </div>
@@ -227,34 +246,38 @@
 
                 <span>02 / TƏHLÜKƏSİZLİK</span>
 
-                <strong>Təhlükəsizlik Mərkəzi</strong>
+                <strong>
+                    Təhlükəsizlik
+                </strong>
 
                 <p>
-                    Şifrələr, hash və təhlükəsizlik alətləri.
+                    Şifrə, təhlükəsizlik və
+                    faydalı qoruma vasitələri.
                 </p>
 
             </div>
 
-
-            <div class="open-arrow">↗</div>
+            <div class="open-arrow">
+                ↗
+            </div>
 
         </button>
 
 
 
-        <!-- TƏRTİBATÇI -->
+        <!-- DEVELOPER -->
 
-        <button class="category-card"
-                onclick="openCategory('developer')">
+        <button
+            class="category-card"
+            onclick="openCategory('developer')"
+        >
 
             <div class="category-icon">
 
-                <svg viewBox="0 0 64 64">
-
-                    <path d="M25 17 L10 32 L25 47"/>
-                    <path d="M39 17 L54 32 L39 47"/>
-                    <path d="M36 10 L28 54"/>
-
+                <svg viewBox="0 0 24 24">
+                    <path d="M8 9l-4 3 4 3"/>
+                    <path d="M16 9l4 3-4 3"/>
+                    <path d="M14 5l-4 14"/>
                 </svg>
 
             </div>
@@ -264,36 +287,39 @@
 
                 <span>03 / TƏRTİBATÇI</span>
 
-                <strong>Tərtibatçı Mərkəzi</strong>
+                <strong>
+                    Developer
+                </strong>
 
                 <p>
-                    Terminal, JSON, Base64 və kod alətləri.
+                    Kod, terminal, JSON və
+                    tərtibatçı alətləri.
                 </p>
 
             </div>
 
-
-            <div class="open-arrow">↗</div>
+            <div class="open-arrow">
+                ↗
+            </div>
 
         </button>
 
 
 
-        <!-- DÜNYA -->
+        <!-- WORLD -->
 
-        <button class="category-card"
-                onclick="openCategory('world')">
+        <button
+            class="category-card"
+            onclick="openCategory('world')"
+        >
 
             <div class="category-icon">
 
-                <svg viewBox="0 0 64 64">
-
-                    <circle cx="32" cy="32" r="23"/>
-
-                    <path d="M9 32 H55"/>
-                    <path d="M32 9 C23 18 23 46 32 55"/>
-                    <path d="M32 9 C41 18 41 46 32 55"/>
-
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path d="M3 12h18"/>
+                    <path d="M12 3c3 3 3 15 0 18"/>
+                    <path d="M12 3c-3 3-3 15 0 18"/>
                 </svg>
 
             </div>
@@ -303,33 +329,38 @@
 
                 <span>04 / DÜNYA</span>
 
-                <strong>Dünya Mərkəzi</strong>
+                <strong>
+                    Dünya & Naviqator
+                </strong>
 
                 <p>
-                    Canlı xəritə, naviqasiya və dünya məlumatları.
+                    Xəritə, istiqamət və
+                    real dünya məlumatları.
                 </p>
 
             </div>
 
-
-            <div class="open-arrow">↗</div>
+            <div class="open-arrow">
+                ↗
+            </div>
 
         </button>
 
 
 
-        <!-- MEDİA -->
+        <!-- MEDIA -->
 
-        <button class="category-card"
-                onclick="openCategory('media')">
+        <button
+            class="category-card"
+            onclick="openCategory('media')"
+        >
 
             <div class="category-icon">
 
-                <svg viewBox="0 0 64 64">
-
-                    <circle cx="32" cy="32" r="23"/>
-                    <path d="M27 21 L45 32 L27 43 Z"/>
-
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 18V5l11-2v13"/>
+                    <circle cx="6" cy="18" r="3"/>
+                    <circle cx="17" cy="16" r="3"/>
                 </svg>
 
             </div>
@@ -339,39 +370,42 @@
 
                 <span>05 / MEDİA</span>
 
-                <strong>Media Mərkəzi</strong>
+                <strong>
+                    Media Center
+                </strong>
 
                 <p>
-                    Musiqi pleyeri və media alətləri.
+                    Musiqi, media və şəxsi
+                    əyləncə alətləri.
                 </p>
 
             </div>
 
-
-            <div class="open-arrow">↗</div>
+            <div class="open-arrow">
+                ↗
+            </div>
 
         </button>
 
 
 
-        <!-- SÜNİ İNTELLEKT -->
+        <!-- AI -->
 
-        <button class="category-card"
-                onclick="openCategory('ai')">
+        <button
+            class="category-card"
+            onclick="openCategory('ai')"
+        >
 
             <div class="category-icon">
 
-                <svg viewBox="0 0 64 64">
-
-                    <circle cx="32" cy="32" r="20"/>
-
-                    <circle cx="23" cy="27" r="3"/>
-                    <circle cx="41" cy="27" r="3"/>
-
-                    <path d="M22 39 C27 44 37 44 42 39"/>
-
-                    <path d="M32 12 V6"/>
-
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="7"/>
+                    <path d="M9 12h6"/>
+                    <path d="M12 9v6"/>
+                    <path d="M4 12H2"/>
+                    <path d="M22 12h-2"/>
+                    <path d="M12 4V2"/>
+                    <path d="M12 22v-2"/>
                 </svg>
 
             </div>
@@ -381,39 +415,39 @@
 
                 <span>06 / İNTELLEKT</span>
 
-                <strong>NEXUS Süni İntellekt</strong>
+                <strong>
+                    NEXUS AI
+                </strong>
 
                 <p>
-                    Sual-cavab və ağıllı rəqəmsal köməkçi.
+                    Suallar, mətnlər və ağıllı
+                    rəqəmsal köməkçi.
                 </p>
 
             </div>
 
-
-            <div class="open-arrow">↗</div>
+            <div class="open-arrow">
+                ↗
+            </div>
 
         </button>
 
 
 
-        <!-- OFİS -->
+        <!-- OFFICE -->
 
-        <button class="category-card"
-                onclick="openCategory('office')">
+        <button
+            class="category-card"
+            onclick="openCategory('office')"
+        >
 
             <div class="category-icon">
 
-                <svg viewBox="0 0 64 64">
-
-                    <rect x="10" y="10"
-                          width="44"
-                          height="44"
-                          rx="5"/>
-
-                    <path d="M21 22 H43"/>
-                    <path d="M21 32 H43"/>
-                    <path d="M21 42 H35"/>
-
+                <svg viewBox="0 0 24 24">
+                    <rect x="4" y="4" width="16" height="16" rx="3"/>
+                    <path d="M8 9h8"/>
+                    <path d="M8 13h5"/>
+                    <path d="M8 17h8"/>
                 </svg>
 
             </div>
@@ -423,41 +457,39 @@
 
                 <span>07 / OFİS</span>
 
-                <strong>Ofis Alətləri</strong>
+                <strong>
+                    Ofis Alətləri
+                </strong>
 
                 <p>
-                    Kalkulyator, QR, qeydlər və gündəlik alətlər.
+                    QR, kalkulyator, çevirici,
+                    qeydlər və faydalı alətlər.
                 </p>
 
             </div>
 
-
-            <div class="open-arrow">↗</div>
+            <div class="open-arrow">
+                ↗
+            </div>
 
         </button>
 
 
 
-        <!-- SİSTEM -->
+        <!-- SYSTEM -->
 
-        <button class="category-card"
-                onclick="openCategory('system')">
+        <button
+            class="category-card"
+            onclick="openCategory('system')"
+        >
 
             <div class="category-icon">
 
-                <svg viewBox="0 0 64 64">
-
-                    <rect x="10"
-                          y="14"
-                          width="44"
-                          height="30"
-                          rx="4"/>
-
-                    <path d="M24 54 H40"/>
-                    <path d="M32 44 V54"/>
-
-                    <path d="M18 35 L25 28 L31 33 L39 23 L46 28"/>
-
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 19V9"/>
+                    <path d="M10 19V5"/>
+                    <path d="M16 19v-7"/>
+                    <path d="M22 19V3"/>
                 </svg>
 
             </div>
@@ -467,129 +499,141 @@
 
                 <span>08 / SİSTEM</span>
 
-                <strong>Sistem Monitoru</strong>
+                <strong>
+                    Sistem Monitoru
+                </strong>
 
                 <p>
-                    Cihaz, brauzer və sistem məlumatları.
+                    Brauzer və cihaz haqqında
+                    texniki məlumatlar.
                 </p>
 
             </div>
 
-
-            <div class="open-arrow">↗</div>
+            <div class="open-arrow">
+                ↗
+            </div>
 
         </button>
 
+    </div>
+
+
+
+    <!-- QUICK STATUS -->
+
+    <div class="quick-status">
+
+        <div class="quick-card">
+
+            <span>ŞƏBƏKƏ</span>
+
+            <strong class="online-text">
+                ONLAYN
+            </strong>
+
+        </div>
+
+
+        <div class="quick-card">
+
+            <span>İCTİMAİ IP</span>
+
+            <strong id="ip">
+                Yoxlanılır...
+            </strong>
+
+        </div>
+
+
+        <div class="quick-card">
+
+            <span>GECİKMƏ</span>
+
+            <strong id="latency">
+                -- ms
+            </strong>
+
+        </div>
+
+
+        <div class="quick-card">
+
+            <span>BRAUZER</span>
+
+            <strong>
+                HAZIR
+            </strong>
+
+        </div>
 
     </div>
 
 </section>
-
-
-
-<!-- SÜRƏTLİ MƏLUMAT -->
-
-<section class="quick-status">
-
-    <div class="quick-card">
-
-        <span>İCTİMAİ IP</span>
-
-        <strong id="ip">
-            Axtarılır...
-        </strong>
-
-    </div>
-
-
-    <div class="quick-card">
-
-        <span>ŞƏBƏKƏ</span>
-
-        <strong class="online-text">
-            BAĞLIDIR
-        </strong>
-
-    </div>
-
-
-    <div class="quick-card">
-
-        <span>SİSTEM</span>
-
-        <strong>
-            STABİL
-        </strong>
-
-    </div>
-
-
-    <div class="quick-card">
-
-        <span>VERSİYA</span>
-
-        <strong>
-            NEXUS 3.0
-        </strong>
-
-    </div>
-
-</section>
-
 
 </main>
 
 
 
-<!-- MODUL PƏNCƏRƏSİ -->
+<!-- =========================
+     CATEGORY OVERLAY
+========================= -->
 
-<div class="module-overlay"
-     id="categoryOverlay">
+<div
+    class="module-overlay"
+    id="categoryOverlay"
+>
 
     <div class="module-panel">
-
 
         <div class="module-header">
 
             <div>
 
                 <span id="moduleLabel">
-                    SİSTEM MODULU
+                    MODUL
                 </span>
 
                 <h2 id="moduleTitle">
-                    Modul
+                    Xidmətlər
                 </h2>
 
             </div>
 
 
-            <button class="close-module"
-                    onclick="closeCategory()">
-
+            <button
+                class="close-module"
+                onclick="closeCategory()"
+            >
                 ×
-
             </button>
 
         </div>
 
 
 
-        <!-- ŞƏBƏKƏ -->
+        <!-- NETWORK -->
 
-        <div class="module-content"
-             id="module-network">
+        <div
+            class="module-content"
+            id="module-network"
+        >
 
             <div class="tool-grid">
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">◎</div>
+                    <div class="tool-icon">
+                        IP
+                    </div>
 
-                    <strong>İctimai IP</strong>
+                    <strong>
+                        IP məlumatı
+                    </strong>
 
                     <span>
-                        Xarici IP ünvanınıza baxın
+                        İctimai IP ünvanını və bağlantı
+                        vəziyyətini yoxla.
                     </span>
 
                 </button>
@@ -597,12 +641,17 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">◇</div>
+                    <div class="tool-icon">
+                        DNS
+                    </div>
 
-                    <strong>DNS Yoxlaması</strong>
+                    <strong>
+                        DNS yoxlaması
+                    </strong>
 
                     <span>
-                        DNS məlumatlarını yoxlayın
+                        DNS sisteminin işləkliyini
+                        yoxlamaq üçün alət.
                     </span>
 
                 </button>
@@ -610,25 +659,38 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">↔</div>
+                    <div class="tool-icon">
+                        ⚡
+                    </div>
 
-                    <strong>Ping</strong>
+                    <strong>
+                        Sürət testi
+                    </strong>
 
                     <span>
-                        Şəbəkə gecikməsini ölçün
+                        Bağlantının cavab müddətini
+                        ölç.
                     </span>
 
                 </button>
 
 
-                <button class="tool-card">
+                <button
+                    class="tool-card"
+                    onclick="openTerminal()"
+                >
 
-                    <div class="tool-icon">⌁</div>
+                    <div class="tool-icon">
+                        >
+                    </div>
 
-                    <strong>Sürət Testi</strong>
+                    <strong>
+                        Şəbəkə terminalı
+                    </strong>
 
                     <span>
-                        İnternet bağlantısını ölçün
+                        Terminal interfeysindən
+                        texniki əmrlər.
                     </span>
 
                 </button>
@@ -639,21 +701,27 @@
 
 
 
-        <!-- TƏHLÜKƏSİZLİK -->
+        <!-- SECURITY -->
 
-        <div class="module-content"
-             id="module-security">
+        <div
+            class="module-content"
+            id="module-security"
+        >
 
             <div class="tool-grid">
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">▣</div>
+                    <div class="tool-icon">
+                        ◆
+                    </div>
 
-                    <strong>Şifrə Generatoru</strong>
+                    <strong>
+                        Şifrə generatoru
+                    </strong>
 
                     <span>
-                        Güclü və təsadüfi şifrə yaradın
+                        Güclü təsadüfi şifrələr yarat.
                     </span>
 
                 </button>
@@ -661,12 +729,17 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">#</div>
+                    <div class="tool-icon">
+                        ✓
+                    </div>
 
-                    <strong>Hash Generatoru</strong>
+                    <strong>
+                        Təhlükəsizlik yoxlaması
+                    </strong>
 
                     <span>
-                        Mətn üçün hash yaradın
+                        Brauzer və bağlantı
+                        haqqında əsas məlumatlar.
                     </span>
 
                 </button>
@@ -674,12 +747,17 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">✓</div>
+                    <div class="tool-icon">
+                        URL
+                    </div>
 
-                    <strong>URL Təhlükəsizliyi</strong>
+                    <strong>
+                        URL analizatoru
+                    </strong>
 
                     <span>
-                        Link strukturunu yoxlayın
+                        Linkin strukturunu və
+                        komponentlərini analiz et.
                     </span>
 
                 </button>
@@ -687,12 +765,17 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">◇</div>
+                    <div class="tool-icon">
+                        #
+                    </div>
 
-                    <strong>UUID Generatoru</strong>
+                    <strong>
+                        Hash aləti
+                    </strong>
 
                     <span>
-                        Unikal identifikator yaradın
+                        Mətnlər üçün hash yaratmaq
+                        üçün istifadə edilə bilər.
                     </span>
 
                 </button>
@@ -703,22 +786,31 @@
 
 
 
-        <!-- TƏRTİBATÇI -->
+        <!-- DEVELOPER -->
 
-        <div class="module-content"
-             id="module-developer">
+        <div
+            class="module-content"
+            id="module-developer"
+        >
 
             <div class="tool-grid">
 
-                <button class="tool-card"
-                        onclick="openTerminal()">
+                <button
+                    class="tool-card"
+                    onclick="openTerminal()"
+                >
 
-                    <div class="tool-icon">&gt;_</div>
+                    <div class="tool-icon">
+                        &gt;_
+                    </div>
 
-                    <strong>NEXUS Terminal</strong>
+                    <strong>
+                        NEXUS Terminal
+                    </strong>
 
                     <span>
-                        İnteraktiv əmr sətri
+                        Brauzer daxilində interaktiv
+                        terminal interfeysi.
                     </span>
 
                 </button>
@@ -726,12 +818,17 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">{ }</div>
+                    <div class="tool-icon">
+                        {}
+                    </div>
 
-                    <strong>JSON Formatlayıcı</strong>
+                    <strong>
+                        JSON Formatter
+                    </strong>
 
                     <span>
-                        JSON məlumatlarını formatlayın
+                        JSON məlumatlarını səliqəli
+                        formata sal.
                     </span>
 
                 </button>
@@ -739,12 +836,17 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">64</div>
+                    <div class="tool-icon">
+                        &lt;/&gt;
+                    </div>
 
-                    <strong>Base64</strong>
+                    <strong>
+                        Kod sahəsi
+                    </strong>
 
                     <span>
-                        Məlumatları kodlaşdırın və açın
+                        Kiçik kod parçalarını
+                        yoxlamaq üçün sahə.
                     </span>
 
                 </button>
@@ -752,12 +854,17 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">&lt;/&gt;</div>
+                    <div class="tool-icon">
+                        API
+                    </div>
 
-                    <strong>Kod Alətləri</strong>
+                    <strong>
+                        API Tester
+                    </strong>
 
                     <span>
-                        Gündəlik proqramlaşdırma alətləri
+                        API sorğularını yoxlamaq üçün
+                        gələcək modul.
                     </span>
 
                 </button>
@@ -768,21 +875,28 @@
 
 
 
-        <!-- DÜNYA -->
+        <!-- WORLD -->
 
-        <div class="module-content"
-             id="module-world">
+        <div
+            class="module-content"
+            id="module-world"
+        >
 
             <div class="tool-grid">
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">◎</div>
+                    <div class="tool-icon">
+                        ◎
+                    </div>
 
-                    <strong>Canlı Dünya Xəritəsi</strong>
+                    <strong>
+                        Canlı Dünya Xəritəsi
+                    </strong>
 
                     <span>
-                        Dünyanı xəritədə araşdırın
+                        Dünya xəritəsini aç və
+                        məkanları araşdır.
                     </span>
 
                 </button>
@@ -790,12 +904,17 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">⌖</div>
+                    <div class="tool-icon">
+                        ➤
+                    </div>
 
-                    <strong>Naviqator</strong>
+                    <strong>
+                        Naviqator
+                    </strong>
 
                     <span>
-                        Ünvan və marşrut axtarın
+                        Məkan və istiqamət məlumatları
+                        üçün naviqasiya aləti.
                     </span>
 
                 </button>
@@ -803,12 +922,17 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">◷</div>
+                    <div class="tool-icon">
+                        GPS
+                    </div>
 
-                    <strong>Dünya Saatı</strong>
+                    <strong>
+                        Mövqeyim
+                    </strong>
 
                     <span>
-                        Müxtəlif şəhərlərin vaxtına baxın
+                        Brauzerin icazəsi ilə
+                        cari mövqeyini müəyyən et.
                     </span>
 
                 </button>
@@ -816,12 +940,17 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">⊕</div>
+                    <div class="tool-icon">
+                        UTC
+                    </div>
 
-                    <strong>Koordinatlar</strong>
+                    <strong>
+                        Dünya saatları
+                    </strong>
 
                     <span>
-                        Məkan koordinatlarını yoxlayın
+                        Müxtəlif şəhərlərin
+                        lokal vaxtını göstər.
                     </span>
 
                 </button>
@@ -832,21 +961,28 @@
 
 
 
-        <!-- MEDİA -->
+        <!-- MEDIA -->
 
-        <div class="module-content"
-             id="module-media">
+        <div
+            class="module-content"
+            id="module-media"
+        >
 
             <div class="tool-grid">
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">▶</div>
+                    <div class="tool-icon">
+                        ♪
+                    </div>
 
-                    <strong>Musiqi Pleyeri</strong>
+                    <strong>
+                        Music Player
+                    </strong>
 
                     <span>
-                        Musiqilərinizi burada idarə edin
+                        Azərbaycan və türk pop və
+                        rep musiqiləri üçün player.
                     </span>
 
                 </button>
@@ -854,12 +990,17 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">♫</div>
+                    <div class="tool-icon">
+                        ▶
+                    </div>
 
-                    <strong>Musiqi Siyahısı</strong>
+                    <strong>
+                        Video
+                    </strong>
 
                     <span>
-                        Seçilmiş musiqilərə baxın
+                        Media məzmunu üçün
+                        gələcək modul.
                     </span>
 
                 </button>
@@ -870,10 +1011,12 @@
 
 
 
-        <!-- SÜNİ İNTELLEKT -->
+        <!-- AI -->
 
-        <div class="module-content"
-             id="module-ai">
+        <div
+            class="module-content"
+            id="module-ai"
+        >
 
             <div class="ai-panel">
 
@@ -881,21 +1024,25 @@
 
                     <svg viewBox="0 0 100 100">
 
-                        <circle cx="50"
-                                cy="50"
-                                r="34"/>
+                        <circle
+                            cx="50"
+                            cy="50"
+                            r="28"
+                        />
 
-                        <circle cx="36"
-                                cy="44"
-                                r="5"/>
+                        <path
+                            d="M35 50h30"
+                        />
 
-                        <circle cx="64"
-                                cy="44"
-                                r="5"/>
+                        <path
+                            d="M50 35v30"
+                        />
 
-                        <path d="
-                        M35 61
-                        C42 68 58 68 65 61"/>
+                        <circle
+                            cx="50"
+                            cy="50"
+                            r="8"
+                        />
 
                     </svg>
 
@@ -904,19 +1051,18 @@
 
                 <div>
 
-                    <strong>NEXUS SÜNİ İNTELLEKT</strong>
+                    <strong>
+                        NEXUS AI
+                    </strong>
 
                     <p>
-                        Suallarınıza cavab verən
-                        ağıllı rəqəmsal köməkçi.
+                        Azərbaycan dilində suallarına
+                        cavab verən ağıllı köməkçi.
                     </p>
 
                     <button class="primary-button">
-
-                        SÜNİ İNTELLEKTİ AÇ
-
+                        SÖHBƏTİ BAŞLAT
                         <span>↗</span>
-
                     </button>
 
                 </div>
@@ -927,21 +1073,28 @@
 
 
 
-        <!-- OFİS -->
+        <!-- OFFICE -->
 
-        <div class="module-content"
-             id="module-office">
+        <div
+            class="module-content"
+            id="module-office"
+        >
 
             <div class="tool-grid">
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">＋</div>
+                    <div class="tool-icon">
+                        QR
+                    </div>
 
-                    <strong>Kalkulyator</strong>
+                    <strong>
+                        QR Generator
+                    </strong>
 
                     <span>
-                        Sürətli hesablamalar aparın
+                        Mətn və linklərdən QR kod
+                        yarat.
                     </span>
 
                 </button>
@@ -949,12 +1102,17 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">▦</div>
+                    <div class="tool-icon">
+                        +
+                    </div>
 
-                    <strong>QR Generatoru</strong>
+                    <strong>
+                        Kalkulyator
+                    </strong>
 
                     <span>
-                        Mətn və linklərdən QR yaradın
+                        Sürətli hesablamalar üçün
+                        müasir kalkulyator.
                     </span>
 
                 </button>
@@ -962,12 +1120,17 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">▤</div>
+                    <div class="tool-icon">
+                        ⇄
+                    </div>
 
-                    <strong>Qeydlər</strong>
+                    <strong>
+                        Çevirici
+                    </strong>
 
                     <span>
-                        Sürətli qeydlərinizi saxlayın
+                        Ölçü, valyuta və digər
+                        çevirmə alətləri.
                     </span>
 
                 </button>
@@ -975,12 +1138,17 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">↔</div>
+                    <div class="tool-icon">
+                        ≡
+                    </div>
 
-                    <strong>Çevirici</strong>
+                    <strong>
+                        Qeydlər
+                    </strong>
 
                     <span>
-                        Ölçü vahidlərini çevirin
+                        Sürətli qeydlərini
+                        brauzerdə saxla.
                     </span>
 
                 </button>
@@ -991,21 +1159,28 @@
 
 
 
-        <!-- SİSTEM -->
+        <!-- SYSTEM -->
 
-        <div class="module-content"
-             id="module-system">
+        <div
+            class="module-content"
+            id="module-system"
+        >
 
             <div class="tool-grid">
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">⌁</div>
+                    <div class="tool-icon">
+                        CPU
+                    </div>
 
-                    <strong>Sistem Performansı</strong>
+                    <strong>
+                        Cihaz məlumatları
+                    </strong>
 
                     <span>
-                        Sistem fəaliyyətinə baxın
+                        Brauzer, ekran və cihaz
+                        haqqında texniki məlumatlar.
                     </span>
 
                 </button>
@@ -1013,25 +1188,17 @@
 
                 <button class="tool-card">
 
-                    <div class="tool-icon">▣</div>
+                    <div class="tool-icon">
+                        WEB
+                    </div>
 
-                    <strong>Cihaz Məlumatları</strong>
-
-                    <span>
-                        Cihazınız haqqında məlumat
-                    </span>
-
-                </button>
-
-
-                <button class="tool-card">
-
-                    <div class="tool-icon">◉</div>
-
-                    <strong>Brauzer Məlumatları</strong>
+                    <strong>
+                        Brauzer məlumatı
+                    </strong>
 
                     <span>
-                        Brauzer və platforma məlumatları
+                        İstifadə olunan brauzer və
+                        platformanı göstər.
                     </span>
 
                 </button>
@@ -1039,7 +1206,6 @@
             </div>
 
         </div>
-
 
     </div>
 
@@ -1047,42 +1213,55 @@
 
 
 
-<!-- TERMINAL -->
+<!-- =========================
+     TERMINAL
+========================= -->
 
-<div class="terminal-window"
-     id="terminalWindow">
+<div
+    class="terminal-window"
+    id="terminalWindow"
+>
 
     <div class="terminal-top">
 
-        <span>NEXUS TERMİNAL</span>
+        <span>
+            NEXUS TERMINAL
+        </span>
 
-        <button onclick="closeTerminal()">×</button>
+        <button onclick="closeTerminal()">
+            ×
+        </button>
 
     </div>
 
 
     <div id="terminalOutput">
 
-        <div>NEXUS NÜVƏSİ v3.0</div>
+        <div>
+            NEXUS // AZ v3.0
+        </div>
 
-        <div>Terminal başladılır...</div>
-
-        <div class="terminal-ok">
-            ŞƏBƏKƏ ............... TAMAM
+        <div>
+            Rəqəmsal terminal başladılır...
         </div>
 
         <div class="terminal-ok">
-            TƏHLÜKƏSİZLİK ........ TAMAM
+            ŞƏBƏKƏ ............... OK
         </div>
 
         <div class="terminal-ok">
-            SİSTEM ............... TAMAM
+            TƏHLÜKƏSİZLİK ........ OK
+        </div>
+
+        <div class="terminal-ok">
+            SİSTEM ............... OK
         </div>
 
         <br>
 
         <div>
-            Mövcud əmrlər üçün <b>help</b> yazın.
+            Mövcud əmrlər üçün
+            <b>help</b> yazın.
         </div>
 
     </div>
@@ -1090,11 +1269,14 @@
 
     <div class="terminal-input">
 
-        <span>nexus@az:~$</span>
+        <span>
+            nexus@az:~$
+        </span>
 
         <input
             id="terminalInput"
             autocomplete="off"
+            spellcheck="false"
             onkeydown="terminalCommand(event)"
         >
 
@@ -1110,9 +1292,11 @@
         NEXUS<span>//</span>AZ
     </strong>
 
-    <span>
-        RƏQƏMSAL İDARƏETMƏ MƏRKƏZİ · v3.0
-    </span>
+    <div>
+        SİSTEM v3.0
+        <span>•</span>
+        GITHUB ÜZƏRİNDƏ QURULUB
+    </div>
 
 </footer>
 
