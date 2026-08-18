@@ -1,354 +1,754 @@
-window.addEventListener("load",()=>{
+/* =========================================
+   NEXUS // AZ — SYSTEM CORE
+   ========================================= */
 
-setTimeout(()=>{
-
-const loader=document.getElementById("loader");
-
-loader.style.opacity="0";
-
-setTimeout(()=>{
-loader.style.display="none";
-},1000);
-
-},1600);
-
-});
+const $ = (id) => document.getElementById(id);
 
 
-/* CLOCK */
+/* ---------- CLOCK ---------- */
 
-function clock(){
+function updateClock(){
 
-const now=new Date();
+    const now = new Date();
 
-document.getElementById("clock").textContent=
-now.toLocaleTimeString("az-AZ",{
-hour:"2-digit",
-minute:"2-digit"
-});
+    const time = now.toLocaleTimeString("az-AZ", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+    });
 
-document.getElementById("date").textContent=
-now.toLocaleDateString("az-AZ",{
-weekday:"long",
-day:"numeric",
-month:"long"
-});
+    const date = now.toLocaleDateString("az-AZ", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+    });
 
+    if($("clock")) $("clock").textContent = time;
+    if($("date")) $("date").textContent = date;
 }
 
-clock();
+setInterval(updateClock,1000);
+updateClock();
 
-setInterval(clock,1000);
+
+/* ---------- SCROLL ---------- */
+
+function scrollTools(){
+
+    const target = $("tools");
+
+    if(target){
+        target.scrollIntoView({
+            behavior:"smooth"
+        });
+    }
+}
 
 
-/* IP */
+/* ---------- PASSWORD ---------- */
+
+function generatePassword(){
+
+    const chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}";
+
+    let password = "";
+
+    for(let i=0;i<20;i++){
+
+        password += chars.charAt(
+            Math.floor(Math.random()*chars.length)
+        );
+
+    }
+
+    if($("password")){
+        $("password").textContent = password;
+    }
+}
+
+
+/* ---------- IP ---------- */
 
 async function getIP(){
 
-const elements=[
-document.getElementById("ip"),
-document.getElementById("ip2")
-];
+    try{
 
-elements.forEach(e=>e.textContent="Detecting...");
+        const response =
+            await fetch("https://api.ipify.org?format=json");
 
-try{
+        const data =
+            await response.json();
 
-const start=performance.now();
+        if($("ip"))
+            $("ip").textContent = data.ip;
 
-const response=
-await fetch("https://api.ipify.org?format=json");
+        if($("ip2"))
+            $("ip2").textContent = data.ip;
 
-const data=await response.json();
+    }catch(error){
 
-const latency=Math.round(performance.now()-start);
+        if($("ip"))
+            $("ip").textContent = "UNAVAILABLE";
 
-elements.forEach(e=>e.textContent=data.ip);
-
-document.getElementById("latency").textContent=
-latency+" ms";
-
-}
-catch{
-
-elements.forEach(e=>e.textContent="Unavailable");
-
-document.getElementById("latency").textContent="-- ms";
-
-}
-
+        if($("ip2"))
+            $("ip2").textContent = "UNAVAILABLE";
+    }
 }
 
 getIP();
 
 
-/* PASSWORD */
+/* ---------- LATENCY ---------- */
 
-function generatePassword(){
+async function checkLatency(){
 
-const chars=
-"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+    const start = performance.now();
 
-let password="";
+    try{
 
-for(let i=0;i<20;i++){
+        await fetch(
+            "https://www.cloudflare.com/cdn-cgi/trace",
+            {
+                method:"HEAD",
+                cache:"no-store"
+            }
+        );
 
-password+=chars[
-Math.floor(Math.random()*chars.length)
-];
+        const latency =
+            Math.round(performance.now()-start);
 
+        if($("latency"))
+            $("latency").textContent = latency + " ms";
+
+    }catch{
+
+        if($("latency"))
+            $("latency").textContent = "-- ms";
+    }
 }
 
-document.getElementById("password").textContent=password;
+checkLatency();
 
-}
+setInterval(checkLatency,15000);
 
 
-/* QR */
+/* ---------- QR GENERATOR ---------- */
 
 function generateQR(){
 
-const text=
-document.getElementById("qrText").value.trim();
+    const text =
+        $("qrText")?.value.trim();
 
-const qr=document.getElementById("qr");
+    if(!text){
 
-if(!text){
+        alert("Please enter text or URL.");
 
-qr.innerHTML="";
+        return;
+    }
 
-return;
+    const qr =
+        $("qr");
 
+    if(!qr) return;
+
+    const encoded =
+        encodeURIComponent(text);
+
+    qr.innerHTML = `
+        <img
+            src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encoded}"
+            alt="QR Code"
+            style="
+                width:220px;
+                height:220px;
+                border-radius:12px;
+                background:white;
+                padding:10px;
+            "
+        >
+    `;
 }
 
-qr.innerHTML=`
 
-<img
-src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(text)}"
-alt="QR Code"
->
-
-`;
-
-}
-
-
-/* URL ANALYZER */
+/* ---------- URL ANALYZER ---------- */
 
 function analyzeURL(){
 
-const input=
-document.getElementById("urlInput").value.trim();
+    const input =
+        $("urlInput")?.value.trim();
 
-const result=
-document.getElementById("urlResult");
+    const result =
+        $("urlResult");
 
-if(!input){
+    if(!result) return;
 
-result.textContent="ENTER A URL";
+    if(!input){
 
-return;
+        result.textContent =
+            "Enter a URL to analyze.";
 
+        return;
+    }
+
+    try{
+
+        const url =
+            new URL(
+                input.startsWith("http")
+                ? input
+                : "https://" + input
+            );
+
+        result.innerHTML = `
+            <div class="generated-value">
+
+                <strong>URL ANALYSIS</strong>
+
+                <br><br>
+
+                PROTOCOL:
+                ${url.protocol}
+
+                <br>
+
+                HOST:
+                ${url.hostname}
+
+                <br>
+
+                PATH:
+                ${url.pathname || "/"}
+
+                <br>
+
+                PORT:
+                ${url.port || "DEFAULT"}
+
+                <br>
+
+                SECURE:
+                ${
+                    url.protocol === "https:"
+                    ? '<span class="green">YES</span>'
+                    : '<span style="color:#ff7777">NO</span>'
+                }
+
+            </div>
+        `;
+
+    }catch{
+
+        result.textContent =
+            "Invalid URL.";
+    }
 }
 
-try{
 
-const url=new URL(input);
-
-result.innerHTML=`
-
-PROTOCOL: <b>${url.protocol}</b><br>
-HOST: <b>${url.hostname}</b><br>
-PATH: <b>${url.pathname||"/"}</b>
-
-`;
-
-}
-
-catch{
-
-result.textContent="INVALID URL";
-
-}
-
-}
-
-
-/* SCROLL */
-
-function scrollTools(){
-
-document
-.getElementById("tools")
-.scrollIntoView({
-behavior:"smooth"
-});
-
-}
-
-
-/* TERMINAL */
+/* =========================================
+   TERMINAL
+   ========================================= */
 
 function openTerminal(){
 
-document
-.getElementById("terminalWindow")
-.classList.add("open");
+    const terminal =
+        $("terminalWindow");
 
-setTimeout(()=>{
+    if(!terminal) return;
 
-document
-.getElementById("terminalInput")
-.focus();
+    terminal.classList.add("active");
 
-},300);
+    setTimeout(() => {
 
+        $("terminalInput")?.focus();
+
+    },100);
 }
 
 
 function closeTerminal(){
 
-document
-.getElementById("terminalWindow")
-.classList.remove("open");
+    const terminal =
+        $("terminalWindow");
 
+    if(terminal){
+
+        terminal.classList.remove("active");
+
+    }
 }
 
 
 function terminalCommand(event){
 
-if(event.key!=="Enter") return;
+    if(event.key !== "Enter") return;
 
-const input=
-document.getElementById("terminalInput");
+    const input =
+        $("terminalInput");
 
-const command=input.value
-.trim()
-.toLowerCase();
+    const output =
+        $("terminalOutput");
 
-const output=
-document.getElementById("terminalOutput");
+    if(!input || !output) return;
 
-const line=document.createElement("div");
+    const command =
+        input.value.trim().toLowerCase();
 
-line.innerHTML=
-`<span style="color:#8067ff">
-nexus@az:~$
-</span> ${command}`;
+    if(!command) return;
 
-output.appendChild(line);
+    const line =
+        document.createElement("div");
+
+    line.innerHTML =
+        `<span style="color:#9d7cff">nexus@az:~$</span> ${escapeHTML(command)}`;
+
+    output.appendChild(line);
+
+    let response = "";
 
 
-const response=document.createElement("div");
+    switch(command){
+
+        case "help":
+
+            response = `
+                <div class="ok">AVAILABLE COMMANDS</div>
+                <div>help — show commands</div>
+                <div>clear — clear terminal</div>
+                <div>status — system status</div>
+                <div>network — network information</div>
+                <div>time — current time</div>
+                <div>whoami — identify system</div>
+                <div>neofetch — NEXUS system info</div>
+            `;
+
+            break;
 
 
-if(command==="help"){
+        case "clear":
 
-response.innerHTML=`
-<br>
-AVAILABLE COMMANDS<br>
-<br>
-<b>help</b> — show commands<br>
-<b>clear</b> — clear terminal<br>
-<b>about</b> — system information<br>
-<b>status</b> — system status<br>
-<b>time</b> — current time<br>
-<b>hello</b> — say hello<br>
-`;
+            output.innerHTML = "";
 
+            input.value = "";
+
+            return;
+
+
+        case "status":
+
+            response = `
+                <div class="ok">
+                SYSTEM ........ ONLINE
+                </div>
+
+                <div class="ok">
+                NETWORK ....... CONNECTED
+                </div>
+
+                <div class="ok">
+                SECURITY ....... ACTIVE
+                </div>
+
+                <div class="ok">
+                NEXUS CORE ..... RUNNING
+                </div>
+            `;
+
+            break;
+
+
+        case "network":
+
+            response = `
+                <div>
+                NETWORK CENTER
+                </div>
+
+                <div>
+                PUBLIC IP: ${$("ip")?.textContent || "UNKNOWN"}
+                </div>
+
+                <div>
+                LATENCY: ${$("latency")?.textContent || "--"}
+                </div>
+            `;
+
+            break;
+
+
+        case "time":
+
+            response =
+                `<div>${new Date().toLocaleString()}</div>`;
+
+            break;
+
+
+        case "whoami":
+
+            response =
+                `<div>USER: NEXUS OPERATOR</div>`;
+
+            break;
+
+
+        case "neofetch":
+
+            response = `
+                <div style="color:#9d7cff">
+                ███╗   ██╗███████╗██╗  ██╗
+                ████╗  ██║██╔════╝╚██╗██╔╝
+                ██╔██╗ ██║█████╗   ╚███╔╝
+                ██║╚██╗██║██╔══╝   ██╔██╗
+                ██║ ╚████║███████╗██╔╝ ██╗
+                ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝
+                </div>
+
+                <div>
+                NEXUS // AZ
+                </div>
+
+                <div>
+                DIGITAL COMMAND CENTER
+                </div>
+
+                <div>
+                VERSION: 3.0
+                </div>
+
+                <div>
+                STATUS: ONLINE
+                </div>
+            `;
+
+            break;
+
+
+        case "sudo":
+
+            response =
+                `<div style="color:#ff7777">
+                ACCESS DENIED — NICE TRY :)
+                </div>`;
+
+            break;
+
+
+        default:
+
+            response =
+                `<div style="color:#777">
+                Command not found.
+                Type <b>help</b>.
+                </div>`;
+    }
+
+
+    const responseElement =
+        document.createElement("div");
+
+    responseElement.innerHTML =
+        response;
+
+    output.appendChild(responseElement);
+
+    output.scrollTop =
+        output.scrollHeight;
+
+    input.value = "";
 }
 
-else if(command==="clear"){
 
-output.innerHTML="";
+function escapeHTML(text){
 
-input.value="";
-
-return;
-
-}
-
-else if(command==="about"){
-
-response.textContent=
-"NEXUS // AZ — DIGITAL COMMAND CENTER v2.0";
-
-}
-
-else if(command==="status"){
-
-response.innerHTML=
-`NETWORK: <b style="color:#66ffa2">ONLINE</b><br>
-SYSTEM: <b style="color:#66ffa2">STABLE</b><br>
-SECURITY: <b style="color:#66ffa2">ACTIVE</b>`;
-
-}
-
-else if(command==="time"){
-
-response.textContent=
-new Date().toLocaleTimeString("az-AZ");
-
-}
-
-else if(command==="hello"){
-
-response.textContent=
-"Hello, operator. Welcome to NEXUS.";
-
-}
-
-else if(command===""){
-
-response.textContent="";
-
-}
-
-else{
-
-response.textContent=
-"Command not found. Type 'help'.";
-
-}
-
-output.appendChild(response);
-
-input.value="";
-
-output.scrollTop=output.scrollHeight;
-
+    return text
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
 }
 
 
-/* CPU SIMULATION */
+/* =========================================
+   CALCULATOR
+   ========================================= */
 
-function updateCPU(){
+let calculatorValue = "";
 
-const value=
-Math.floor(Math.random()*35)+20;
 
-document.getElementById("cpu").textContent=
-value+"%";
+function calcPress(value){
 
+    if(value === "C"){
+
+        calculatorValue = "";
+
+    }else if(value === "="){
+
+        try{
+
+            calculatorValue =
+                String(
+                    Function(
+                        `"use strict";return (${calculatorValue})`
+                    )()
+                );
+
+        }catch{
+
+            calculatorValue = "ERROR";
+        }
+
+    }else{
+
+        calculatorValue += value;
+
+    }
+
+    if($("calcDisplay"))
+        $("calcDisplay").value =
+            calculatorValue;
 }
 
-updateCPU();
 
-setInterval(updateCPU,1200);
+/* =========================================
+   CATEGORY SYSTEM
+   ========================================= */
+
+function openCategory(category){
+
+    const overlay =
+        $("categoryOverlay");
+
+    if(!overlay) return;
+
+    overlay.classList.add("active");
+
+    showModule(category);
+}
 
 
-/* LIVE STATUS */
+function closeCategory(){
 
-setInterval(()=>{
+    const overlay =
+        $("categoryOverlay");
 
-const bars=
-document.querySelectorAll(".bars span");
+    if(overlay)
+        overlay.classList.remove("active");
+}
 
-bars.forEach(bar=>{
 
-bar.style.height=
-(Math.random()*70+20)+"%";
+function showModule(category){
 
-});
+    document
+        .querySelectorAll(".module-content")
+        .forEach(module => {
 
-},700);
+            module.classList.remove("active");
+
+        });
+
+
+    const target =
+        document.getElementById(
+            "module-" + category
+        );
+
+    if(target)
+        target.classList.add("active");
+}
+
+
+/* =========================================
+   AI DEMO
+   ========================================= */
+
+function sendAI(){
+
+    const input =
+        $("aiInput");
+
+    const messages =
+        $("aiMessages");
+
+    if(!input || !messages) return;
+
+    const text =
+        input.value.trim();
+
+    if(!text) return;
+
+
+    const userMessage =
+        document.createElement("div");
+
+    userMessage.className =
+        "ai-message";
+
+    userMessage.style.marginBottom =
+        "16px";
+
+    userMessage.innerHTML = `
+        <span>YOU</span>
+        <p>${escapeHTML(text)}</p>
+    `;
+
+    messages.appendChild(userMessage);
+
+
+    const thinking =
+        document.createElement("div");
+
+    thinking.className =
+        "ai-message";
+
+    thinking.innerHTML = `
+        <span>AI</span>
+        <p>Processing request...</p>
+    `;
+
+    messages.appendChild(thinking);
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
+    input.value = "";
+
+
+    setTimeout(() => {
+
+        thinking.querySelector("p").textContent =
+            aiLocalResponse(text);
+
+        messages.scrollTop =
+            messages.scrollHeight;
+
+    },700);
+}
+
+
+function aiLocalResponse(text){
+
+    const lower =
+        text.toLowerCase();
+
+    if(
+        lower.includes("salam") ||
+        lower.includes("hello")
+    ){
+
+        return "Salam. NEXUS AI hazırdır. Sualını ver.";
+
+    }
+
+    if(lower.includes("nexus")){
+
+        return "NEXUS // AZ rəqəmsal command center sistemidir.";
+
+    }
+
+    if(
+        lower.includes("ip") ||
+        lower.includes("network")
+    ){
+
+        return "Network məlumatlarını Network Center modulundan yoxlaya bilərsən.";
+
+    }
+
+    if(lower.includes("github")){
+
+        return "GitHub üzərində işləyən NEXUS sisteminin lokal AI interfeysindəsən.";
+
+    }
+
+    return "Sorğun qəbul edildi. Hazırda NEXUS AI demo rejimindədir. Tam AI cavab sistemi üçün təhlükəsiz API bağlantısı əlavə etmək mümkündür.";
+}
+
+
+/* =========================================
+   SYSTEM MONITOR
+   ========================================= */
+
+function updateSystem(){
+
+    const cpu =
+        Math.floor(
+            20 + Math.random()*55
+        );
+
+    if($("cpu"))
+        $("cpu").textContent =
+            cpu + "%";
+
+
+    document
+        .querySelectorAll(".bars span")
+        .forEach(bar => {
+
+            const height =
+                15 + Math.random()*85;
+
+            bar.style.height =
+                height + "%";
+
+        });
+}
+
+setInterval(updateSystem,1000);
+updateSystem();
+
+
+/* =========================================
+   KEYBOARD SHORTCUT
+   ========================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            event.ctrlKey &&
+            event.key.toLowerCase() === "k"
+        ){
+
+            event.preventDefault();
+
+            openTerminal();
+        }
+
+
+        if(event.key === "Escape"){
+
+            closeTerminal();
+            closeCategory();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   OUTSIDE CLICK
+   ========================================= */
+
+document.addEventListener(
+    "click",
+    event => {
+
+        const overlay =
+            $("categoryOverlay");
+
+        if(
+            overlay &&
+            event.target === overlay
+        ){
+
+            closeCategory();
+
+        }
+
+    }
+);
