@@ -1,404 +1,1905 @@
 <!DOCTYPE html>
 <html lang="az">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="theme-color" content="#05050a">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+name="theme-color"
+content="#05050a"
+>
 
 <title>NEXUS // AZ</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link
+rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin
+>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+rel="stylesheet"
+>
 
 <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
+
+<!-- LOADER -->
+
 <div id="loader">
-    <div class="loader-logo">NEXUS<span>//</span>AZ</div>
+
+    <div class="loader-logo">
+        NEXUS<span>//</span>AZ
+    </div>
+
     <div class="loader-line">
         <div></div>
     </div>
-    <small>INITIALIZING SYSTEM</small>
+
+    <small>
+        INITIALIZING SYSTEM
+    </small>
+
 </div>
 
+
 <div class="aurora"></div>
+
 <div class="noise"></div>
+
 <div class="grid"></div>
+
+
+
+<!-- HEADER -->
 
 <header>
 
     <div class="brand">
+
         <div class="brand-mark">
+
             <span></span>
             <span></span>
             <span></span>
+
         </div>
+
 
         <div>
-            <strong>NEXUS<span>//</span>AZ</strong>
-            <small>DIGITAL COMMAND CENTER</small>
+
+            <strong>
+                NEXUS<span>//</span>AZ
+            </strong>
+
+            <small>
+                DIGITAL COMMAND CENTER
+            </small>
+
         </div>
+
     </div>
 
+
     <div class="online">
+
         <i></i>
+
         SYSTEM ONLINE
+
     </div>
 
 </header>
 
 
+
 <main>
+
+
+<!-- HERO -->
 
 <section class="hero">
 
+
     <div class="hero-text">
 
+
         <div class="eyebrow">
+
             <span></span>
+
             SECURE DIGITAL ENVIRONMENT
+
         </div>
 
+
         <h1>
+
             Everything<br>
+
             <span>connected.</span>
+
         </h1>
 
+
         <p>
-            A modern digital command center for network tools,
-            utilities and real-time information.
+
+            Your personal digital command center
+            for tools, network, security,
+            development and everyday work.
+
         </p>
+
 
         <div class="hero-buttons">
 
-            <button class="primary" onclick="scrollTools()">
+            <button
+            class="primary"
+            onclick="openCategory('tools')"
+            >
+
                 EXPLORE SYSTEM
+
                 <b>↗</b>
+
             </button>
 
-            <button class="ghost" onclick="openTerminal()">
+
+            <button
+            class="ghost"
+            onclick="openTerminal()"
+            >
+
                 OPEN TERMINAL
+
             </button>
 
         </div>
 
+
     </div>
 
+
+
+    <!-- STATUS PANEL -->
 
     <div class="hero-status">
 
-        <div class="time-label">LOCAL TIME</div>
-
-        <div id="clock">00:00</div>
-
-        <div id="date">Loading...</div>
-
-        <div class="status-bar">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+        <div class="time-label">
+            LOCAL TIME
         </div>
 
-        <small>SECURE CONNECTION ESTABLISHED</small>
+
+        <div id="clock">
+            00:00
+        </div>
+
+
+        <div id="date">
+            Loading...
+        </div>
+
+
+        <div class="status-bar">
+
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </div>
+
+
+        <small>
+            SECURE CONNECTION ESTABLISHED
+        </small>
 
     </div>
 
+
 </section>
 
+
+
+<!-- SYSTEM STATS -->
 
 <section class="stats">
 
-    <div>
-        <small>NETWORK</small>
-        <strong id="networkStatus">ONLINE</strong>
-    </div>
 
     <div>
-        <small>YOUR IP</small>
-        <strong id="ip">Detecting...</strong>
+
+        <small>
+            NETWORK
+        </small>
+
+        <strong id="networkStatus">
+            ONLINE
+        </strong>
+
     </div>
 
-    <div>
-        <small>LATENCY</small>
-        <strong id="latency">-- ms</strong>
-    </div>
 
     <div>
-        <small>SYSTEM</small>
-        <strong class="green">STABLE</strong>
+
+        <small>
+            YOUR IP
+        </small>
+
+        <strong id="ip">
+            Detecting...
+        </strong>
+
     </div>
+
+
+    <div>
+
+        <small>
+            LATENCY
+        </small>
+
+        <strong id="latency">
+            -- ms
+        </strong>
+
+    </div>
+
+
+    <div>
+
+        <small>
+            SYSTEM
+        </small>
+
+        <strong class="green">
+            STABLE
+        </strong>
+
+    </div>
+
 
 </section>
 
 
-<div id="tools"></div>
 
+<!-- CATEGORY HEADER -->
 
 <section class="section-title">
 
     <div>
-        <small>AVAILABLE MODULES</small>
-        <h2>Digital tools.</h2>
+
+        <small>
+            NEXUS MODULES
+        </small>
+
+        <h2>
+            Digital command.
+        </h2>
+
     </div>
 
-    <span>06 MODULES</span>
+
+    <span>
+        08 MODULES
+    </span>
 
 </section>
 
 
-<section class="cards">
+
+<!-- CATEGORY GRID -->
+
+<section class="category-grid">
 
 
-    <article class="card network-card">
 
-        <div class="card-icon">◉</div>
+<!-- TOOLS -->
 
-        <div class="card-head">
-            <small>01 / NETWORK</small>
-            <span>LIVE</span>
+<article
+class="category-card"
+onclick="openCategory('tools')"
+>
+
+    <div class="category-icon tools-icon">
+
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+
+    </div>
+
+
+    <div class="category-meta">
+
+        <small>
+            01 / UTILITY
+        </small>
+
+        <span>
+            READY
+        </span>
+
+    </div>
+
+
+    <h3>
+        Tools
+    </h3>
+
+
+    <p>
+        QR, calculator, converter,
+        timer and everyday utilities.
+    </p>
+
+
+    <div class="category-arrow">
+        ↗
+    </div>
+
+</article>
+
+
+
+<!-- NETWORK -->
+
+<article
+class="category-card"
+onclick="openCategory('network')"
+>
+
+    <div class="category-icon network-icon">
+
+        <div></div>
+
+    </div>
+
+
+    <div class="category-meta">
+
+        <small>
+            02 / NETWORK
+        </small>
+
+        <span class="live">
+            LIVE
+        </span>
+
+    </div>
+
+
+    <h3>
+        Network
+    </h3>
+
+
+    <p>
+        IP, DNS, connection,
+        latency and navigator.
+    </p>
+
+
+    <div class="category-arrow">
+        ↗
+    </div>
+
+</article>
+
+
+
+<!-- SECURITY -->
+
+<article
+class="category-card"
+onclick="openCategory('security')"
+>
+
+    <div class="category-icon security-icon">
+
+        <div class="shield-shape">
+            N
         </div>
 
-        <h3>Connection</h3>
+    </div>
 
-        <p>
-            Check your public IP and connection status.
-        </p>
 
-        <div class="network-details">
+    <div class="category-meta">
+
+        <small>
+            03 / SECURITY
+        </small>
+
+        <span>
+            LOCAL
+        </span>
+
+    </div>
+
+
+    <h3>
+        Security
+    </h3>
+
+
+    <p>
+        Passwords, hashes,
+        encoding and security tools.
+    </p>
+
+
+    <div class="category-arrow">
+        ↗
+    </div>
+
+</article>
+
+
+
+<!-- DEV LAB -->
+
+<article
+class="category-card"
+onclick="openCategory('devlab')"
+>
+
+    <div class="category-icon dev-icon">
+
+        <span>_</span>
+
+        <span>›</span>
+
+    </div>
+
+
+    <div class="category-meta">
+
+        <small>
+            04 / DEVELOPMENT
+        </small>
+
+        <span>
+            LAB
+        </span>
+
+    </div>
+
+
+    <h3>
+        Dev Lab
+    </h3>
+
+
+    <p>
+        Terminal, JSON, regex,
+        timestamps and developer tools.
+    </p>
+
+
+    <div class="category-arrow">
+        ↗
+    </div>
+
+</article>
+
+
+
+<!-- MEDIA -->
+
+<article
+class="category-card"
+onclick="openCategory('media')"
+>
+
+    <div class="category-icon media-icon">
+
+        <div></div>
+
+    </div>
+
+
+    <div class="category-meta">
+
+        <small>
+            05 / MEDIA
+        </small>
+
+        <span>
+            PLAYER
+        </span>
+
+    </div>
+
+
+    <h3>
+        Media
+    </h3>
+
+
+    <p>
+        Music player with
+        AZ & TR playlists.
+    </p>
+
+
+    <div class="category-arrow">
+        ↗
+    </div>
+
+</article>
+
+
+
+<!-- WORLD -->
+
+<article
+class="category-card"
+onclick="openCategory('world')"
+>
+
+    <div class="category-icon world-icon">
+
+        <div class="world-ring"></div>
+
+        <div class="world-line"></div>
+
+    </div>
+
+
+    <div class="category-meta">
+
+        <small>
+            06 / WORLD
+        </small>
+
+        <span>
+            MAP
+        </span>
+
+    </div>
+
+
+    <h3>
+        World
+    </h3>
+
+
+    <p>
+        Live map, location,
+        timezone and navigator.
+    </p>
+
+
+    <div class="category-arrow">
+        ↗
+    </div>
+
+</article>
+
+
+
+<!-- OFFICE -->
+
+<article
+class="category-card"
+onclick="openCategory('office')"
+>
+
+    <div class="category-icon office-icon">
+
+        <div></div>
+
+        <div></div>
+
+    </div>
+
+
+    <div class="category-meta">
+
+        <small>
+            07 / WORK
+        </small>
+
+        <span>
+            OFFICE
+        </span>
+
+    </div>
+
+
+    <h3>
+        Office
+    </h3>
+
+
+    <p>
+        Notes, tasks, Pomodoro,
+        meeting and work utilities.
+    </p>
+
+
+    <div class="category-arrow">
+        ↗
+    </div>
+
+</article>
+
+
+
+<!-- AI -->
+
+<article
+class="category-card ai-card"
+onclick="openCategory('ai')"
+>
+
+    <div class="category-icon ai-icon">
+
+        <div class="ai-core">
+            N
+        </div>
+
+        <span></span>
+        <span></span>
+        <span></span>
+
+    </div>
+
+
+    <div class="category-meta">
+
+        <small>
+            08 / INTELLIGENCE
+        </small>
+
+        <span class="ai-status">
+            AI
+        </span>
+
+    </div>
+
+
+    <h3>
+        NEXUS AI
+    </h3>
+
+
+    <p>
+        Intelligent assistant for
+        questions, ideas and work.
+    </p>
+
+
+    <div class="category-arrow">
+        ↗
+    </div>
+
+</article>
+
+
+</section>
+
+
+
+<!-- CATEGORY MODAL -->
+
+<div
+id="categoryOverlay"
+class="category-overlay"
+onclick="closeCategory(event)"
+>
+
+
+    <div
+    class="category-panel"
+    onclick="event.stopPropagation()"
+    >
+
+
+        <div class="panel-header">
+
 
             <div>
-                <small>IP ADDRESS</small>
-                <b id="ip2">Detecting...</b>
+
+                <small id="panelNumber">
+                    MODULE
+                </small>
+
+                <h2 id="panelTitle">
+                    NEXUS
+                </h2>
+
             </div>
 
-            <div>
-                <small>STATUS</small>
-                <b class="green">CONNECTED</b>
-            </div>
 
-        </div>
-
-        <button onclick="getIP()">REFRESH →</button>
-
-    </article>
-
-
-    <article class="card">
-
-        <div class="card-icon">⌁</div>
-
-        <div class="card-head">
-            <small>02 / SECURITY</small>
-            <span>LOCAL</span>
-        </div>
-
-        <h3>Password</h3>
-
-        <p>
-            Generate a secure random password.
-        </p>
-
-        <div class="password">
-
-            <div id="password">
-                ••••••••••••••••
-            </div>
-
-            <button onclick="generatePassword()">
-                GENERATE
+            <button
+            class="panel-close"
+            onclick="closeCategory()"
+            >
+                ×
             </button>
 
+
         </div>
 
-    </article>
 
 
-    <article class="card">
+        <!-- TOOLS PANEL -->
 
-        <div class="card-icon">⌗</div>
-
-        <div class="card-head">
-            <small>03 / UTILITY</small>
-            <span>READY</span>
-        </div>
-
-        <h3>QR Generator</h3>
-
-        <p>
-            Convert text or links into a QR code.
-        </p>
-
-        <input
-            id="qrText"
-            placeholder="Enter URL or text..."
+        <div
+        class="module-content"
+        id="module-tools"
         >
 
-        <button onclick="generateQR()">
-            CREATE QR →
-        </button>
-
-        <div id="qr"></div>
-
-    </article>
+            <div class="module-grid">
 
 
-    <article class="card">
+                <button
+                class="tool-item"
+                onclick="openTool('qr')"
+                >
 
-        <div class="card-icon">↗</div>
+                    <div class="mini-icon">
+                        ⌗
+                    </div>
 
-        <div class="card-head">
-            <small>04 / ANALYZER</small>
-            <span>SCANNER</span>
+                    <strong>
+                        QR Generator
+                    </strong>
+
+                    <small>
+                        CREATE QR CODE
+                    </small>
+
+                </button>
+
+
+                <button
+                class="tool-item"
+                onclick="openTool('calculator')"
+                >
+
+                    <div class="mini-icon">
+                        +
+                    </div>
+
+                    <strong>
+                        Calculator
+                    </strong>
+
+                    <small>
+                        QUICK CALCULATOR
+                    </small>
+
+                </button>
+
+
+                <button
+                class="tool-item"
+                >
+
+                    <div class="mini-icon">
+                        ⇄
+                    </div>
+
+                    <strong>
+                        Converter
+                    </strong>
+
+                    <small>
+                        UNIT CONVERTER
+                    </small>
+
+                </button>
+
+
+                <button
+                class="tool-item"
+                >
+
+                    <div class="mini-icon">
+                        ◷
+                    </div>
+
+                    <strong>
+                        Timer
+                    </strong>
+
+                    <small>
+                        TIMER & STOPWATCH
+                    </small>
+
+                </button>
+
+
+                <button
+                class="tool-item"
+                >
+
+                    <div class="mini-icon">
+                        #
+                    </div>
+
+                    <strong>
+                        UUID Generator
+                    </strong>
+
+                    <small>
+                        RANDOM UUID
+                    </small>
+
+                </button>
+
+
+                <button
+                class="tool-item"
+                >
+
+                    <div class="mini-icon">
+                        %
+                    </div>
+
+                    <strong>
+                        Percentage
+                    </strong>
+
+                    <small>
+                        QUICK CALCULATION
+                    </small>
+
+                </button>
+
+
+            </div>
+
         </div>
 
-        <h3>URL Analyzer</h3>
 
-        <p>
-            Inspect the structure of any URL.
-        </p>
 
-        <div class="url-box">
+        <!-- NETWORK PANEL -->
+
+        <div
+        class="module-content"
+        id="module-network"
+        >
+
+            <div class="network-dashboard">
+
+
+                <div class="network-big">
+
+                    <small>
+                        PUBLIC IP
+                    </small>
+
+                    <strong id="networkIP">
+                        Detecting...
+                    </strong>
+
+                    <span class="green">
+                        ● CONNECTION ACTIVE
+                    </span>
+
+                </div>
+
+
+                <div class="network-grid">
+
+
+                    <div>
+                        <small>
+                            LATENCY
+                        </small>
+
+                        <strong id="networkLatency">
+                            -- ms
+                        </strong>
+                    </div>
+
+
+                    <div>
+                        <small>
+                            STATUS
+                        </small>
+
+                        <strong class="green">
+                            ONLINE
+                        </strong>
+                    </div>
+
+
+                    <div>
+                        <small>
+                            BROWSER
+                        </small>
+
+                        <strong id="browserInfo">
+                            DETECTING
+                        </strong>
+                    </div>
+
+
+                    <div>
+                        <small>
+                            PLATFORM
+                        </small>
+
+                        <strong id="platformInfo">
+                            DETECTING
+                        </strong>
+                    </div>
+
+
+                </div>
+
+
+                <button
+                class="panel-action"
+                onclick="getIP()"
+                >
+                    REFRESH NETWORK →
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- SECURITY PANEL -->
+
+        <div
+        class="module-content"
+        id="module-security"
+        >
+
+            <div class="module-grid">
+
+
+                <button
+                class="tool-item"
+                onclick="openTool('password')"
+                >
+
+                    <div class="mini-icon">
+                        ◈
+                    </div>
+
+                    <strong>
+                        Password Generator
+                    </strong>
+
+                    <small>
+                        SECURE PASSWORD
+                    </small>
+
+                </button>
+
+
+                <button
+                class="tool-item"
+                >
+
+                    <div class="mini-icon">
+                        #
+                    </div>
+
+                    <strong>
+                        SHA-256 Hash
+                    </strong>
+
+                    <small>
+                        HASH TEXT LOCALLY
+                    </small>
+
+                </button>
+
+
+                <button
+                class="tool-item"
+                >
+
+                    <div class="mini-icon">
+                        ⇄
+                    </div>
+
+                    <strong>
+                        Base64
+                    </strong>
+
+                    <small>
+                        ENCODE / DECODE
+                    </small>
+
+                </button>
+
+
+                <button
+                class="tool-item"
+                >
+
+                    <div class="mini-icon">
+                        ◇
+                    </div>
+
+                    <strong>
+                        Token Generator
+                    </strong>
+
+                    <small>
+                        RANDOM TOKEN
+                    </small>
+
+                </button>
+
+
+                <button
+                class="tool-item"
+                >
+
+                    <div class="mini-icon">
+                        JWT
+                    </div>
+
+                    <strong>
+                        JWT Decoder
+                    </strong>
+
+                    <small>
+                        INSPECT JWT
+                    </small>
+
+                </button>
+
+
+                <button
+                class="tool-item"
+                >
+
+                    <div class="mini-icon">
+                        @
+                    </div>
+
+                    <strong>
+                        URL Encoder
+                    </strong>
+
+                    <small>
+                        ENCODE / DECODE
+                    </small>
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- DEV LAB -->
+
+        <div
+        class="module-content"
+        id="module-devlab"
+        >
+
+            <div class="module-grid">
+
+
+                <button
+                class="tool-item"
+                onclick="openTerminal()"
+                >
+
+                    <div class="mini-icon">
+                        >_
+                    </div>
+
+                    <strong>
+                        NEXUS Terminal
+                    </strong>
+
+                    <small>
+                        COMMAND INTERFACE
+                    </small>
+
+                </button>
+
+
+                <button
+                class="tool-item"
+                >
+
+                    <div class="mini-icon">
+                        {}
+                    </div>
+
+                    <strong>
+                        JSON Lab
+                    </strong>
+
+                    <small>
+                        FORMAT / VALIDATE
+                    </small>
+
+                </button>
+
+
+                <button
+                class="tool-item"
+                >
+
+                    <div class="mini-icon">
+                        /_
+                    </div>
+
+                    <strong>
+                        Regex Tester
+                    </strong>
+
+                    <small>
+                        TEST EXPRESSIONS
+                    </small>
+
+                </button>
+
+
+                <button
+                class="tool-item"
+                >
+
+                    <div class="mini-icon">
+                        T
+                    </div>
+
+                    <strong>
+                        Timestamp
+                    </strong>
+
+                    <small>
+                        TIME CONVERTER
+                    </small>
+
+                </button>
+
+
+                <button
+                class="tool-item"
+                >
+
+                    <div class="mini-icon">
+                        &lt;/&gt;
+                    </div>
+
+                    <strong>
+                        HTML Tools
+                    </strong>
+
+                    <small>
+                        FORMAT / ESCAPE
+                    </small>
+
+                </button>
+
+
+                <button
+                class="tool-item"
+                >
+
+                    <div class="mini-icon">
+                        RGB
+                    </div>
+
+                    <strong>
+                        Color Lab
+                    </strong>
+
+                    <small>
+                        COLOR CONVERTER
+                    </small>
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- MEDIA -->
+
+        <div
+        class="module-content"
+        id="module-media"
+        >
+
+            <div class="music-player">
+
+
+                <div class="album-art">
+
+                    <div class="music-orbit"></div>
+
+                    <div class="music-core">
+                        N
+                    </div>
+
+                </div>
+
+
+                <div class="music-info">
+
+                    <small>
+                        NEXUS RADIO
+                    </small>
+
+                    <h3 id="songTitle">
+                        NEXUS MIX
+                    </h3>
+
+                    <p id="songArtist">
+                        AZ / TR TRENDING
+                    </p>
+
+
+                    <div class="music-progress">
+
+                        <div></div>
+
+                    </div>
+
+
+                    <div class="music-time">
+
+                        <span>
+                            00:00
+                        </span>
+
+                        <span>
+                            LIVE
+                        </span>
+
+                    </div>
+
+
+                    <div class="music-controls">
+
+                        <button>
+                            ↶
+                        </button>
+
+                        <button class="play-button">
+                            ▶
+                        </button>
+
+                        <button>
+                            ↷
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="music-categories">
+
+                <button class="active">
+                    AZ POP
+                </button>
+
+                <button>
+                    AZ RAP
+                </button>
+
+                <button>
+                    TR POP
+                </button>
+
+                <button>
+                    TR RAP
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- WORLD -->
+
+        <div
+        class="module-content"
+        id="module-world"
+        >
+
+            <div class="world-preview">
+
+
+                <div class="fake-map">
+
+                    <div class="map-grid"></div>
+
+                    <div class="map-line line-one"></div>
+
+                    <div class="map-line line-two"></div>
+
+                    <div class="map-point">
+                        <span></span>
+                    </div>
+
+                    <div class="map-label">
+                        BAKU / AZ
+                    </div>
+
+                </div>
+
+
+                <div class="world-info">
+
+                    <small>
+                        CURRENT LOCATION
+                    </small>
+
+                    <h3>
+                        Azerbaijan
+                    </h3>
+
+                    <p>
+                        Location permission can be
+                        enabled from your browser.
+                    </p>
+
+
+                    <button
+                    class="panel-action"
+                    onclick="requestLocation()"
+                    >
+                        LOCATE ME →
+                    </button>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- OFFICE -->
+
+        <div
+        class="module-content"
+        id="module-office"
+        >
+
+            <div class="module-grid">
+
+
+                <button class="tool-item">
+
+                    <div class="mini-icon">
+                        □
+                    </div>
+
+                    <strong>
+                        Quick Notes
+                    </strong>
+
+                    <small>
+                        PERSONAL NOTES
+                    </small>
+
+                </button>
+
+
+                <button class="tool-item">
+
+                    <div class="mini-icon">
+                        ✓
+                    </div>
+
+                    <strong>
+                        To-Do
+                    </strong>
+
+                    <small>
+                        TASK MANAGER
+                    </small>
+
+                </button>
+
+
+                <button class="tool-item">
+
+                    <div class="mini-icon">
+                        ◷
+                    </div>
+
+                    <strong>
+                        Pomodoro
+                    </strong>
+
+                    <small>
+                        FOCUS TIMER
+                    </small>
+
+                </button>
+
+
+                <button class="tool-item">
+
+                    <div class="mini-icon">
+                        %
+                    </div>
+
+                    <strong>
+                        VAT Calculator
+                    </strong>
+
+                    <small>
+                        BUSINESS TOOL
+                    </small>
+
+                </button>
+
+
+                <button class="tool-item">
+
+                    <div class="mini-icon">
+                        ₼
+                    </div>
+
+                    <strong>
+                        Salary Calculator
+                    </strong>
+
+                    <small>
+                        WORK CALCULATOR
+                    </small>
+
+                </button>
+
+
+                <button class="tool-item">
+
+                    <div class="mini-icon">
+                        ⏱
+                    </div>
+
+                    <strong>
+                        Meeting Timer
+                    </strong>
+
+                    <small>
+                        TIME TRACKER
+                    </small>
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- AI -->
+
+        <div
+        class="module-content"
+        id="module-ai"
+        >
+
+            <div class="ai-interface">
+
+
+                <div class="ai-header">
+
+                    <div class="ai-avatar">
+                        N
+                    </div>
+
+
+                    <div>
+
+                        <small>
+                            NEXUS INTELLIGENCE
+                        </small>
+
+                        <h3>
+                            How can I help?
+                        </h3>
+
+                    </div>
+
+
+                    <span class="ai-online">
+                        ● ONLINE
+                    </span>
+
+                </div>
+
+
+                <div
+                class="ai-messages"
+                id="aiMessages"
+                >
+
+                    <div class="ai-message">
+
+                        <span>
+                            N
+                        </span>
+
+                        <p>
+                            NEXUS AI hazırdır.
+                            Sualını, ideyanı və ya
+                            tapşırığını yaz.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="ai-input">
+
+                    <input
+                    id="aiInput"
+                    placeholder="Ask NEXUS anything..."
+                    >
+
+                    <button
+                    onclick="sendAIMessage()"
+                    >
+                        →
+                    </button>
+
+                </div>
+
+
+                <small class="ai-note">
+                    AI connection will be secured
+                    through a backend endpoint.
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- QR TOOL -->
+
+        <div
+        class="tool-screen"
+        id="tool-qr"
+        >
+
+            <button
+            class="back-tool"
+            onclick="backToModule()"
+            >
+                ← BACK
+            </button>
+
+
+            <h3>
+                QR Generator
+            </h3>
+
+
+            <p>
+                Convert text or links into a QR code.
+            </p>
+
 
             <input
-                id="urlInput"
-                placeholder="https://example.com"
+            id="qrText"
+            class="large-input"
+            placeholder="Enter URL or text..."
             >
 
-            <button onclick="analyzeURL()">
-                SCAN
+
+            <button
+            class="panel-action"
+            onclick="generateQR()"
+            >
+                GENERATE QR →
+            </button>
+
+
+            <div id="qr"></div>
+
+        </div>
+
+
+
+        <!-- CALCULATOR -->
+
+        <div
+        class="tool-screen"
+        id="tool-calculator"
+        >
+
+            <button
+            class="back-tool"
+            onclick="backToModule()"
+            >
+                ← BACK
+            </button>
+
+
+            <h3>
+                Calculator
+            </h3>
+
+
+            <div class="calculator">
+
+                <input
+                id="calcDisplay"
+                readonly
+                value="0"
+                >
+
+
+                <div class="calc-buttons">
+
+                    <button onclick="calcClear()">
+                        C
+                    </button>
+
+                    <button onclick="calcInput('/')">
+                        ÷
+                    </button>
+
+                    <button onclick="calcInput('*')">
+                        ×
+                    </button>
+
+                    <button onclick="calcInput('-')">
+                        −
+                    </button>
+
+
+                    <button onclick="calcInput('7')">
+                        7
+                    </button>
+
+                    <button onclick="calcInput('8')">
+                        8
+                    </button>
+
+                    <button onclick="calcInput('9')">
+                        9
+                    </button>
+
+                    <button onclick="calcInput('+')">
+                        +
+                    </button>
+
+
+                    <button onclick="calcInput('4')">
+                        4
+                    </button>
+
+                    <button onclick="calcInput('5')">
+                        5
+                    </button>
+
+                    <button onclick="calcInput('6')">
+                        6
+                    </button>
+
+                    <button onclick="calcResult()">
+                        =
+                    </button>
+
+
+                    <button onclick="calcInput('1')">
+                        1
+                    </button>
+
+                    <button onclick="calcInput('2')">
+                        2
+                    </button>
+
+                    <button onclick="calcInput('3')">
+                        3
+                    </button>
+
+                    <button onclick="calcInput('0')">
+                        0
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- PASSWORD -->
+
+        <div
+        class="tool-screen"
+        id="tool-password"
+        >
+
+            <button
+            class="back-tool"
+            onclick="backToModule()"
+            >
+                ← BACK
+            </button>
+
+
+            <h3>
+                Password Generator
+            </h3>
+
+
+            <p>
+                Generate a secure random password locally.
+            </p>
+
+
+            <div
+            id="securePassword"
+            class="generated-value"
+            >
+                ••••••••••••••••••••
+            </div>
+
+
+            <button
+            class="panel-action"
+            onclick="generateSecurePassword()"
+            >
+                GENERATE PASSWORD →
             </button>
 
         </div>
 
-        <div id="urlResult">
-            Waiting for target...
-        </div>
-
-    </article>
 
 
-    <article class="card terminal-module">
+    </div>
 
-        <div class="card-icon">_</div>
-
-        <div class="card-head">
-            <small>05 / TERMINAL</small>
-            <span>INTERACTIVE</span>
-        </div>
-
-        <h3>NEXUS Terminal</h3>
-
-        <p>
-            Interactive command interface.
-        </p>
-
-        <button onclick="openTerminal()">
-            OPEN TERMINAL →
-        </button>
-
-    </article>
+</div>
 
 
-    <article class="card">
 
-        <div class="card-icon">✦</div>
+<!-- TERMINAL -->
 
-        <div class="card-head">
-            <small>06 / SYSTEM</small>
-            <span>REALTIME</span>
-        </div>
+<section
+class="terminal-window"
+id="terminalWindow"
+>
 
-        <h3>System Monitor</h3>
-
-        <p>
-            Real-time simulated system activity.
-        </p>
-
-        <div class="bars">
-
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-
-        </div>
-
-        <div class="monitor">
-            <span>CPU</span>
-            <b id="cpu">--%</b>
-        </div>
-
-    </article>
-
-</section>
-
-
-<section class="terminal-window" id="terminalWindow">
 
     <div class="terminal-top">
 
-        <span>NEXUS TERMINAL</span>
+        <span>
+            NEXUS TERMINAL
+        </span>
 
-        <button onclick="closeTerminal()">×</button>
+
+        <button
+        onclick="closeTerminal()"
+        >
+            ×
+        </button>
 
     </div>
+
 
     <div id="terminalOutput">
 
-        <div>NEXUS OS v2.0</div>
-        <div>Initializing environment...</div>
-        <div class="ok">NETWORK ............... OK</div>
-        <div class="ok">SECURITY .............. OK</div>
-        <div class="ok">SYSTEM ................ OK</div>
+        <div>
+            NEXUS OS v3.0
+        </div>
+
+        <div>
+            Initializing environment...
+        </div>
+
+        <div class="ok">
+            NETWORK ............... OK
+        </div>
+
+        <div class="ok">
+            SECURITY .............. OK
+        </div>
+
+        <div class="ok">
+            SYSTEM ................ OK
+        </div>
+
         <br>
-        <div>Type <b>help</b> to see available commands.</div>
+
+        <div>
+            Type <b>help</b>
+            to see available commands.
+        </div>
 
     </div>
 
+
     <div class="terminal-input">
 
-        <span>nexus@az:~$</span>
+        <span>
+            nexus@az:~$
+        </span>
+
 
         <input
-            id="terminalInput"
-            autocomplete="off"
-            onkeydown="terminalCommand(event)"
+        id="terminalInput"
+        autocomplete="off"
+        onkeydown="terminalCommand(event)"
         >
 
     </div>
 
+
 </section>
+
+
 
 </main>
 
 
+
+<!-- FOOTER -->
+
 <footer>
 
-    <strong>NEXUS<span>//</span>AZ</strong>
+    <strong>
+        NEXUS<span>//</span>AZ
+    </strong>
+
 
     <div>
-        SYSTEM v2.0
-        <span>•</span>
-        BUILT ON GITHUB
+
+        SYSTEM v3.0
+
+        <span>
+            •
+        </span>
+
+        DIGITAL COMMAND CENTER
+
     </div>
 
 </footer>
 
 
+
 <script src="script.js"></script>
 
 </body>
+
 </html>
