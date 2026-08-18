@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXUS // AZ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="background">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="grid"></div>
+</div>
+
+<header>
+  <div class="logo">
+    <span class="logo-dot"></span>
+    NEXUS<span>//</span>AZ
+  </div>
+
+  <div class="status">
+    <span></span> SYSTEM ONLINE
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div>
+      <p class="eyebrow">DIGITAL COMMAND CENTER</p>
+
+      <h1>
+        Your digital world,
+        <span>one place.</span>
+      </h1>
+
+      <p class="subtitle">
+        Tools, information and utilities built into one futuristic dashboard.
+      </p>
+    </div>
+
+    <div class="clock-card">
+      <div id="clock">00:00:00</div>
+      <small id="date">Loading...</small>
+    </div>
+  </section>
+
+
+  <section class="dashboard">
+
+    <div class="card large-card">
+      <div class="card-top">
+        <span>NETWORK</span>
+        <span class="icon">◉</span>
+      </div>
+
+      <h2>Connection</h2>
+
+      <div class="network-info">
+        <div>
+          <small>YOUR IP</small>
+          <strong id="ip">Detecting...</strong>
+        </div>
+
+        <div>
+          <small>STATUS</small>
+          <strong class="online">CONNECTED</strong>
+        </div>
+      </div>
+
+      <button onclick="getIP()">Refresh connection</button>
+    </div>
+
+
+    <div class="card">
+      <div class="card-top">
+        <span>SECURITY</span>
+        <span class="icon">⌁</span>
+      </div>
+
+      <h2>Password</h2>
+
+      <div class="password-box">
+        <span id="password">••••••••••••</span>
+        <button onclick="generatePassword()">GENERATE</button>
+      </div>
+    </div>
+
+
+    <div class="card">
+      <div class="card-top">
+        <span>QUICK TOOL</span>
+        <span class="icon">⌗</span>
+      </div>
+
+      <h2>QR Generator</h2>
+
+      <input id="qrText" placeholder="Enter text or URL">
+
+      <button onclick="generateQR()">CREATE QR</button>
+
+      <div id="qr"></div>
+    </div>
+
+
+    <div class="card large-card">
+      <div class="card-top">
+        <span>URL ANALYZER</span>
+        <span class="icon">↗</span>
+      </div>
+
+      <h2>Analyze a URL</h2>
+
+      <div class="url-input">
+        <input id="urlInput" placeholder="https://example.com">
+        <button onclick="analyzeURL()">SCAN</button>
+      </div>
+
+      <div id="urlResult" class="result">
+        Waiting for target...
+      </div>
+    </div>
+
+
+    <div class="card terminal-card">
+
+      <div class="card-top">
+        <span>NEXUS TERMINAL</span>
+        <span class="icon">_</span>
+      </div>
+
+      <div class="terminal" id="terminal">
+
+        <p> NEXUS OS v1.0</p>
+        <p> Initializing system...</p>
+        <p> Network module ........ <b>OK</b></p>
+        <p> Security module ...... <b>OK</b></p>
+        <p> Interface ............ <b>OK</b></p>
+        <p class="cursor">▋</p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  <span>NEXUS // AZ</span>
+  <span>BUILT FOR THE WEB</span>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
