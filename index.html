@@ -3,27 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEXUS // AZ - Digital Command Center</title>
+  <title>NEXUS // AZ - Command Center</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+  <div class="bg-glow"></div>
   <div class="grid"></div>
 
   <!-- Header -->
   <header>
     <a class="brand" onclick="location.reload()">
-      <span class="mark"><i></i><i></i><i></i></span>
-      <span><b>NEXUS<span>//</span>AZ</b><small>DIGITAL COMMAND CENTER</small></span>
+      <div class="brand-logo">
+        <span class="bar"></span>
+        <span class="bar main"></span>
+        <span class="bar"></span>
+      </div>
+      <div class="brand-text">
+        <b>NEXUS<span>//</span>AZ</b>
+        <small>COMMAND CENTER</small>
+      </div>
     </a>
     <div class="head-right">
-      <button id="searchBtn">⌕ <span>Axtar</span></button>
-      <button class="action" onclick="openChatGPTModal()">✦ <span>NEXUS AI (ChatGPT)</span></button>
-      <label><i></i>SİSTEM ONLAYN</label>
+      <button class="icon-btn" onclick="openSearchModal()">⌕ <span>Axtar</span></button>
+      <button class="action-btn ai-btn" onclick="openChatGPTModal()">✦ <span>NEXUS AI</span></button>
+      <div class="status-badge">
+        <span class="pulse-dot"></span>
+        <span>ONLINE</span>
+      </div>
     </div>
   </header>
 
@@ -31,45 +42,48 @@
   <main>
     <!-- Hero Section -->
     <section class="hero">
-      <div>
-        <small class="eyebrow">RƏQƏMSAL İŞ MÜHİTİ</small>
-        <h1>Hər şey <em>bir mərkəzdə.</em></h1>
-        <p>Gündəlik iş, developer, şəbəkə, təhlükəsizlik, office alətləri və süni intellekt köməkçisi — tək bir müasir platformada.</p>
+      <div class="hero-left">
+        <div class="eyebrow-wrapper">
+          <span class="eyebrow-dot"></span>
+          <small class="eyebrow">RƏQƏMSAL İŞ MÜHİTİ v5.0</small>
+        </div>
+        <h1>İşinizi <em>mərkəzləşdirin.</em></h1>
+        <p>Gündəlik developer alətləri, təhlükəsizlik mühiti, office redaktorları və AI köməkçisi — vahid, ultra-müasir idarəetmə panelində.</p>
       </div>
-      <aside>
-        <strong id="clock">00:00:00</strong>
-        <small id="date">Yüklənir...</small>
-        <span>● Bütün sistemlər hazırdır</span>
+      <aside class="clock-card">
+        <div class="clock-display" id="clock">00:00:00</div>
+        <div class="date-display" id="date">Yüklənir...</div>
+        <div class="sys-status">● Bütün sistemlər aktivdir</div>
       </aside>
     </section>
 
     <!-- Categories Section Title -->
-    <div class="section-title">
+    <div class="section-header">
       <div>
-        <small>ƏSAS MENYU</small>
-        <h2>Xidmət Kateqoriyaları</h2>
+        <small class="sub-label">XİDMƏTLƏR</small>
+        <h2>Kateqoriyalar</h2>
       </div>
-      <small id="catCount">08 KATEQORİYA</small>
+      <span class="badge-count">08 KATEQORİYA</span>
     </div>
 
-    <!-- 4x2 Categories Grid + Sub-tools Expandable Drawer -->
+    <!-- 4x2 Categories Grid -->
     <div id="categoriesGrid" class="categories-grid"></div>
 
     <!-- Quick Bar -->
     <div class="quick-bar">
-      <div class="quick-card">
-        <span style="font-size:24px">⌕</span>
-        <div style="flex:1">
-          <small class="quick-title">SÜRƏTLİ AXTARIŞ</small>
-          <b class="quick-desc">Bütün 25+ alət içində axtarış et</b>
+      <div class="quick-card" onclick="openSearchModal()">
+        <div class="q-icon">⌕</div>
+        <div class="q-info">
+          <small>SÜRƏTLİ AXTARIŞ</small>
+          <b>Bütün 25+ alət içində axtarış et</b>
         </div>
-        <button class="action" onclick="openSearchModal()">Axtar →</button>
+        <button class="action-btn">Axtar →</button>
       </div>
       <div class="quick-card">
-        <span style="font-size:24px">◷</span>
-        <div>
-          <small class="quick-title">SİSTEM SAATI</small>
-          <b id="quickClock" class="quick-clock-val">—</b>
+        <div class="q-icon">◷</div>
+        <div class="q-info">
+          <small>SİSTEM SAATI</small>
+          <b id="quickClock" class="q-clock-val">—</b>
         </div>
       </div>
     </div>
@@ -77,19 +91,33 @@
 
   <!-- Floating AI Orb -->
   <button class="ai-orb" onclick="openChatGPTModal()">
-    <span>✦</span>
+    <span class="orb-sparkle">✦</span>
     <small>NEXUS AI</small>
   </button>
 
-  <!-- Tool Modal -->
+  <!-- Category Modal (Pəncərə Şəklində Sub-Menyu) -->
+  <div id="categoryModal" class="overlay">
+    <div class="modal cat-modal">
+      <div class="modalhead">
+        <div>
+          <small id="catModalBadge" class="modal-badge">KATEQORİYA</small>
+          <h2 id="catModalTitle">Kateqoriya Alətləri</h2>
+        </div>
+        <button class="close-btn" onclick="closeAllModals()">×</button>
+      </div>
+      <div id="catModalBody" class="cat-modal-grid"></div>
+    </div>
+  </div>
+
+  <!-- Tool Execution Modal -->
   <div id="toolModal" class="overlay">
     <div class="modal">
       <div class="modalhead">
         <div>
-          <small style="color:#8290ff;letter-spacing:1px;font-weight:bold" id="toolCategoryLabel">NEXUS TOOL</small>
+          <small id="toolCategoryLabel" class="modal-badge">NEXUS TOOL</small>
           <h2 id="toolTitle">Alət İdarəetməsi</h2>
         </div>
-        <button class="close" onclick="closeAllModals()">×</button>
+        <button class="close-btn" onclick="closeAllModals()">×</button>
       </div>
       <div id="toolBody"></div>
     </div>
@@ -97,49 +125,45 @@
 
   <!-- Search Modal -->
   <div id="searchModal" class="overlay">
-    <div class="modal" style="max-width:650px">
+    <div class="modal search-modal">
       <div class="searchbox">
-        <input id="searchInput" placeholder="İstənilən alətin adını yazın (məs: Excel, Map, Pass)..." oninput="handleSearch()">
+        <input id="searchInput" placeholder="İstənilən alətin adını yazın..." oninput="handleSearch()">
       </div>
-      <div id="searchResults" style="margin-top:15px"></div>
+      <div id="searchResults" class="search-results"></div>
     </div>
   </div>
 
-  <!-- REAL CHATGPT MODAL -->
+  <!-- CHATGPT MODAL -->
   <div id="chatgptModal" class="overlay">
-    <div class="modal chatgpt-modal" style="max-width:1100px">
+    <div class="modal chatgpt-modal">
       <div class="chatgpt-layout">
-        <!-- Sidebar -->
         <div class="chat-sidebar">
-          <button class="new-chat-btn" onclick="startNewChat()">
-            <span>+</span> Yeni Söhbət
-          </button>
-          <div style="font-size:10px;color:#68758d;margin-bottom:8px;letter-spacing:1px">SÖHBƏT TARİXÇƏSİ</div>
+          <button class="new-chat-btn" onclick="startNewChat()">+ Yeni Söhbət</button>
+          <div class="chat-hist-head">SÖHBƏT TARİXÇƏSİ</div>
           <div class="chat-history" id="chatHistory">
-            <div class="history-item active">NEXUS AI ilə İlkin Söhbət</div>
+            <div class="history-item active">NEXUS AI Sesiyası</div>
           </div>
         </div>
 
-        <!-- Main Chat Area -->
         <div class="chat-main">
           <div class="chat-header">
-            <div style="display:flex;align-items:center;gap:10px">
-              <span style="color:#52dfba;font-size:18px">✦</span>
-              <b>NEXUS AI <small style="color:#8290ff;font-weight:normal">(GPT-4 Powered Engine)</small></b>
+            <div class="chat-title">
+              <span class="sparkle">✦</span>
+              <b>NEXUS AI <small>(GPT-4 Engine)</small></b>
             </div>
-            <button class="close" onclick="closeAllModals()">×</button>
+            <button class="close-btn" onclick="closeAllModals()">×</button>
           </div>
 
           <div class="chat-messages" id="chatMessages">
             <div class="chat-bubble assistant">
               <span class="sender-name">NEXUS AI</span>
-              Salam! Mən sizin rəqəmsal köməkçiniz NEXUS AI-yam. Məndən kodlaşdırma, mətn yazılması, təhlil və ya istənilən mövzuda sual soruşa bilərsiniz. Sizə necə kömək edim?
+              Salam! Mən sizin rəqəmsal köməkçiniz NEXUS AI-yam. Kodlaşdırma, analiz və ya istənilən mövzuda sual verə bilərsiniz.
             </div>
           </div>
 
           <form class="chat-input-area" onsubmit="sendChatMessage(event)">
             <input id="chatInput" placeholder="NEXUS AI-dan bir şey soruşun..." autocomplete="off">
-            <button type="submit" class="action">Göndər ↗</button>
+            <button type="submit" class="action-btn">Göndər ↗</button>
           </form>
         </div>
       </div>
@@ -149,7 +173,7 @@
   <!-- Footer -->
   <footer>
     <b>NEXUS<span>//</span>AZ</b>
-    <span>v5.0 · REAL CHATGPT & DIGITAL COMMAND CENTER</span>
+    <span>v5.0 EXECUTIVE DASHBOARD</span>
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
