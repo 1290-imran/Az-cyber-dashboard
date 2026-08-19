@@ -45,7 +45,7 @@ const C = [
 const $ = s => document.querySelector(s);
 const allTools = () => C.flatMap(c => c[5].map(t => ({ ...t, catId: c[0], catName: c[2] })));
 
-// --- SYSTEM CLOCK ---
+// --- CLOCK ---
 function updateClock() {
   const d = new Date();
   const clockEl = $('#clock');
@@ -59,9 +59,7 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// --- RENDER CATEGORIES ---
-let activeCatId = null;
-
+// --- RENDER MAIN CATEGORIES ---
 function renderCategories() {
   const container = $('#categoriesGrid');
   if(!container) return;
@@ -69,12 +67,12 @@ function renderCategories() {
 
   C.forEach((c) => {
     html += `
-      <div class="cat-card ${activeCatId === c[0] ? 'active' : ''}" onclick="toggleCategory('${c[0]}')">
-        <div class="card-top">
-          <div class="icon">${c[4]}</div>
-          <span class="arrow">↗</span>
+      <div class="cat-card" onclick="openCategoryModal('${c[0]}')">
+        <div class="cat-card-top">
+          <div class="cat-icon">${c[4]}</div>
+          <span class="cat-arrow">↗</span>
         </div>
-        <div class="info">
+        <div class="cat-info">
           <small>${c[1]}</small>
           <strong>${c[2]}</strong>
           <p>${c[3]}</p>
@@ -83,44 +81,25 @@ function renderCategories() {
     `;
   });
 
-  html += `<div id="toolsDrawer" class="tools-drawer"></div>`;
   container.innerHTML = html;
-
-  if (activeCatId) {
-    updateDrawer();
-  }
 }
 
-function toggleCategory(id) {
-  if (activeCatId === id) {
-    activeCatId = null;
-  } else {
-    activeCatId = id;
-  }
-  renderCategories();
-}
+// --- OPEN CATEGORY MODAL (POPUP WINDOW) ---
+function openCategoryModal(catId) {
+  const cat = C.find(x => x[0] === catId);
+  if(!cat) return;
 
-function updateDrawer() {
-  const cat = C.find(x => x[0] === activeCatId);
-  const toolsDrawer = $('#toolsDrawer');
-  if(!cat || !toolsDrawer) return;
+  $('#catModalBadge').textContent = cat[1];
+  $('#catModalTitle').textContent = cat[2] + ' Alətləri';
 
-  let drawerHtml = `
-    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #fff2;padding-bottom:10px">
-      <div>
-        <small style="color:#8290ff;letter-spacing:1px">${cat[1]}</small>
-        <h3 style="margin:2px 0 0;color:#fff">${cat[2]} Alətləri</h3>
-      </div>
-      <button class="action" onclick="toggleCategory('${activeCatId}')">Bağla ×</button>
-    </div>
-    <div class="tools-grid">
-  `;
+  const body = $('#catModalBody');
+  let gridHtml = '';
 
   cat[5].forEach(t => {
-    drawerHtml += `
-      <div class="tool-card" onclick="openTool('${t[0]}')">
-        <div class="t-head">
-          <div class="t-icon">${t[3]}</div>
+    gridHtml += `
+      <div class="tool-item-card" onclick="closeAllModals(); openTool('${t[0]}')">
+        <div class="t-header">
+          <div class="t-badge">${t[3]}</div>
           <strong>${t[1]}</strong>
         </div>
         <p>${t[2]}</p>
@@ -128,16 +107,15 @@ function updateDrawer() {
     `;
   });
 
-  drawerHtml += `</div>`;
-  toolsDrawer.innerHTML = drawerHtml;
-  toolsDrawer.classList.add('open');
+  body.innerHTML = gridHtml;
+  $('#categoryModal').classList.add('open');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   renderCategories();
 });
 
-// --- TOOL MODALS ---
+// --- TOOL MODAL ---
 function openTool(id) {
   if (id === 'chatgpt') {
     openChatGPTModal();
@@ -161,96 +139,26 @@ function closeAllModals() {
   document.querySelectorAll('.overlay').forEach(x => x.classList.remove('open'));
 }
 
-// --- HTML GENERATOR FOR TOOLS ---
+// --- TOOL HTML GENERATOR ---
 function getToolHTML(id) {
   switch(id) {
-    case 'word':
+    case 'time':
       return `
-        <div class="word-toolbar">
-          <button onclick="execWordCmd('bold')"><b>B</b></button>
-          <button onclick="execWordCmd('italic')"><i>I</i></button>
-          <button onclick="execWordCmd('underline')"><u>U</u></button>
-          <button onclick="execWordCmd('insertUnorderedList')">• Siyahı</button>
-          <button onclick="execWordCmd('formatBlock', 'H2')">Başlıq</button>
-        </div>
-        <div id="wordEditor" class="word-editor" contenteditable="true">Mətni bura daxil edin...</div>
-        <div style="margin-top:12px;display:flex;gap:10px">
-          <button class="action" onclick="downloadWord()">Sənədi Yüklə (.html)</button>
-        </div>
-      `;
-
-    case 'excel':
-      return `
-        <div style="margin-bottom:10px;display:flex;gap:10px">
-          <button class="action" onclick="addExcelRow()">+ Sətir Əlavə Et</button>
-          <button class="action" onclick="exportExcelCSV()">CSV Kimi İxrac Et</button>
-        </div>
-        <div class="excel-container">
-          <table class="excel-table" id="excelTable">
-            <thead>
-              <tr><th>#</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
-            </thead>
-            <tbody>
-              ${[1,2,3,4,5].map(r => `
-                <tr>
-                  <td><b>${r}</b></td>
-                  ${['A','B','C','D','E'].map(c => `<td><input id="ex_${c}${r}" value=""></td>`).join('')}
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-
-    case 'calc':
-      return `
-        <div class="ios-calc">
-          <div class="calc-screen" id="calcDisplay">0</div>
-          <div class="calc-grid">
-            <button class="calc-btn btn-gray" onclick="calcAction('C')">C</button>
-            <button class="calc-btn btn-gray" onclick="calcAction('+/-')">±</button>
-            <button class="calc-btn btn-gray" onclick="calcAction('%')">%</button>
-            <button class="calc-btn btn-orange" onclick="calcAction('/')">÷</button>
-
-            <button class="calc-btn btn-dark" onclick="calcNum('7')">7</button>
-            <button class="calc-btn btn-dark" onclick="calcNum('8')">8</button>
-            <button class="calc-btn btn-dark" onclick="calcNum('9')">9</button>
-            <button class="calc-btn btn-orange" onclick="calcAction('*')">×</button>
-
-            <button class="calc-btn btn-dark" onclick="calcNum('4')">4</button>
-            <button class="calc-btn btn-dark" onclick="calcNum('5')">5</button>
-            <button class="calc-btn btn-dark" onclick="calcNum('6')">6</button>
-            <button class="calc-btn btn-orange" onclick="calcAction('-')">-</button>
-
-            <button class="calc-btn btn-dark" onclick="calcNum('1')">1</button>
-            <button class="calc-btn btn-dark" onclick="calcNum('2')">2</button>
-            <button class="calc-btn btn-dark" onclick="calcNum('3')">3</button>
-            <button class="calc-btn btn-orange" onclick="calcAction('+')">+</button>
-
-            <button class="calc-btn btn-dark btn-zero" onclick="calcNum('0')">0</button>
-            <button class="calc-btn btn-dark" onclick="calcNum('.')">.</button>
-            <button class="calc-btn btn-orange" onclick="calcEqual()">=</button>
-          </div>
-        </div>
+        <div class="world-grid" id="worldCards"></div>
+        <div class="out" id="outWeather">Canlı hava şəraiti Open-Meteo API ilə yenilənir...</div>
       `;
 
     case 'map':
-      return `<div id="leafletMap" style="width:100%;height:380px;border-radius:14px;border:1px solid #fff2"></div>`;
-
-    case 'time':
-      return `
-        <div class="world-cards" id="worldCards"></div>
-        <div class="out" id="outWeather">Canlı hava məlumatları Open-Meteo API vasitəsilə yenilənir...</div>
-      `;
+      return `<div id="leafletMap" style="width:100%;height:380px;border-radius:14px;border:1px solid var(--card-border)"></div>`;
 
     case 'ip':
-      return `<button class="action" onclick="fetchIP()">IP Adresimi Göstər</button><div class="out" id="out"></div>`;
+      return `<button class="action-btn" onclick="fetchIP()">IP Adresimi Göstər</button><div class="out" id="out"></div>`;
 
     case 'pass':
       return `
         <div class="field">
           <input type="number" id="passLen" value="16" placeholder="Uzunluq">
-          <button class="action" onclick="generatePass()">Şifrə Yarat</button>
+          <button class="action-btn" onclick="generatePass()">Şifrə Yarat</button>
         </div>
         <div class="out" id="out"></div>
       `;
@@ -259,26 +167,22 @@ function getToolHTML(id) {
       return `
         <div class="field">
           <input id="qrInput" placeholder="Link və ya mətn...">
-          <button class="action" onclick="generateQR()">QR Kod Yarat</button>
+          <button class="action-btn" onclick="generateQR()">QR Kod Yarat</button>
         </div>
         <div class="out" id="out" style="text-align:center"></div>
       `;
 
     default:
-      return `<div class="field"><input id="v" placeholder="Məlumat daxil edin..."><button class="action" onclick="alert('Funksiya aktivdir!')">İcra Et</button></div><div class="out" id="out">Sistem hazır durumdadır.</div>`;
+      return `<div class="field"><input id="v" placeholder="Məlumat daxil edin..."><button class="action-btn" onclick="alert('Funksiya aktivdir!')">İcra Et</button></div><div class="out" id="out">Sistem hazır durumdadır.</div>`;
   }
 }
 
-// --- TOOL LOGIC HANDLERS ---
 function initToolLogic(id) {
   if (id === 'map') {
     setTimeout(() => {
       const map = L.map('leafletMap').setView([40.4093, 49.8671], 12);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-      }).addTo(map);
-
-      L.marker([40.4093, 49.8671]).addTo(map).bindPopup('🏙️ Bakı, Azərbaycan').openPopup();
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+      L.marker([40.4093, 49.8671]).addTo(map).bindPopup('Bakı, Azərbaycan').openPopup();
     }, 200);
   }
 
@@ -287,13 +191,13 @@ function initToolLogic(id) {
   }
 }
 
-// --- WORLD CLOCKS & LIVE WEATHER ---
+// --- WORLD CLOCKS (SADƏ, DƏBƏLİ MİNİMALİST DİZAYN - MƏTNSİZ/STİKERSİZ) ---
 const cities = [
-  { name: 'Bakı', icon: '🏙️ Alov Qüllələri', tz: 'Asia/Baku', lat: 40.4093, lon: 49.8671 },
-  { name: 'İstanbul', icon: '🕌 Aya Sofya', tz: 'Europe/Istanbul', lat: 41.0082, lon: 28.9784 },
-  { name: 'London', icon: '🏰 Big Ben', tz: 'Europe/London', lat: 51.5074, lon: -0.1278 },
-  { name: 'Nyu-York', icon: '🗽 Azadlıq Heykəli', tz: 'America/New_York', lat: 40.7128, lon: -74.0060 },
-  { name: 'Tokio', icon: '🗼 Tokyo Tower', tz: 'Asia/Tokyo', lat: 35.6762, lon: 139.6503 }
+  { name: 'BAKIDA SAAT', flag: '🇦🇿', tz: 'Asia/Baku', lat: 40.4093, lon: 49.8671 },
+  { name: 'İSTANBUL', flag: '🇹🇷', tz: 'Europe/Istanbul', lat: 41.0082, lon: 28.9784 },
+  { name: 'LONDON', flag: '🇬🇧', tz: 'Europe/London', lat: 51.5074, lon: -0.1278 },
+  { name: 'NYU-YORK', flag: '🇺🇸', tz: 'America/New_York', lat: 40.7128, lon: -74.0060 },
+  { name: 'TOKİO', flag: '🇯🇵', tz: 'Asia/Tokyo', lat: 35.6762, lon: 139.6503 }
 ];
 
 async function renderWorldClocks() {
@@ -308,108 +212,24 @@ async function renderWorldClocks() {
     try {
       const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current_weather=true`);
       const data = await res.json();
-      weatherText = `🌡️ ${data.current_weather.temperature}°C`;
-    } catch(e) { weatherText = '🌡️ 22°C'; }
+      weatherText = `${data.current_weather.temperature}°C`;
+    } catch(e) { weatherText = '22°C'; }
 
     html += `
-      <div class="city-card">
-        <div class="icon">${c.icon.split(' ')[0]}</div>
-        <strong>${c.name}</strong>
-        <small style="font-size:9px;color:#8290ff">${c.icon.substring(3)}</small>
-        <div class="time">${timeStr}</div>
-        <div class="weather">${weatherText}</div>
+      <div class="city-box">
+        <div class="city-flag">${c.flag}</div>
+        <div class="city-name">${c.name}</div>
+        <div class="city-time">${timeStr}</div>
+        <div class="city-temp">🌡️ ${weatherText}</div>
       </div>
     `;
   }
   container.innerHTML = html;
 }
 
-// --- HELPER FUNCTIONS ---
-function execWordCmd(cmd, val = null) { document.execCommand(cmd, false, val); }
-function downloadWord() {
-  const content = $('#wordEditor').innerHTML;
-  const blob = new Blob([content], { type: 'text/html' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'NEXUS_Document.html';
-  a.click();
-}
-
-let excelRowCount = 5;
-function addExcelRow() {
-  excelRowCount++;
-  const tbody = $('#excelTable tbody');
-  const tr = document.createElement('tr');
-  tr.innerHTML = `<td><b>${excelRowCount}</b></td>` + ['A','B','C','D','E'].map(c => `<td><input id="ex_${c}${excelRowCount}" value=""></td>`).join('');
-  tbody.appendChild(tr);
-}
-function exportExcelCSV() {
-  let csv = 'A,B,C,D,E\n';
-  for (let r = 1; r <= excelRowCount; r++) {
-    let row = ['A','B','C','D','E'].map(c => {
-      const el = $(`#ex_${c}${r}`);
-      return el ? el.value : '';
-    }).join(',');
-    csv += row + '\n';
-  }
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'NEXUS_Sheet.csv';
-  a.click();
-}
-
-let calcVal = '0';
-function calcNum(n) {
-  if (calcVal === '0') calcVal = n;
-  else calcVal += n;
-  $('#calcDisplay').textContent = calcVal;
-}
-function calcAction(op) {
-  if (op === 'C') calcVal = '0';
-  else if (op === '+/-') calcVal = (parseFloat(calcVal) * -1).toString();
-  else if (op === '%') calcVal = (parseFloat(calcVal) / 100).toString();
-  else calcVal += ' ' + op + ' ';
-  $('#calcDisplay').textContent = calcVal;
-}
-function calcEqual() {
-  try { calcVal = eval(calcVal.replace(/×/g, '*').replace(/÷/g, '/')).toString(); } catch(e) { calcVal = 'Xəta'; }
-  $('#calcDisplay').textContent = calcVal;
-}
-
-async function fetchIP() {
-  try {
-    const r = await fetch('https://api.ipify.org?format=json');
-    const d = await r.json();
-    $('#out').textContent = 'Sizin İctimai IP: ' + d.ip;
-  } catch { $('#out').textContent = 'IP alına bilmədi.'; }
-}
-
-function generatePass() {
-  const len = +$('#passLen').value || 16;
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+';
-  let res = '';
-  for(let i=0; i<len; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
-  $('#out').textContent = res;
-}
-
-function generateQR() {
-  const val = $('#qrInput').value;
-  if(!val) return;
-  $('#out').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(val)}" style="background:#fff;padding:8px;border-radius:10px">`;
-}
-
 // --- SEARCH & CHATGPT ---
-function openSearchModal() {
-  $('#searchModal').classList.add('open');
-  $('#searchInput').focus();
-}
-
-function openChatGPTModal() {
-  closeAllModals();
-  $('#chatgptModal').classList.add('open');
-  $('#chatInput').focus();
-}
+function openSearchModal() { $('#searchModal').classList.add('open'); $('#searchInput').focus(); }
+function openChatGPTModal() { closeAllModals(); $('#chatgptModal').classList.add('open'); $('#chatInput').focus(); }
 
 let chatMessages = [{ role: 'assistant', text: 'Salam! Mən sizin rəqəmsal köməkçiniz NEXUS AI-yam. Sizə necə kömək edim?' }];
 
@@ -444,4 +264,26 @@ function sendChatMessage(e) {
 function startNewChat() {
   chatMessages = [{ role: 'assistant', text: 'Yeni söhbət başladııldı.' }];
   renderChat();
+}
+
+async function fetchIP() {
+  try {
+    const r = await fetch('https://api.ipify.org?format=json');
+    const d = await r.json();
+    $('#out').textContent = 'Sizin İctimai IP: ' + d.ip;
+  } catch { $('#out').textContent = 'IP alına bilmədi.'; }
+}
+
+function generatePass() {
+  const len = +$('#passLen').value || 16;
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+';
+  let res = '';
+  for(let i=0; i<len; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+  $('#out').textContent = res;
+}
+
+function generateQR() {
+  const val = $('#qrInput').value;
+  if(!val) return;
+  $('#out').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(val)}" style="background:#fff;padding:8px;border-radius:10px">`;
 }
