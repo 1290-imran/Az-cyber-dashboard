@@ -1384,7 +1384,7 @@ function openModal(
 
 
     modal.classList.add(
-        "open"
+        "show"
     );
 
 
@@ -1410,7 +1410,7 @@ function closeModal() {
 
 
     modal.classList.remove(
-        "open"
+        "show"
     );
 
 
