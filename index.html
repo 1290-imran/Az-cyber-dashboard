@@ -1,8 +1,8 @@
+```html
 <!DOCTYPE html>
 <html lang="az">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -16,9 +16,6 @@
     >
 
     <title>NEXUS // AZ</title>
-
-
-    <!-- Google Fonts -->
 
     <link
         rel="preconnect"
@@ -36,37 +33,26 @@
         rel="stylesheet"
     >
 
-
-    <!-- Main CSS -->
-
     <link
         rel="stylesheet"
         href="style.css"
     >
 
-
     <!-- Excel -->
-
     <script
         src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"
     ></script>
 
-
     <!-- DOCX -->
-
     <script
         src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"
     ></script>
-
 </head>
 
 
 <body>
 
-
-<!-- =========================================
-     LOADER
-========================================= -->
+<!-- LOADER -->
 
 <div id="loader">
 
@@ -85,32 +71,26 @@
 </div>
 
 
-<!-- Background -->
+<!-- BACKGROUND -->
 
 <div class="aurora"></div>
 <div class="noise"></div>
 <div class="grid"></div>
 
 
-<!-- =========================================
-     HEADER
-========================================= -->
+<!-- HEADER -->
 
 <header>
 
     <div class="brand">
 
         <div class="brand-mark">
-
             <span></span>
             <span></span>
             <span></span>
-
         </div>
 
-
         <div>
-
             <strong>
                 NEXUS<span>//</span>AZ
             </strong>
@@ -118,7 +98,6 @@
             <small>
                 RƏQƏMSAL KOMANDA MƏRKƏZİ
             </small>
-
         </div>
 
     </div>
@@ -137,7 +116,10 @@
                 autocomplete="off"
             >
 
-            <button id="searchBtn">
+            <button
+                id="searchBtn"
+                type="button"
+            >
                 AXTAR
             </button>
 
@@ -157,239 +139,213 @@
 </header>
 
 
-<!-- =========================================
-     MAIN
-========================================= -->
+<!-- MAIN -->
 
 <main>
 
+    <!-- HERO -->
 
-<!-- =========================================
-     HERO
-========================================= -->
+    <section class="hero">
 
-<section class="hero">
+        <div class="hero-text">
 
+            <div class="eyebrow">
 
-    <div class="hero-text">
+                <span></span>
 
+                TƏHLÜKƏSİZ RƏQƏMSAL MÜHİT
 
-        <div class="eyebrow">
-
-            <span></span>
-
-            TƏHLÜKƏSİZ RƏQƏMSAL MÜHİT
-
-        </div>
+            </div>
 
 
-        <h1>
-
-            Hər şey<br>
-
-            <span>bir mərkəzdə.</span>
-
-        </h1>
+            <h1>
+                Hər şey<br>
+                <span>bir mərkəzdə.</span>
+            </h1>
 
 
-        <p>
-
-            Gündəlik istifadə etdiyin internet,
-            ofis, təhlükəsizlik, dünya və
-            texnologiya alətləri — hamısı
-            bir mərkəzdə.
-
-        </p>
+            <p>
+                Gündəlik istifadə etdiyin internet,
+                ofis, təhlükəsizlik, dünya və
+                texnologiya alətləri — hamısı
+                bir mərkəzdə.
+            </p>
 
 
-        <div class="hero-buttons">
+            <div class="hero-buttons">
 
-            <button
-                class="primary"
-                onclick="scrollToCategories()"
-            >
-
-                XİDMƏTLƏRƏ BAX
-
-                <b>↘</b>
-
-            </button>
+                <button
+                    class="primary"
+                    type="button"
+                    onclick="scrollToCategories()"
+                >
+                    XİDMƏTLƏRƏ BAX
+                    <b>↘</b>
+                </button>
 
 
-            <button
-                class="ghost"
-                onclick="openAI()"
-            >
+                <button
+                    class="ghost"
+                    type="button"
+                    onclick="openAI()"
+                >
+                    ✦ NEXUS AI
+                </button>
 
-                ✦ NEXUS AI
-
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <div class="hero-status">
-
-
-        <div class="time-label">
-            YERLİ VAXT
-        </div>
-
-
-        <div id="clock">
-            00:00:00
-        </div>
-
-
-        <div id="date">
-            Yüklənir...
-        </div>
-
-
-        <div class="status-bar">
-
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+            </div>
 
         </div>
 
 
-        <small>
-            TƏHLÜKƏSİZ BAĞLANTI QURULDU
-        </small>
+        <div class="hero-status">
 
-    </div>
-
-
-</section>
+            <div class="time-label">
+                YERLİ VAXT
+            </div>
 
 
-<!-- =========================================
-     CATEGORIES
-========================================= -->
-
-<section
-    class="categories-section"
-    id="categoriesSection"
->
+            <div id="clock">
+                00:00:00
+            </div>
 
 
-    <div class="section-title">
+            <div id="date">
+                Yüklənir...
+            </div>
 
-        <div>
+
+            <div class="status-bar">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
 
             <small>
-                ƏSAS BÖLMƏLƏR
+                TƏHLÜKƏSİZ BAĞLANTI QURULDU
             </small>
 
-            <h2>
-                Kateqoriyalar
-            </h2>
+        </div>
+
+    </section>
+
+
+    <!-- CATEGORIES -->
+
+    <section
+        class="categories-section"
+        id="categoriesSection"
+    >
+
+        <div class="section-title">
+
+            <div>
+
+                <small>
+                    ƏSAS BÖLMƏLƏR
+                </small>
+
+                <h2>
+                    Kateqoriyalar
+                </h2>
+
+            </div>
+
+
+            <span>
+                08 BÖLMƏ
+            </span>
 
         </div>
 
 
-        <span>
-            08 BÖLMƏ
-        </span>
+        <div
+            id="categories"
+            class="categories-grid"
+        ></div>
 
-    </div>
-
-
-    <div
-        id="categories"
-        class="categories-grid"
-    ></div>
+    </section>
 
 
-</section>
+    <!-- MODULES -->
+
+    <section
+        id="modules"
+        class="modules-section"
+    >
+
+        <div class="section-title">
+
+            <div>
+
+                <small>
+                    SEÇİLMİŞ XİDMƏTLƏR
+                </small>
+
+                <h2>
+                    Xidmətlər
+                </h2>
+
+            </div>
 
 
-<!-- =========================================
-     MODULES
-========================================= -->
-
-<section
-    id="modules"
-    class="modules-section"
->
-
-
-    <div class="section-title">
-
-        <div>
-
-            <small>
-                SEÇİLMİŞ XİDMƏTLƏR
-            </small>
-
-            <h2>
-                Xidmətlər
-            </h2>
+            <span id="moduleHint">
+                İNTERNET
+            </span>
 
         </div>
 
 
-        <span id="moduleHint">
-            NETWORK
-        </span>
+        <!--
+            ƏSAS DÜZƏLİŞ:
+            JavaScript artıq məhz bu elementə
+            xidmət kartlarını yerləşdirir.
+        -->
 
-    </div>
+        <div
+            id="moduleGrid"
+            class="module-grid"
+        ></div>
 
-
-    <div
-        id="moduleGrid"
-        class="module-grid"
-    ></div>
-
-
-</section>
-
+    </section>
 
 </main>
 
 
-<!-- =========================================
-     MODAL
-========================================= -->
+<!-- MODAL -->
 
 <div
     id="modal"
     class="modal"
+    aria-hidden="true"
 >
 
-
     <div class="modal-window">
-
 
         <button
             id="closeModal"
             class="modal-close"
+            type="button"
+            aria-label="Bağla"
         >
             ×
         </button>
 
-
         <div id="modalContent"></div>
-
 
     </div>
 
 </div>
 
 
-<!-- =========================================
-     AI FLOATING BUTTON
-========================================= -->
+<!-- AI FLOATING BUTTON -->
 
 <button
     id="aiFab"
     class="ai-fab"
+    type="button"
     aria-label="NEXUS AI"
 >
 
@@ -402,12 +358,9 @@
 </button>
 
 
-<!-- =========================================
-     FOOTER
-========================================= -->
+<!-- FOOTER -->
 
 <footer>
-
 
     <strong>
         NEXUS<span>//</span>AZ
@@ -415,28 +368,16 @@
 
 
     <div>
-
         RƏQƏMSAL KOMANDA MƏRKƏZİ
-
         <span>•</span>
-
-        SYSTEM v4.1
-
+        SYSTEM v4.2
     </div>
-
 
 </footer>
 
 
-<!-- =========================================
-     SCRIPT
-========================================= -->
-
-<script
-    src="script.js"
-></script>
-
+<script src="script.js"></script>
 
 </body>
-
 </html>
+```
