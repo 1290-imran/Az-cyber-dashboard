@@ -1,11 +1,5 @@
-/* =========================================================
-   NEXUS // AZ
-   SYSTEM v4.2
-   MAIN JAVASCRIPT
-========================================================= */
-
+```javascript
 "use strict";
-
 
 /* =========================================================
    CONFIG
@@ -35,7 +29,7 @@ const CONFIG = {
    STATE
 ========================================================= */
 
-let currentCategory = null;
+let currentCategory = "internet";
 
 let conversationHistory = [];
 
@@ -53,7 +47,6 @@ let excelColumns = 8;
 const $ = selector =>
     document.querySelector(selector);
 
-
 const $$ = selector =>
     document.querySelectorAll(selector);
 
@@ -67,20 +60,12 @@ document.addEventListener(
     () => {
 
         initLoader();
-
         initClock();
-
         initCategories();
-
         initModal();
-
         initSearch();
-
         initAI();
-
         initKeyboard();
-
-        initHeroAI();
 
     }
 );
@@ -92,18 +77,13 @@ document.addEventListener(
 
 function initLoader() {
 
-    const loader =
-        $("#loader");
+    const loader = $("#loader");
 
     if (!loader) return;
 
     window.setTimeout(
         () => {
-
-            loader.classList.add(
-                "hidden"
-            );
-
+            loader.classList.add("hidden");
         },
         900
     );
@@ -112,24 +92,20 @@ function initLoader() {
 
 
 /* =========================================================
-   LOCAL CLOCK
+   CLOCK
 ========================================================= */
 
 function initClock() {
 
-    const clock =
-        $("#clock");
-
-    const date =
-        $("#date");
+    const clock = $("#clock");
+    const date = $("#date");
 
     if (!clock) return;
 
 
     function updateClock() {
 
-        const now =
-            new Date();
+        const now = new Date();
 
 
         clock.textContent =
@@ -163,13 +139,36 @@ function initClock() {
 
     updateClock();
 
-
     window.setInterval(
         updateClock,
         1000
     );
 
 }
+
+
+/* =========================================================
+   SCROLL TO CATEGORIES
+========================================================= */
+
+function scrollToCategories() {
+
+    const section =
+        $("#categoriesSection");
+
+    if (!section) return;
+
+
+    section.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+}
+
+
+window.scrollToCategories =
+    scrollToCategories;
 
 
 /* =========================================================
@@ -246,109 +245,10 @@ const categories = [
 
 
 /* =========================================================
-   INIT CATEGORIES
-========================================================= */
-
-function initCategories() {
-
-    const container =
-        $("#categories");
-
-    if (!container) return;
-
-
-    container.innerHTML = "";
-
-
-    categories.forEach(
-        category => {
-
-            const card =
-                document.createElement(
-                    "button"
-                );
-
-
-            card.type =
-                "button";
-
-
-            card.className =
-                "category-card";
-
-
-            card.dataset.category =
-                category.id;
-
-
-            card.innerHTML = `
-
-                <div class="category-icon">
-                    ${category.icon}
-                </div>
-
-                <div class="category-info">
-
-                    <strong>
-                        ${escapeHTML(category.title)}
-                    </strong>
-
-                    <span>
-                        ${escapeHTML(category.description)}
-                    </span>
-
-                </div>
-
-                <b class="category-arrow">
-                    →
-                </b>
-
-            `;
-
-
-            card.addEventListener(
-                "click",
-                () => {
-
-                    selectCategory(
-                        category.id
-                    );
-
-                }
-            );
-
-
-            container.appendChild(
-                card
-            );
-
-        }
-    );
-
-
-    /*
-       İlk kateqoriya.
-       Burada səhifə aşağı sürüşdürülmür.
-    */
-
-    selectCategory(
-        "internet",
-        false
-    );
-
-}
-
-
-/* =========================================================
    MODULE DATA
 ========================================================= */
 
 const modules = {
-
-
-    /* =====================================================
-       INTERNET
-    ===================================================== */
 
     internet: [
 
@@ -443,10 +343,6 @@ const modules = {
     ],
 
 
-    /* =====================================================
-       OFFICE
-    ===================================================== */
-
     office: [
 
         {
@@ -536,10 +432,6 @@ const modules = {
     ],
 
 
-    /* =====================================================
-       WORLD
-    ===================================================== */
-
     world: [
 
         {
@@ -616,10 +508,6 @@ const modules = {
 
     ],
 
-
-    /* =====================================================
-       MEDIA
-    ===================================================== */
 
     media: [
 
@@ -714,10 +602,6 @@ const modules = {
     ],
 
 
-    /* =====================================================
-       SECURITY
-    ===================================================== */
-
     security: [
 
         {
@@ -810,10 +694,6 @@ const modules = {
 
     ],
 
-
-    /* =====================================================
-       DEVELOPER
-    ===================================================== */
 
     developer: [
 
@@ -908,10 +788,6 @@ const modules = {
     ],
 
 
-    /* =====================================================
-       TOOLS
-    ===================================================== */
-
     tools: [
 
         {
@@ -994,10 +870,6 @@ const modules = {
 
     ],
 
-
-    /* =====================================================
-       AI
-    ===================================================== */
 
     ai: [
 
@@ -1091,7 +963,83 @@ const modules = {
 
 
 /* =========================================================
-   SELECT CATEGORY
+   INIT CATEGORIES
+========================================================= */
+
+function initCategories() {
+
+    const container =
+        $("#categories");
+
+    if (!container) return;
+
+
+    container.innerHTML = "";
+
+
+    categories.forEach(
+        category => {
+
+            const card =
+                document.createElement("button");
+
+
+            card.type = "button";
+
+            card.className =
+                "category-card";
+
+            card.dataset.category =
+                category.id;
+
+
+            card.innerHTML = `
+
+                <div class="category-icon">
+                    ${escapeHTML(category.icon)}
+                </div>
+
+                <div class="category-info">
+
+                    <strong>
+                        ${escapeHTML(category.title)}
+                    </strong>
+
+                    <span>
+                        ${escapeHTML(category.description)}
+                    </span>
+
+                </div>
+
+                <b class="category-arrow">
+                    →
+                </b>
+
+            `;
+
+
+            card.addEventListener(
+                "click",
+                () => selectCategory(category.id)
+            );
+
+
+            container.appendChild(card);
+
+        }
+    );
+
+
+    selectCategory(
+        "internet",
+        false
+    );
+
+}
+
+
+/* =========================================================
+   SELECT CATEGORY — FIXED
 ========================================================= */
 
 function selectCategory(
@@ -1099,18 +1047,13 @@ function selectCategory(
     shouldFocus = true
 ) {
 
-    currentCategory =
-        id;
-
-
     const container =
-        $("#categoryServices");
-
+        $("#moduleGrid");
 
     if (!container) {
 
         console.error(
-            "categoryServices tapılmadı."
+            "moduleGrid tapılmadı."
         );
 
         return;
@@ -1120,13 +1063,16 @@ function selectCategory(
 
     const category =
         categories.find(
-            item =>
-                item.id === id
+            item => item.id === id
         );
 
 
     const selected =
         modules[id] || [];
+
+
+    currentCategory =
+        id;
 
 
     /*
@@ -1145,60 +1091,41 @@ function selectCategory(
 
 
     /*
-       Əvvəlki animasiyanı sıfırla
+       Başlıq
     */
 
-    container.classList.remove(
-        "category-services-visible"
-    );
+    const hint =
+        $("#moduleHint");
+
+    if (hint) {
+
+        hint.textContent =
+            (
+                category?.title ||
+                "XİDMƏTLƏR"
+            ).toUpperCase();
+
+    }
 
 
     /*
-       Yeni xidmət paneli
+       Xidmət kartlarını yarat
     */
 
-    container.innerHTML = `
-
-        <div class="category-services-header">
-
-            <div>
-
-                <span>
-                    XİDMƏTLƏR
-                </span>
-
-                <h3>
-                    ${escapeHTML(
-                        category?.title ||
-                        "Kateqoriya"
-                    )}
-                </h3>
-
-            </div>
-
-            <div class="category-services-count">
-                ${selected.length} ALƏT
-            </div>
-
-        </div>
-
-        <div class="module-grid">
-
-            ${selected.map(
+    container.innerHTML =
+        selected
+            .map(
                 (item, index) =>
                     createModuleCard(
                         item,
                         index
                     )
-            ).join("")}
-
-        </div>
-
-    `;
+            )
+            .join("");
 
 
     /*
-       Event-ləri bağla
+       Click event-ləri
     */
 
     container
@@ -1234,9 +1161,7 @@ function selectCategory(
                             item.timezone
                         ) {
 
-                            showTimezone(
-                                item
-                            );
+                            showTimezone(item);
 
                         }
 
@@ -1251,11 +1176,16 @@ function selectCategory(
        Animasiya
     */
 
+    container.classList.remove(
+        "module-grid-visible"
+    );
+
+
     requestAnimationFrame(
         () => {
 
             container.classList.add(
-                "category-services-visible"
+                "module-grid-visible"
             );
 
         }
@@ -1263,17 +1193,23 @@ function selectCategory(
 
 
     /*
-       QƏTİYYƏN scrollIntoView yoxdur.
-
-       Kateqoriyaya basanda səhifə aşağı
-       atılmayacaq.
+       İstəyə görə xidmətlərə keç.
+       Default olaraq scroll etmirik.
     */
+
+    if (shouldFocus === true) {
+
+        // Qəsdən scroll yoxdur.
+        // Kateqoriyaya klik ediləndə
+        // səhifə yerindən tərpənmir.
+
+    }
 
 }
 
 
 /* =========================================================
-   CREATE MODULE CARD
+   MODULE CARD
 ========================================================= */
 
 function createModuleCard(
@@ -1290,25 +1226,17 @@ function createModuleCard(
         >
 
             <div class="module-icon">
-
-                ${escapeHTML(
-                    item.icon || "•"
-                )}
-
+                ${escapeHTML(item.icon || "•")}
             </div>
 
             <div class="module-info">
 
                 <strong>
-                    ${escapeHTML(
-                        item.title
-                    )}
+                    ${escapeHTML(item.title)}
                 </strong>
 
                 <span>
-                    ${escapeHTML(
-                        item.description
-                    )}
+                    ${escapeHTML(item.description)}
                 </span>
 
             </div>
@@ -1363,9 +1291,7 @@ function initModal() {
 }
 
 
-function openModal(
-    content
-) {
+function openModal(content) {
 
     const modal =
         $("#modal");
@@ -1383,10 +1309,7 @@ function openModal(
         content;
 
 
-    modal.classList.add(
-        "show"
-    );
-
+    modal.classList.add("show");
 
     modal.setAttribute(
         "aria-hidden",
@@ -1409,10 +1332,7 @@ function closeModal() {
     if (!modal) return;
 
 
-    modal.classList.remove(
-        "show"
-    );
-
+    modal.classList.remove("show");
 
     modal.setAttribute(
         "aria-hidden",
@@ -1428,7 +1348,7 @@ function closeModal() {
 
 
 /* =========================================================
-   WORD EDITOR
+   WORD
 ========================================================= */
 
 function openWord() {
@@ -1440,58 +1360,39 @@ function openWord() {
             <div class="tool-header">
 
                 <div>
-
-                    <small>
-                        NEXUS OFFICE
-                    </small>
-
-                    <strong>
-                        Word
-                    </strong>
-
+                    <small>NEXUS OFFICE</small>
+                    <strong>Word</strong>
                 </div>
 
                 <div class="tool-actions">
 
-                    <button
-                        type="button"
-                        onclick="wordCommand('bold')"
-                    >
+                    <button type="button"
+                        onclick="wordCommand('bold')">
                         <b>B</b>
                     </button>
 
-                    <button
-                        type="button"
-                        onclick="wordCommand('italic')"
-                    >
+                    <button type="button"
+                        onclick="wordCommand('italic')">
                         <i>I</i>
                     </button>
 
-                    <button
-                        type="button"
-                        onclick="wordCommand('underline')"
-                    >
+                    <button type="button"
+                        onclick="wordCommand('underline')">
                         <u>U</u>
                     </button>
 
-                    <button
-                        type="button"
-                        onclick="wordCommand('justifyLeft')"
-                    >
+                    <button type="button"
+                        onclick="wordCommand('justifyLeft')">
                         ☰
                     </button>
 
-                    <button
-                        type="button"
-                        onclick="wordCommand('justifyCenter')"
-                    >
+                    <button type="button"
+                        onclick="wordCommand('justifyCenter')">
                         ≡
                     </button>
 
-                    <button
-                        type="button"
-                        onclick="wordCommand('justifyRight')"
-                    >
+                    <button type="button"
+                        onclick="wordCommand('justifyRight')">
                         ≣
                     </button>
 
@@ -1517,66 +1418,28 @@ function openWord() {
                         id="wordFontSize"
                         onchange="wordFontSize(this.value)"
                     >
-
-                        <option value="14">
-                            14
-                        </option>
-
-                        <option value="16">
-                            16
-                        </option>
-
-                        <option value="18">
-                            18
-                        </option>
-
-                        <option value="20">
-                            20
-                        </option>
-
-                        <option value="24">
-                            24
-                        </option>
-
-                        <option value="28">
-                            28
-                        </option>
-
-                        <option value="32">
-                            32
-                        </option>
-
+                        <option value="14">14</option>
+                        <option value="16">16</option>
+                        <option value="18">18</option>
+                        <option value="20">20</option>
+                        <option value="24">24</option>
+                        <option value="28">28</option>
+                        <option value="32">32</option>
                     </select>
-
                 </label>
 
 
                 <label>
-
                     Format
 
                     <select
                         onchange="wordFormat(this.value)"
                     >
-
-                        <option value="p">
-                            Normal
-                        </option>
-
-                        <option value="h1">
-                            Başlıq 1
-                        </option>
-
-                        <option value="h2">
-                            Başlıq 2
-                        </option>
-
-                        <option value="blockquote">
-                            Sitat
-                        </option>
-
+                        <option value="p">Normal</option>
+                        <option value="h1">Başlıq 1</option>
+                        <option value="h2">Başlıq 2</option>
+                        <option value="blockquote">Sitat</option>
                     </select>
-
                 </label>
 
 
@@ -1611,23 +1474,17 @@ function openWord() {
                 contenteditable="true"
                 spellcheck="true"
             >
-
-                <h1>
-                    Yeni sənəd
-                </h1>
+                <h1>Yeni sənəd</h1>
 
                 <p>
                     Burada yazmağa başlayın...
                 </p>
-
             </div>
 
 
             <div class="word-status">
 
-                <span>
-                    NEXUS Word
-                </span>
+                <span>NEXUS Word</span>
 
                 <span>
                     Sənəd redaktəyə hazırdır
@@ -1644,7 +1501,24 @@ function openWord() {
         $("#wordEditor");
 
 
-    editor?.addEventListener(
+    if (!editor) return;
+
+
+    const saved =
+        localStorage.getItem(
+            "nexus_word_draft"
+        );
+
+
+    if (saved) {
+
+        editor.innerHTML =
+            saved;
+
+    }
+
+
+    editor.addEventListener(
         "input",
         () => {
 
@@ -1656,33 +1530,10 @@ function openWord() {
         }
     );
 
-
-    const saved =
-        localStorage.getItem(
-            "nexus_word_draft"
-        );
-
-
-    if (
-        saved &&
-        editor
-    ) {
-
-        editor.innerHTML =
-            saved;
-
-    }
-
 }
 
 
-/* =========================================================
-   WORD COMMANDS
-========================================================= */
-
-function wordCommand(
-    command
-) {
+function wordCommand(command) {
 
     document.execCommand(
         command,
@@ -1695,9 +1546,7 @@ function wordCommand(
 }
 
 
-function wordFontSize(
-    size
-) {
+function wordFontSize(size) {
 
     document.execCommand(
         "fontSize",
@@ -1716,9 +1565,7 @@ function wordFontSize(
     fonts?.forEach(
         font => {
 
-            font.removeAttribute(
-                "size"
-            );
+            font.removeAttribute("size");
 
             font.style.fontSize =
                 `${size}px`;
@@ -1729,9 +1576,7 @@ function wordFontSize(
 }
 
 
-function wordFormat(
-    format
-) {
+function wordFormat(format) {
 
     document.execCommand(
         "formatBlock",
@@ -1745,7 +1590,7 @@ function wordFormat(
 
 
 /* =========================================================
-   DOWNLOAD WORD
+   DOCX DOWNLOAD
 ========================================================= */
 
 async function downloadWord() {
@@ -1757,11 +1602,7 @@ async function downloadWord() {
         $("#wordTitle");
 
 
-    if (!editor) {
-
-        return;
-
-    }
+    if (!editor) return;
 
 
     const title =
@@ -1769,16 +1610,12 @@ async function downloadWord() {
             titleInput?.value ||
             "NEXUS Sənəd"
         )
-            .trim()
-            .replace(
-                /[\\/:*?"<>|]/g,
-                "_"
-            );
+        .trim()
+        .replace(
+            /[\\/:*?"<>|]/g,
+            "_"
+        );
 
-
-    /*
-       DOCX kitabxanası
-    */
 
     if (
         typeof docx ===
@@ -1800,17 +1637,13 @@ async function downloadWord() {
             Document,
             Packer,
             Paragraph,
-            TextRun,
-            HeadingLevel
+            TextRun
         } = docx;
 
 
         const text =
             editor.innerText
-                .replace(
-                    /\r/g,
-                    ""
-                );
+                .replace(/\r/g, "");
 
 
         const paragraphs =
@@ -1819,33 +1652,23 @@ async function downloadWord() {
                 .map(
                     line =>
                         new Paragraph({
-
                             children: [
-
                                 new TextRun({
                                     text: line
                                 })
-
                             ]
-
                         })
                 );
 
 
         const document =
             new Document({
-
                 sections: [
-
                     {
-
                         children:
                             paragraphs
-
                     }
-
                 ]
-
             });
 
 
@@ -1868,7 +1691,6 @@ async function downloadWord() {
             error
         );
 
-
         alert(
             "DOCX yaradılarkən xəta baş verdi."
         );
@@ -1885,7 +1707,6 @@ async function downloadWord() {
 function openExcel() {
 
     excelRows = 8;
-
     excelColumns = 8;
 
 
@@ -1896,15 +1717,8 @@ function openExcel() {
             <div class="tool-header">
 
                 <div>
-
-                    <small>
-                        NEXUS OFFICE
-                    </small>
-
-                    <strong>
-                        Excel
-                    </strong>
-
+                    <small>NEXUS OFFICE</small>
+                    <strong>Excel</strong>
                 </div>
 
 
@@ -1967,13 +1781,9 @@ function openExcel() {
 
             <div class="excel-status">
 
-                <span>
-                    NEXUS Excel
-                </span>
+                <span>NEXUS Excel</span>
 
-                <span>
-                    XLSX
-                </span>
+                <span>XLSX</span>
 
             </div>
 
@@ -1985,31 +1795,26 @@ function openExcel() {
     buildExcelTable();
 
 
-    const formula =
-        $("#excelFormula");
+    $("#excelFormula")
+        ?.addEventListener(
+            "keydown",
+            event => {
 
+                if (
+                    event.key === "Enter"
+                ) {
 
-    formula?.addEventListener(
-        "keydown",
-        event => {
+                    event.preventDefault();
 
-            if (
-                event.key === "Enter"
-            ) {
+                    applyExcelFormula();
 
-                applyExcelFormula();
+                }
 
             }
-
-        }
-    );
+        );
 
 }
 
-
-/* =========================================================
-   BUILD EXCEL TABLE
-========================================================= */
 
 function buildExcelTable() {
 
@@ -2022,9 +1827,7 @@ function buildExcelTable() {
     let html = `
         <thead>
             <tr>
-                <th class="corner">
-                    #
-                </th>
+                <th class="corner">#</th>
     `;
 
 
@@ -2058,7 +1861,6 @@ function buildExcelTable() {
 
         html += `
             <tr>
-
                 <th class="row-number">
                     ${row + 1}
                 </th>
@@ -2072,14 +1874,12 @@ function buildExcelTable() {
         ) {
 
             html += `
-
                 <td
                     contenteditable="true"
                     data-row="${row}"
                     data-col="${column}"
                     data-cell="${excelColumnName(column)}${row + 1}"
                 ></td>
-
             `;
 
         }
@@ -2101,10 +1901,6 @@ function buildExcelTable() {
         html;
 
 
-    /*
-       Hüceyrə seçimi
-    */
-
     table
         .querySelectorAll(
             "td[data-cell]"
@@ -2114,25 +1910,15 @@ function buildExcelTable() {
 
                 cell.addEventListener(
                     "focus",
-                    () => {
-
-                        updateExcelFormulaBar(
-                            cell
-                        );
-
-                    }
+                    () =>
+                        updateExcelFormulaBar(cell)
                 );
 
 
                 cell.addEventListener(
                     "input",
-                    () => {
-
-                        updateExcelFormulaBar(
-                            cell
-                        );
-
-                    }
+                    () =>
+                        updateExcelFormulaBar(cell)
                 );
 
 
@@ -2141,36 +1927,32 @@ function buildExcelTable() {
                     event => {
 
                         if (
-                            event.key ===
+                            event.key !==
                             "Enter"
-                        ) {
-
-                            event.preventDefault();
-
-                            const row =
-                                Number(
-                                    cell.dataset.row
-                                );
-
-                            const col =
-                                Number(
-                                    cell.dataset.col
-                                );
+                        ) return;
 
 
-                            const next =
-                                table.querySelector(
-                                    `td[data-row="${row + 1}"][data-col="${col}"]`
-                                );
+                        event.preventDefault();
 
 
-                            if (next) {
+                        const row =
+                            Number(
+                                cell.dataset.row
+                            );
 
-                                next.focus();
+                        const col =
+                            Number(
+                                cell.dataset.col
+                            );
 
-                            }
 
-                        }
+                        const next =
+                            table.querySelector(
+                                `td[data-row="${row + 1}"][data-col="${col}"]`
+                            );
+
+
+                        next?.focus();
 
                     }
                 );
@@ -2181,13 +1963,7 @@ function buildExcelTable() {
 }
 
 
-/* =========================================================
-   EXCEL COLUMN NAME
-========================================================= */
-
-function excelColumnName(
-    number
-) {
+function excelColumnName(number) {
 
     let name = "";
 
@@ -2204,8 +1980,7 @@ function excelColumnName(
         name =
             String.fromCharCode(
                 65 + remainder
-            ) +
-            name;
+            ) + name;
 
 
         n =
@@ -2221,10 +1996,6 @@ function excelColumnName(
 }
 
 
-/* =========================================================
-   EXCEL ROW
-========================================================= */
-
 function addExcelRow() {
 
     excelRows++;
@@ -2233,10 +2004,6 @@ function addExcelRow() {
 
 }
 
-
-/* =========================================================
-   EXCEL COLUMN
-========================================================= */
 
 function addExcelColumn() {
 
@@ -2247,13 +2014,7 @@ function addExcelColumn() {
 }
 
 
-/* =========================================================
-   EXCEL FORMULA BAR
-========================================================= */
-
-function updateExcelFormulaBar(
-    cell
-) {
+function updateExcelFormulaBar(cell) {
 
     const formula =
         $("#excelFormula");
@@ -2312,10 +2073,6 @@ function applyExcelFormula() {
 }
 
 
-/* =========================================================
-   DOWNLOAD EXCEL
-========================================================= */
-
 function downloadExcel() {
 
     if (
@@ -2334,7 +2091,6 @@ function downloadExcel() {
 
     const table =
         $("#excelTable");
-
 
     if (!table) return;
 
@@ -2371,7 +2127,6 @@ function downloadExcel() {
             error
         );
 
-
         alert(
             "Excel faylı yaradılarkən xəta baş verdi."
         );
@@ -2382,13 +2137,12 @@ function downloadExcel() {
 
 
 /* =========================================================
-   IOS STYLE CALCULATOR
+   CALCULATOR
 ========================================================= */
 
 function openCalculator() {
 
-    calculatorExpression =
-        "";
+    calculatorExpression = "";
 
 
     openModal(`
@@ -2442,23 +2196,9 @@ function openCalculator() {
                 </button>
 
 
-                <button
-                    onclick="calcInput('7')"
-                >
-                    7
-                </button>
-
-                <button
-                    onclick="calcInput('8')"
-                >
-                    8
-                </button>
-
-                <button
-                    onclick="calcInput('9')"
-                >
-                    9
-                </button>
+                <button onclick="calcInput('7')">7</button>
+                <button onclick="calcInput('8')">8</button>
+                <button onclick="calcInput('9')">9</button>
 
                 <button
                     class="calc-operator"
@@ -2468,23 +2208,9 @@ function openCalculator() {
                 </button>
 
 
-                <button
-                    onclick="calcInput('4')"
-                >
-                    4
-                </button>
-
-                <button
-                    onclick="calcInput('5')"
-                >
-                    5
-                </button>
-
-                <button
-                    onclick="calcInput('6')"
-                >
-                    6
-                </button>
+                <button onclick="calcInput('4')">4</button>
+                <button onclick="calcInput('5')">5</button>
+                <button onclick="calcInput('6')">6</button>
 
                 <button
                     class="calc-operator"
@@ -2494,23 +2220,9 @@ function openCalculator() {
                 </button>
 
 
-                <button
-                    onclick="calcInput('1')"
-                >
-                    1
-                </button>
-
-                <button
-                    onclick="calcInput('2')"
-                >
-                    2
-                </button>
-
-                <button
-                    onclick="calcInput('3')"
-                >
-                    3
-                </button>
+                <button onclick="calcInput('1')">1</button>
+                <button onclick="calcInput('2')">2</button>
+                <button onclick="calcInput('3')">3</button>
 
                 <button
                     class="calc-operator"
@@ -2527,9 +2239,7 @@ function openCalculator() {
                     0
                 </button>
 
-                <button
-                    onclick="calcInput('.')"
-                >
+                <button onclick="calcInput('.')">
                     .
                 </button>
 
@@ -2549,43 +2259,26 @@ function openCalculator() {
 }
 
 
-function calcInput(
-    value
-) {
-
-    /*
-       Xəta vəziyyətindən çıx
-    */
+function calcInput(value) {
 
     if (
         calculatorExpression ===
         "ERROR"
     ) {
 
-        calculatorExpression =
-            "";
+        calculatorExpression = "";
 
     }
 
 
-    /*
-       Operator təkrarlanmasının qarşısı
-    */
-
     if (
-        ["+", "-", "*", "/"]
-            .includes(value)
+        ["+", "-", "*", "/"].includes(value)
     ) {
 
         if (
-            !calculatorExpression
-        ) {
-
-            if (
-                value !== "-"
-            ) return;
-
-        }
+            !calculatorExpression &&
+            value !== "-"
+        ) return;
 
 
         if (
@@ -2605,18 +2298,13 @@ function calcInput(
     }
 
 
-    /*
-       Eyni expression-də iki decimal
-    */
-
-    if (
-        value === "."
-    ) {
+    if (value === ".") {
 
         const parts =
             calculatorExpression.split(
                 /[+\-*/]/
             );
+
 
         const last =
             parts[parts.length - 1];
@@ -2640,8 +2328,7 @@ function calcInput(
 
 function calcClear() {
 
-    calculatorExpression =
-        "";
+    calculatorExpression = "";
 
     updateCalcDisplay();
 
@@ -2673,9 +2360,7 @@ function calcPercent() {
 
 
     const number =
-        Number(
-            match[1]
-        );
+        Number(match[1]);
 
 
     calculatorExpression =
@@ -2683,9 +2368,7 @@ function calcPercent() {
             0,
             -match[1].length
         ) +
-        String(
-            number / 100
-        );
+        String(number / 100);
 
 
     updateCalcDisplay();
@@ -2694,11 +2377,6 @@ function calcPercent() {
 
 
 function calcToggleSign() {
-
-    if (
-        !calculatorExpression
-    ) return;
-
 
     const match =
         calculatorExpression.match(
@@ -2725,19 +2403,13 @@ function calcToggleSign() {
         (
             before.length === 1 ||
             /[+\-*/]$/.test(
-                before.slice(
-                    0,
-                    -1
-                )
+                before.slice(0, -1)
             )
         )
     ) {
 
         calculatorExpression =
-            before.slice(
-                0,
-                -1
-            ) +
+            before.slice(0, -1) +
             number;
 
     } else {
@@ -2757,9 +2429,7 @@ function calcToggleSign() {
 
 function calcEquals() {
 
-    if (
-        !calculatorExpression
-    ) return;
+    if (!calculatorExpression) return;
 
 
     try {
@@ -2768,13 +2438,10 @@ function calcEquals() {
             calculatorExpression;
 
 
-        /*
-           Yalnız riyazi simvollar
-        */
-
         if (
-            !/^[0-9+\-*/().\s]+$/
-                .test(expression)
+            !/^[0-9+\-*/().\s]+$/.test(
+                expression
+            )
         ) {
 
             throw new Error();
@@ -2789,9 +2456,7 @@ function calcEquals() {
 
 
         if (
-            !Number.isFinite(
-                result
-            )
+            !Number.isFinite(result)
         ) {
 
             throw new Error();
@@ -2811,9 +2476,7 @@ function calcEquals() {
 
     } catch {
 
-        calculatorExpression =
-            "ERROR";
-
+        calculatorExpression = "ERROR";
 
         updateCalcDisplay();
 
@@ -2821,8 +2484,7 @@ function calcEquals() {
         window.setTimeout(
             () => {
 
-                calculatorExpression =
-                    "";
+                calculatorExpression = "";
 
                 updateCalcDisplay();
 
@@ -2848,29 +2510,20 @@ function updateCalcDisplay() {
         "ERROR"
     ) {
 
-        display.textContent =
-            "Error";
+        display.textContent = "Error";
 
         return;
 
     }
 
 
-    const expression =
-        calculatorExpression ||
-        "0";
-
-
     display.textContent =
-        expression
-            .replace(
-                /\*/g,
-                "×"
-            )
-            .replace(
-                /\//g,
-                "÷"
-            );
+        (
+            calculatorExpression ||
+            "0"
+        )
+        .replace(/\*/g, "×")
+        .replace(/\//g, "÷");
 
 }
 
@@ -2879,9 +2532,7 @@ function updateCalcDisplay() {
    WORLD CLOCK
 ========================================================= */
 
-function showTimezone(
-    item
-) {
+function showTimezone(item) {
 
     openModal(`
 
@@ -2891,9 +2542,7 @@ function showTimezone(
                 ${item.icon}
             </div>
 
-            <small>
-                PAYTAXT
-            </small>
+            <small>PAYTAXT</small>
 
             <h2>
                 ${escapeHTML(item.title)}
@@ -2936,13 +2585,9 @@ function openWorldClock() {
 
             <div class="world-clocks-heading">
 
-                <small>
-                    NEXUS WORLD
-                </small>
+                <small>NEXUS WORLD</small>
 
-                <h2>
-                    Dünya saatları
-                </h2>
+                <h2>Dünya saatları</h2>
 
                 <p>
                     Paytaxtların canlı yerli vaxtı
@@ -2973,9 +2618,7 @@ function openWorldClock() {
                             ${escapeHTML(city.description)}
                         </span>
 
-                        <b>
-                            --
-                        </b>
+                        <b>--</b>
 
                     </div>
 
@@ -2996,10 +2639,7 @@ function openWorldClock() {
 
 function updateWorldClock() {
 
-    $$
-        (
-            "[data-timezone]"
-        )
+    $$("[data-timezone]")
         .forEach(
             element => {
 
@@ -3018,13 +2658,10 @@ function updateWorldClock() {
                             {
                                 timeZone:
                                     timezone,
-
                                 hour:
                                     "2-digit",
-
                                 minute:
                                     "2-digit",
-
                                 second:
                                     "2-digit"
                             }
@@ -3040,9 +2677,7 @@ function updateWorldClock() {
                     ) {
 
                         const clock =
-                            element.querySelector(
-                                "b"
-                            );
+                            element.querySelector("b");
 
 
                         if (clock) {
@@ -3079,7 +2714,7 @@ window.setInterval(
 
 
 /* =========================================================
-   PERCENTAGE CALCULATOR
+   PERCENTAGE
 ========================================================= */
 
 function openPercentageCalculator() {
@@ -3088,9 +2723,7 @@ function openPercentageCalculator() {
 
         <div class="simple-tool">
 
-            <small>
-                NEXUS TOOLS
-            </small>
+            <small>NEXUS TOOLS</small>
 
             <h2>
                 Faiz kalkulyatoru
@@ -3104,8 +2737,8 @@ function openPercentageCalculator() {
                     type="number"
                     placeholder="100"
                 >
-
             </label>
+
 
             <label>
                 Faiz %
@@ -3115,8 +2748,8 @@ function openPercentageCalculator() {
                     type="number"
                     placeholder="15"
                 >
-
             </label>
+
 
             <button
                 class="primary-tool-button"
@@ -3124,6 +2757,7 @@ function openPercentageCalculator() {
             >
                 HESABLA
             </button>
+
 
             <div
                 id="percentageResult"
@@ -3171,7 +2805,7 @@ function calculatePercentage() {
 
 
 /* =========================================================
-   QR GENERATOR
+   QR
 ========================================================= */
 
 function openQRGenerator() {
@@ -3180,13 +2814,9 @@ function openQRGenerator() {
 
         <div class="simple-tool">
 
-            <small>
-                NEXUS TOOLS
-            </small>
+            <small>NEXUS TOOLS</small>
 
-            <h2>
-                QR Code
-            </h2>
+            <h2>QR Code</h2>
 
             <input
                 id="qrText"
@@ -3199,6 +2829,7 @@ function openQRGenerator() {
             >
                 QR YARAT
             </button>
+
 
             <div
                 id="qrResult"
@@ -3250,13 +2881,9 @@ function openNotepad() {
 
         <div class="simple-tool">
 
-            <small>
-                NEXUS TOOLS
-            </small>
+            <small>NEXUS TOOLS</small>
 
-            <h2>
-                Notepad
-            </h2>
+            <h2>Notepad</h2>
 
             <textarea
                 id="nexusNotes"
@@ -3291,8 +2918,7 @@ function openNotepad() {
         saved
     ) {
 
-        notes.value =
-            saved;
+        notes.value = saved;
 
     }
 
@@ -3354,9 +2980,7 @@ function initSearch() {
 
         window.open(
             CONFIG.SEARCH_URL +
-            encodeURIComponent(
-                query
-            ),
+            encodeURIComponent(query),
             "_blank",
             "noopener,noreferrer"
         );
@@ -3375,8 +2999,7 @@ function initSearch() {
         event => {
 
             if (
-                event.key ===
-                "Enter"
+                event.key === "Enter"
             ) {
 
                 event.preventDefault();
@@ -3392,28 +3015,7 @@ function initSearch() {
 
 
 /* =========================================================
-   HERO AI
-========================================================= */
-
-function initHeroAI() {
-
-    const button =
-        $("#heroAIButton");
-
-
-    if (!button) return;
-
-
-    button.addEventListener(
-        "click",
-        openAI
-    );
-
-}
-
-
-/* =========================================================
-   NEXUS AI FLOATING BUTTON
+   NEXUS AI
 ========================================================= */
 
 function initAI() {
@@ -3433,32 +3035,17 @@ function initAI() {
 }
 
 
-/* =========================================================
-   OPEN AI
-========================================================= */
-
 function openAI() {
-
-    /*
-       Əgər artıq açıqdırsa,
-       ikinci interface yaratma.
-    */
 
     if (
         document.querySelector(
             ".ai-interface"
         )
-    ) {
-
-        return;
-
-    }
+    ) return;
 
 
     const ai =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     ai.className =
@@ -3468,7 +3055,6 @@ function openAI() {
     ai.innerHTML = `
 
         <div class="ai-interface-inner">
-
 
             <header class="ai-header">
 
@@ -3480,9 +3066,7 @@ function openAI() {
 
                     <div>
 
-                        <strong>
-                            NEXUS AI
-                        </strong>
+                        <strong>NEXUS AI</strong>
 
                         <span>
                             SƏNİN RƏQƏMSAL KÖMƏKÇİN
@@ -3507,7 +3091,6 @@ function openAI() {
                         type="button"
                         class="ai-close"
                         id="aiClose"
-                        aria-label="Bağla"
                     >
                         ×
                     </button>
@@ -3540,27 +3123,19 @@ function openAI() {
 
                     <div class="ai-suggestions">
 
-                        <button
-                            type="button"
-                        >
+                        <button type="button">
                             Mənə bir şey öyrət
                         </button>
 
-                        <button
-                            type="button"
-                        >
+                        <button type="button">
                             Azərbaycan haqqında danış
                         </button>
 
-                        <button
-                            type="button"
-                        >
+                        <button type="button">
                             Kompüter problemimi həll et
                         </button>
 
-                        <button
-                            type="button"
-                        >
+                        <button type="button">
                             Mənə maraqlı bir fakt de
                         </button>
 
@@ -3585,7 +3160,6 @@ function openAI() {
                     <button
                         id="aiSend"
                         type="button"
-                        aria-label="Göndər"
                     >
                         ↑
                     </button>
@@ -3600,24 +3174,16 @@ function openAI() {
 
             </div>
 
-
         </div>
 
     `;
 
 
-    document.body.appendChild(
-        ai
-    );
-
+    document.body.appendChild(ai);
 
     document.body.style.overflow =
         "hidden";
 
-
-    /*
-       Close
-    */
 
     $("#aiClose")
         ?.addEventListener(
@@ -3626,20 +3192,12 @@ function openAI() {
         );
 
 
-    /*
-       New chat
-    */
-
     $("#aiNewChat")
         ?.addEventListener(
             "click",
             newAIChat
         );
 
-
-    /*
-       Send
-    */
 
     $("#aiSend")
         ?.addEventListener(
@@ -3648,18 +3206,13 @@ function openAI() {
         );
 
 
-    /*
-       Enter
-    */
-
     $("#aiInput")
         ?.addEventListener(
             "keydown",
             event => {
 
                 if (
-                    event.key ===
-                    "Enter" &&
+                    event.key === "Enter" &&
                     !event.shiftKey
                 ) {
 
@@ -3672,10 +3225,6 @@ function openAI() {
             }
         );
 
-
-    /*
-       Suggestions
-    */
 
     $$(".ai-suggestions button")
         .forEach(
@@ -3705,25 +3254,15 @@ function openAI() {
         );
 
 
-    /*
-       Focus
-    */
-
     window.setTimeout(
         () => {
-
             $("#aiInput")?.focus();
-
         },
         100
     );
 
 }
 
-
-/* =========================================================
-   CLOSE AI
-========================================================= */
 
 function closeAI() {
 
@@ -3738,21 +3277,14 @@ function closeAI() {
 
     ai.remove();
 
-
-    document.body.style.overflow =
-        "";
+    document.body.style.overflow = "";
 
 }
 
 
-/* =========================================================
-   NEW AI CHAT
-========================================================= */
-
 function newAIChat() {
 
-    conversationHistory =
-        [];
+    conversationHistory = [];
 
 
     const chat =
@@ -3785,10 +3317,6 @@ function newAIChat() {
 }
 
 
-/* =========================================================
-   SEND AI
-========================================================= */
-
 async function sendAI() {
 
     const input =
@@ -3811,39 +3339,23 @@ async function sendAI() {
     if (!message) return;
 
 
-    /*
-       User message
-    */
-
     addAIMessage(
         "user",
         message
     );
 
 
-    input.value =
-        "";
+    input.value = "";
 
 
     conversationHistory.push({
-
-        role:
-            "user",
-
-        content:
-            message
-
+        role: "user",
+        content: message
     });
 
 
-    /*
-       Loading
-    */
-
     const loading =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     loading.className =
@@ -3867,17 +3379,10 @@ async function sendAI() {
     `;
 
 
-    chat.appendChild(
-        loading
-    );
-
+    chat.appendChild(loading);
 
     scrollAI();
 
-
-    /*
-       Disable button
-    */
 
     const sendButton =
         $("#aiSend");
@@ -3885,8 +3390,7 @@ async function sendAI() {
 
     if (sendButton) {
 
-        sendButton.disabled =
-            true;
+        sendButton.disabled = true;
 
     }
 
@@ -3897,38 +3401,25 @@ async function sendAI() {
             await fetch(
                 CONFIG.AI_WORKER_URL,
                 {
-
-                    method:
-                        "POST",
+                    method: "POST",
 
                     headers: {
-
                         "Content-Type":
                             "application/json",
 
                         "Accept":
                             "application/json"
-
                     },
 
                     body:
                         JSON.stringify({
-
-                            message:
-                                message,
-
+                            message,
                             history:
                                 conversationHistory
-
                         })
-
                 }
             );
 
-
-        /*
-           JSON parse
-        */
 
         let data;
 
@@ -3948,9 +3439,7 @@ async function sendAI() {
         loading.remove();
 
 
-        if (
-            !response.ok
-        ) {
+        if (!response.ok) {
 
             throw new Error(
                 data?.error ||
@@ -3959,11 +3448,6 @@ async function sendAI() {
 
         }
 
-
-        /*
-           Worker müxtəlif adlarla
-           cavab qaytara bilər.
-        */
 
         const answer =
             data?.answer ??
@@ -3984,13 +3468,8 @@ async function sendAI() {
 
 
         conversationHistory.push({
-
-            role:
-                "assistant",
-
-            content:
-                String(answer)
-
+            role: "assistant",
+            content: String(answer)
         });
 
 
@@ -4013,17 +3492,20 @@ async function sendAI() {
 
         addAIMessage(
             "assistant",
-            `Bağlantı zamanı xəta baş verdi.\n\n${error.message || "Naməlum xəta."}`
+            `Bağlantı zamanı xəta baş verdi.\n\n${
+                error.message ||
+                "Naməlum xəta."
+            }`
         );
 
     } finally {
 
         if (sendButton) {
 
-            sendButton.disabled =
-                false;
+            sendButton.disabled = false;
 
         }
+
 
         scrollAI();
 
@@ -4033,10 +3515,6 @@ async function sendAI() {
 
 }
 
-
-/* =========================================================
-   AI MESSAGE
-========================================================= */
 
 function addAIMessage(
     role,
@@ -4050,10 +3528,6 @@ function addAIMessage(
     if (!chat) return;
 
 
-    /*
-       Welcome screen-i ilk mesajda sil.
-    */
-
     chat
         .querySelector(
             ".ai-welcome"
@@ -4062,9 +3536,7 @@ function addAIMessage(
 
 
     const message =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     message.className =
@@ -4074,8 +3546,7 @@ function addAIMessage(
 
 
     if (
-        role ===
-        "user"
+        role === "user"
     ) {
 
         message.innerHTML = `
@@ -4103,31 +3574,18 @@ function addAIMessage(
     }
 
 
-    chat.appendChild(
-        message
-    );
-
+    chat.appendChild(message);
 
     scrollAI();
 
 }
 
 
-/* =========================================================
-   AI RESPONSE FORMAT
-========================================================= */
-
-function formatAIResponse(
-    text
-) {
+function formatAIResponse(text) {
 
     let safe =
         escapeHTML(text);
 
-
-    /*
-       Bold
-    */
 
     safe =
         safe.replace(
@@ -4136,31 +3594,12 @@ function formatAIResponse(
         );
 
 
-    /*
-       Inline code
-    */
-
     safe =
         safe.replace(
             /`([^`]+)`/g,
             "<code>$1</code>"
         );
 
-
-    /*
-       Simple bullets
-    */
-
-    safe =
-        safe.replace(
-            /^[-•]\s(.+)$/gm,
-            "• $1"
-        );
-
-
-    /*
-       New lines
-    */
 
     safe =
         safe.replace(
@@ -4173,10 +3612,6 @@ function formatAIResponse(
 
 }
 
-
-/* =========================================================
-   AI SCROLL
-========================================================= */
 
 function scrollAI() {
 
@@ -4197,38 +3632,16 @@ function scrollAI() {
    SECURITY
 ========================================================= */
 
-function escapeHTML(
-    value
-) {
+function escapeHTML(value) {
 
     return String(
         value ?? ""
     )
-
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
 }
 
@@ -4237,9 +3650,7 @@ function escapeHTML(
    EXTERNAL
 ========================================================= */
 
-function openExternal(
-    url
-) {
+function openExternal(url) {
 
     window.open(
         url,
@@ -4260,43 +3671,29 @@ function downloadBlob(
 ) {
 
     const url =
-        URL.createObjectURL(
-            blob
-        );
+        URL.createObjectURL(blob);
 
 
     const link =
-        document.createElement(
-            "a"
-        );
+        document.createElement("a");
 
 
-    link.href =
-        url;
-
+    link.href = url;
 
     link.download =
         filename;
 
 
-    document.body.appendChild(
-        link
-    );
-
+    document.body.appendChild(link);
 
     link.click();
-
 
     link.remove();
 
 
     window.setTimeout(
         () => {
-
-            URL.revokeObjectURL(
-                url
-            );
-
+            URL.revokeObjectURL(url);
         },
         1000
     );
@@ -4315,12 +3712,10 @@ function initKeyboard() {
         event => {
 
             if (
-                event.key ===
-                "Escape"
+                event.key === "Escape"
             ) {
 
                 closeModal();
-
                 closeAI();
 
             }
@@ -4425,7 +3820,11 @@ window.openNotepad =
 window.saveNotes =
     saveNotes;
 
+window.scrollToCategories =
+    scrollToCategories;
+
 
 /* =========================================================
    END NEXUS // AZ
 ========================================================= */
+```
