@@ -1,467 +1,510 @@
+```javascript
 /* =========================================================
-   NEXUS // AZ 4.1
-   MAIN JAVASCRIPT
+   NEXUS // AZ
+   SYSTEM v4.1
+   Main JavaScript
 ========================================================= */
+
+"use strict";
 
 
 /* =========================================================
-   HELPERS
+   CONFIG
 ========================================================= */
+
+const CONFIG = {
+
+    AI_WORKER_URL:
+        "https://nexus-ai.imranvelizade98.workers.dev/",
+
+    SEARCH_URL:
+        "https://www.google.com/search?q="
+
+};
+
+
+/* =========================================================
+   GLOBAL STATE
+========================================================= */
+
+let currentCategory = null;
+let conversationHistory = [];
 
 const $ = (selector) =>
     document.querySelector(selector);
 
-const $$ = (selector) =>
-    document.querySelectorAll(selector);
+
+/* =========================================================
+   DOM READY
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    initLoader();
+    initClock();
+    initCategories();
+    initModal();
+    initSearch();
+    initAI();
+    initKeyboard();
+
+});
 
 
 /* =========================================================
-   DATA
+   LOADER
+========================================================= */
+
+function initLoader() {
+
+    const loader = $("#loader");
+
+    if (!loader) return;
+
+    setTimeout(() => {
+
+        loader.classList.add("hidden");
+
+    }, 900);
+
+}
+
+
+/* =========================================================
+   CLOCK
+========================================================= */
+
+function initClock() {
+
+    const clock = $("#clock");
+    const date = $("#date");
+
+    if (!clock) return;
+
+    function updateClock() {
+
+        const now = new Date();
+
+        clock.textContent =
+            now.toLocaleTimeString(
+                "az-AZ",
+                {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit"
+                }
+            );
+
+        if (date) {
+
+            date.textContent =
+                now.toLocaleDateString(
+                    "az-AZ",
+                    {
+                        weekday: "long",
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
+
+        }
+
+    }
+
+    updateClock();
+
+    setInterval(updateClock, 1000);
+
+}
+
+
+/* =========================================================
+   CATEGORIES
 ========================================================= */
 
 const categories = [
 
     {
-        id: "network",
-        name: "Şəbəkə",
-        desc: "İnternet və bağlantı",
-        icon: "⌁"
-    },
-
-    {
-        id: "security",
-        name: "Təhlükəsizlik",
-        desc: "Məxfilik və qoruma",
-        icon: "◈"
-    },
-
-    {
-        id: "developer",
-        name: "Developer",
-        desc: "Kod və proqramlaşdırma",
-        icon: "</>"
-    },
-
-    {
-        id: "world",
-        name: "Dünya",
-        desc: "Ölkələr və saatlar",
-        icon: "◎"
+        id: "internet",
+        icon: "◉",
+        title: "İnternet",
+        description: "Axtarış, sürət və bağlantı alətləri"
     },
 
     {
         id: "office",
-        name: "Office",
-        desc: "Word və Excel",
-        icon: "▦"
+        icon: "▣",
+        title: "Ofis",
+        description: "Word, Excel və sənəd alətləri"
+    },
+
+    {
+        id: "world",
+        icon: "◎",
+        title: "Dünya",
+        description: "Saat qurşaqları və dünya məlumatları"
     },
 
     {
         id: "media",
-        name: "Media",
-        desc: "Musiqi və fayllar",
-        icon: "▶"
+        icon: "▶",
+        title: "Media",
+        description: "Musiqi və multimedia alətləri"
+    },
+
+    {
+        id: "security",
+        icon: "◇",
+        title: "Təhlükəsizlik",
+        description: "Şəbəkə və təhlükəsizlik alətləri"
+    },
+
+    {
+        id: "developer",
+        icon: "</>",
+        title: "Developer",
+        description: "Developer və kodlaşdırma alətləri"
     },
 
     {
         id: "tools",
-        name: "Alətlər",
-        desc: "Gündəlik alətlər",
-        icon: "⌘"
+        icon: "✣",
+        title: "Alətlər",
+        description: "Gündəlik faydalı alətlər"
     },
 
     {
         id: "ai",
-        name: "Süni intellekt",
-        desc: "NEXUS AI",
-        icon: "✦"
+        icon: "✦",
+        title: "AI",
+        description: "Süni intellekt alətləri"
     }
 
 ];
 
 
-/* =========================================================
-   TOOLS
-========================================================= */
-
-const tools = [
-
-    /* NETWORK */
-
-    {
-        id: "speed",
-        category: "network",
-        name: "Speed Test",
-        desc: "İnternet bağlantının sürətini yoxla.",
-        icon: "↯"
-    },
-
-    {
-        id: "ip",
-        category: "network",
-        name: "IP məlumatı",
-        desc: "İctimai IP ünvanını və bağlantı məlumatlarını göstər.",
-        icon: "IP"
-    },
-
-    {
-        id: "dns",
-        category: "network",
-        name: "DNS yoxlayıcı",
-        desc: "DNS bağlantısını və cavab müddətini yoxla.",
-        icon: "DNS"
-    },
-
-    {
-        id: "ping",
-        category: "network",
-        name: "Ping",
-        desc: "Şəbəkə cavab müddətini ölç.",
-        icon: "≈"
-    },
-
-    {
-        id: "browser",
-        category: "network",
-        name: "Brauzer məlumatı",
-        desc: "Cihaz və brauzer məlumatlarını göstər.",
-        icon: "WEB"
-    },
-
-    {
-        id: "connection",
-        category: "network",
-        name: "Bağlantı statusu",
-        desc: "İnternet bağlantısının hazırkı vəziyyətini yoxla.",
-        icon: "ON"
-    },
-
-
-    /* SECURITY */
-
-    {
-        id: "password",
-        category: "security",
-        name: "Şifrə generatoru",
-        desc: "Güclü və təsadüfi şifrələr yarat.",
-        icon: "KEY"
-    },
-
-    {
-        id: "password-check",
-        category: "security",
-        name: "Şifrə yoxlayıcı",
-        desc: "Şifrənin təhlükəsizlik səviyyəsini yoxla.",
-        icon: "✓"
-    },
-
-    {
-        id: "uuid",
-        category: "security",
-        name: "UUID generator",
-        desc: "Unikal UUID kodları yarat.",
-        icon: "ID"
-    },
-
-    {
-        id: "hash",
-        category: "security",
-        name: "Hash generator",
-        desc: "Mətn üçün SHA-256 hash yarat.",
-        icon: "#"
-    },
-
-    {
-        id: "base64",
-        category: "security",
-        name: "Base64",
-        desc: "Base64 kodlaşdırma və açma.",
-        icon: "64"
-    },
-
-
-    /* DEVELOPER */
-
-    {
-        id: "json",
-        category: "developer",
-        name: "JSON Formatter",
-        desc: "JSON məlumatlarını formatla və yoxla.",
-        icon: "{}"
-    },
-
-    {
-        id: "html",
-        category: "developer",
-        name: "HTML Formatter",
-        desc: "HTML kodunu daha oxunaqlı vəziyyətə gətir.",
-        icon: "</>"
-    },
-
-    {
-        id: "css",
-        category: "developer",
-        name: "CSS Formatter",
-        desc: "CSS kodunu formatla.",
-        icon: "#{}"
-    },
-
-    {
-        id: "js",
-        category: "developer",
-        name: "JavaScript",
-        desc: "JavaScript kodunu yoxla və sına.",
-        icon: "JS"
-    },
-
-    {
-        id: "timestamp",
-        category: "developer",
-        name: "Timestamp",
-        desc: "Unix timestamp çeviricisi.",
-        icon: "T"
-    },
-
-    {
-        id: "color",
-        category: "developer",
-        name: "Color Picker",
-        desc: "Rəng seç və HEX/RGB kodunu əldə et.",
-        icon: "RGB"
-    },
-
-
-    /* WORLD */
-
-    {
-        id: "world-clock",
-        category: "world",
-        name: "Dünya saatları",
-        desc: "Paytaxtların yerli vaxtını göstər.",
-        icon: "◷"
-    },
-
-    {
-        id: "countries",
-        category: "world",
-        name: "Ölkələr",
-        desc: "Ölkələr haqqında əsas məlumatlara bax.",
-        icon: "🌍"
-    },
-
-    {
-        id: "currency",
-        category: "world",
-        name: "Valyuta",
-        desc: "Valyutalar arasında çevirmə apar.",
-        icon: "$"
-    },
-
-    {
-        id: "timezone",
-        category: "world",
-        name: "Timezone",
-        desc: "Saat qurşaqlarını müqayisə et.",
-        icon: "TZ"
-    },
-
-
-    /* OFFICE */
-
-    {
-        id: "word",
-        category: "office",
-        name: "NEXUS Word",
-        desc: "Mətn yaz, formatla və DOCX faylı yarat.",
-        icon: "W"
-    },
-
-    {
-        id: "excel",
-        category: "office",
-        name: "NEXUS Excel",
-        desc: "Cədvəl yarat, məlumat daxil et və XLSX çıxar.",
-        icon: "X"
-    },
-
-    {
-        id: "calculator",
-        category: "office",
-        name: "Kalkulyator",
-        desc: "iOS üslubunda tam ekran kalkulyator.",
-        icon: "÷"
-    },
-
-    {
-        id: "percentage",
-        category: "office",
-        name: "Faiz hesablayıcı",
-        desc: "Faizləri sürətli şəkildə hesabla.",
-        icon: "%"
-    },
-
-
-    /* MEDIA */
-
-    {
-        id: "audio",
-        category: "media",
-        name: "Media Player",
-        desc: "Öz musiqi və audio fayllarını burada dinlə.",
-        icon: "♫"
-    },
-
-    {
-        id: "image",
-        category: "media",
-        name: "Şəkil görüntüləyici",
-        desc: "Şəkillərə bax və ölçülərini yoxla.",
-        icon: "IMG"
-    },
-
-    {
-        id: "file-info",
-        category: "media",
-        name: "Fayl məlumatı",
-        desc: "Faylın ölçüsünü və tipini öyrən.",
-        icon: "FILE"
-    },
-
-
-    /* TOOLS */
-
-    {
-        id: "notes",
-        category: "tools",
-        name: "Qeydlər",
-        desc: "Sürətli qeydlər yaz və yadda saxla.",
-        icon: "N"
-    },
-
-    {
-        id: "timer",
-        category: "tools",
-        name: "Timer",
-        desc: "Geri sayım taymeri.",
-        icon: "◴"
-    },
-
-    {
-        id: "stopwatch",
-        category: "tools",
-        name: "Saniyəölçən",
-        desc: "Dəqiq vaxt ölç.",
-        icon: "◉"
-    },
-
-    {
-        id: "qr",
-        category: "tools",
-        name: "QR Generator",
-        desc: "Mətn və linklərdən QR kod yarat.",
-        icon: "QR"
-    },
-
-
-    /* AI */
-
-    {
-        id: "ai",
-        category: "ai",
-        name: "NEXUS AI",
-        desc: "Süni intellekt köməkçisi.",
-        icon: "✦"
-    }
-
-];
-
-
-/* =========================================================
-   RENDER CATEGORIES
-========================================================= */
-
-function renderCategories() {
+function initCategories() {
 
     const container =
         $("#categories");
 
     if (!container) return;
 
-    container.innerHTML =
-        categories.map(cat => `
+    container.innerHTML = "";
 
-            <button
-                class="cat"
-                data-category="${cat.id}"
-            >
+    categories.forEach(category => {
 
-                <span class="cat-icon">
-                    ${cat.icon}
+        const card =
+            document.createElement("button");
+
+        card.className =
+            "category-card";
+
+        card.dataset.category =
+            category.id;
+
+        card.innerHTML = `
+
+            <div class="category-icon">
+                ${category.icon}
+            </div>
+
+            <div class="category-info">
+
+                <strong>
+                    ${category.title}
+                </strong>
+
+                <span>
+                    ${category.description}
                 </span>
 
-                <b>
-                    ${cat.name}
-                </b>
+            </div>
 
-                <small>
-                    ${cat.desc}
-                </small>
+            <b class="category-arrow">
+                →
+            </b>
 
-            </button>
+        `;
 
-        `).join("");
-
-
-    $$(".cat").forEach(button => {
-
-        button.addEventListener(
+        card.addEventListener(
             "click",
-            () => {
-
-                $$(".cat").forEach(item =>
-                    item.classList.remove("active")
-                );
-
-                button.classList.add("active");
-
-                renderTools(
-                    button.dataset.category
-                );
-
-                setTimeout(() => {
-
-                    const section =
-                        $("#modules");
-
-                    if (!section) return;
-
-                    const top =
-                        section.getBoundingClientRect().top
-                        + window.scrollY
-                        - 18;
-
-                    window.scrollTo({
-
-                        top,
-                        behavior: "smooth"
-
-                    });
-
-                }, 80);
-
-            }
+            () => selectCategory(category.id)
         );
 
+        container.appendChild(card);
+
     });
+
+
+    // İlk kateqoriya
+    selectCategory("internet");
 
 }
 
 
 /* =========================================================
-   RENDER TOOLS
+   MODULE DATA
 ========================================================= */
 
-function renderTools(category) {
+const modules = {
+
+    internet: [
+
+        {
+            icon: "⌕",
+            title: "Google",
+            description: "İnternetdə qlobal axtarış",
+            action: () => openExternal(
+                "https://www.google.com"
+            )
+        },
+
+        {
+            icon: "◉",
+            title: "Sürət testi",
+            description: "İnternet bağlantı sürətini yoxla",
+            action: () => openExternal(
+                "https://www.speedtest.net"
+            )
+        },
+
+        {
+            icon: "◌",
+            title: "IP ünvanım",
+            description: "İctimai IP ünvanını öyrən",
+            action: () => openExternal(
+                "https://whatismyipaddress.com"
+            )
+        },
+
+        {
+            icon: "⌁",
+            title: "DNS yoxlama",
+            description: "DNS məlumatlarını yoxla",
+            action: () => openExternal(
+                "https://www.dnsleaktest.com"
+            )
+        }
+
+    ],
+
+
+    office: [
+
+        {
+            icon: "W",
+            title: "Word",
+            description: "Brauzerdə sənəd yarat və redaktə et",
+            action: () => openWord()
+        },
+
+        {
+            icon: "X",
+            title: "Excel",
+            description: "Cədvəl yarat və XLSX faylı çıxart",
+            action: () => openExcel()
+        },
+
+        {
+            icon: "▤",
+            title: "PDF",
+            description: "PDF sənədləri ilə işləmək",
+            action: () => openExternal(
+                "https://www.ilovepdf.com"
+            )
+        }
+
+    ],
+
+
+    world: [
+
+        {
+            icon: "🇦🇿",
+            title: "Bakı",
+            description: "Azərbaycan — Bakı",
+            timezone: "Asia/Baku"
+        },
+
+        {
+            icon: "🇹🇷",
+            title: "Ankara",
+            description: "Türkiyə — Ankara",
+            timezone: "Europe/Istanbul"
+        },
+
+        {
+            icon: "🇬🇧",
+            title: "London",
+            description: "Böyük Britaniya — London",
+            timezone: "Europe/London"
+        },
+
+        {
+            icon: "🇺🇸",
+            title: "Vaşinqton",
+            description: "ABŞ — Vaşinqton",
+            timezone: "America/New_York"
+        },
+
+        {
+            icon: "🇩🇪",
+            title: "Berlin",
+            description: "Almaniya — Berlin",
+            timezone: "Europe/Berlin"
+        },
+
+        {
+            icon: "🇯🇵",
+            title: "Tokio",
+            description: "Yaponiya — Tokio",
+            timezone: "Asia/Tokyo"
+        },
+
+        {
+            icon: "🇦🇪",
+            title: "Əbu-Dabi",
+            description: "BƏƏ — Əbu-Dabi",
+            timezone: "Asia/Dubai"
+        },
+
+        {
+            icon: "🇷🇺",
+            title: "Moskva",
+            description: "Rusiya — Moskva",
+            timezone: "Europe/Moscow"
+        },
+
+        {
+            icon: "🇫🇷",
+            title: "Paris",
+            description: "Fransa — Paris",
+            timezone: "Europe/Paris"
+        }
+
+    ],
+
+
+    media: [
+
+        {
+            icon: "♫",
+            title: "YouTube Music",
+            description: "Musiqi dinlə",
+            action: () => openExternal(
+                "https://music.youtube.com"
+            )
+        },
+
+        {
+            icon: "▶",
+            title: "YouTube",
+            description: "Video və musiqi",
+            action: () => openExternal(
+                "https://www.youtube.com"
+            )
+        }
+
+    ],
+
+
+    security: [
+
+        {
+            icon: "◆",
+            title: "VirusTotal",
+            description: "Fayl və link təhlükəsizliyini yoxla",
+            action: () => openExternal(
+                "https://www.virustotal.com"
+            )
+        },
+
+        {
+            icon: "◇",
+            title: "Have I Been Pwned",
+            description: "E-poçt məlumat sızmasını yoxla",
+            action: () => openExternal(
+                "https://haveibeenpwned.com"
+            )
+        }
+
+    ],
+
+
+    developer: [
+
+        {
+            icon: "⌘",
+            title: "GitHub",
+            description: "Kod və layihələr",
+            action: () => openExternal(
+                "https://github.com"
+            )
+        },
+
+        {
+            icon: "</>",
+            title: "JSON Formatter",
+            description: "JSON məlumatlarını formatla",
+            action: () => openExternal(
+                "https://jsonformatter.org"
+            )
+        }
+
+    ],
+
+
+    tools: [
+
+        {
+            icon: "＋",
+            title: "Kalkulyator",
+            description: "iOS üslubunda kalkulyator",
+            action: () => openCalculator()
+        },
+
+        {
+            icon: "◷",
+            title: "Dünya saatları",
+            description: "Şəhərlərin yerli vaxtını göstər",
+            action: () => openWorldClock()
+        }
+
+    ],
+
+
+    ai: [
+
+        {
+            icon: "✦",
+            title: "NEXUS AI",
+            description: "Süni intellekt köməkçisi",
+            action: () => openAI()
+        },
+
+        {
+            icon: "◈",
+            title: "ChatGPT",
+            description: "OpenAI ChatGPT",
+            action: () => openExternal(
+                "https://chatgpt.com"
+            )
+        }
+
+    ]
+
+};
+
+
+/* =========================================================
+   SELECT CATEGORY
+========================================================= */
+
+function selectCategory(id) {
+
+    currentCategory = id;
 
     const grid =
         $("#moduleGrid");
@@ -471,1136 +514,135 @@ function renderTools(category) {
 
     if (!grid) return;
 
+    grid.innerHTML = "";
 
-    const categoryData =
+    const selected =
+        modules[id] || [];
+
+    const category =
         categories.find(
-            item => item.id === category
+            item => item.id === id
         );
-
 
     if (hint) {
 
         hint.textContent =
-            categoryData
-                ? categoryData.name.toUpperCase()
-                : category.toUpperCase();
+            category
+                ? category.title.toUpperCase()
+                : "";
 
     }
 
 
-    const selected =
-        tools.filter(
-            tool => tool.category === category
+    selected.forEach((item, index) => {
+
+        const card =
+            document.createElement("button");
+
+        card.className =
+            "module-card";
+
+        card.style.animationDelay =
+            `${index * 0.05}s`;
+
+        card.innerHTML = `
+
+            <div class="module-icon">
+                ${item.icon}
+            </div>
+
+            <div class="module-info">
+
+                <strong>
+                    ${item.title}
+                </strong>
+
+                <span>
+                    ${item.description}
+                </span>
+
+            </div>
+
+            <b class="module-arrow">
+                →
+            </b>
+
+        `;
+
+
+        card.addEventListener(
+            "click",
+            () => {
+
+                if (item.action) {
+
+                    item.action();
+
+                } else if (item.timezone) {
+
+                    showTimezone(item);
+
+                }
+
+            }
         );
 
 
-    grid.innerHTML =
-        selected.map(tool => `
+        grid.appendChild(card);
 
-            <article
-                class="tool"
-                data-tool="${tool.id}"
-            >
+    });
 
-                <div class="tool-icon">
-                    ${tool.icon}
-                </div>
 
-                <h3>
-                    ${tool.name}
-                </h3>
+    document
+        .querySelectorAll(".category-card")
+        .forEach(card => {
 
-                <p>
-                    ${tool.desc}
-                </p>
+            card.classList.toggle(
+                "active",
+                card.dataset.category === id
+            );
 
-                <button
-                    onclick="openTool('${tool.id}')"
-                >
-                    AÇ
-                </button>
-
-            </article>
-
-        `).join("");
+        });
 
 }
 
 
 /* =========================================================
-   OPEN TOOL
+   MODAL
 ========================================================= */
 
-function openTool(id) {
-
-    if (id === "ai") {
-
-        openAI();
-
-        return;
-
-    }
-
-
-    const tool =
-        tools.find(
-            item => item.id === id
-        );
-
-    if (!tool) return;
-
+function initModal() {
 
     const modal =
         $("#modal");
 
-    const content =
-        $("#modalContent");
+    const close =
+        $("#closeModal");
 
+    if (!modal) return;
 
-    content.innerHTML = `
 
-        <div class="modal-inner">
+    if (close) {
 
-            <div class="tool-icon">
-                ${tool.icon}
-            </div>
-
-            <h2>
-                ${tool.name}
-            </h2>
-
-            <p>
-                ${tool.desc}
-            </p>
-
-            <div id="toolArea"></div>
-
-        </div>
-
-    `;
-
-
-    modal.classList.add("show");
-
-
-    loadTool(
-        id,
-        $("#toolArea")
-    );
-
-}
-
-
-/* =========================================================
-   TOOL LOADER
-========================================================= */
-
-function loadTool(id, area) {
-
-    switch (id) {
-
-        case "speed":
-            speedTest(area);
-            break;
-
-        case "ip":
-            ipTool(area);
-            break;
-
-        case "dns":
-            dnsTool(area);
-            break;
-
-        case "ping":
-            pingTool(area);
-            break;
-
-        case "browser":
-            browserTool(area);
-            break;
-
-        case "connection":
-            connectionTool(area);
-            break;
-
-        case "password":
-            passwordTool(area);
-            break;
-
-        case "password-check":
-            passwordCheck(area);
-            break;
-
-        case "uuid":
-            uuidTool(area);
-            break;
-
-        case "hash":
-            hashTool(area);
-            break;
-
-        case "base64":
-            base64Tool(area);
-            break;
-
-        case "json":
-            jsonTool(area);
-            break;
-
-        case "html":
-            formatterTool(area, "HTML");
-            break;
-
-        case "css":
-            formatterTool(area, "CSS");
-            break;
-
-        case "js":
-            javascriptTool(area);
-            break;
-
-        case "timestamp":
-            timestampTool(area);
-            break;
-
-        case "color":
-            colorTool(area);
-            break;
-
-        case "world-clock":
-            worldClockTool(area);
-            break;
-
-        case "countries":
-            countriesTool(area);
-            break;
-
-        case "currency":
-            currencyTool(area);
-            break;
-
-        case "timezone":
-            timezoneTool(area);
-            break;
-
-        case "word":
-            wordTool(area);
-            break;
-
-        case "excel":
-            excelTool(area);
-            break;
-
-        case "calculator":
-            calculatorTool(area);
-            break;
-
-        case "percentage":
-            percentageTool(area);
-            break;
-
-        case "audio":
-            audioTool(area);
-            break;
-
-        case "image":
-            imageTool(area);
-            break;
-
-        case "file-info":
-            fileInfoTool(area);
-            break;
-
-        case "notes":
-            notesTool(area);
-            break;
-
-        case "timer":
-            timerTool(area);
-            break;
-
-        case "stopwatch":
-            stopwatchTool(area);
-            break;
-
-        case "qr":
-            qrTool(area);
-            break;
-
-    }
-
-}
-
-
-/* =========================================================
-   NETWORK
-========================================================= */
-
-function speedTest(area) {
-
-    area.innerHTML = `
-
-        <div class="speed">
-
-            <div class="speed-ring">
-                <span id="speedNumber">
-                    0
-                </span>
-            </div>
-
-            <div class="speed-value">
-                Mbps
-            </div>
-
-            <button
-                class="action"
-                id="startSpeed"
-            >
-                TESTƏ BAŞLA
-            </button>
-
-        </div>
-
-    `;
-
-
-    $("#startSpeed").onclick =
-        async function () {
-
-            const number =
-                $("#speedNumber");
-
-            number.textContent =
-                "...";
-
-
-            const start =
-                performance.now();
-
-
-            try {
-
-                const response =
-                    await fetch(
-                        "https://speed.cloudflare.com/__down?bytes=1000000",
-                        {
-                            cache: "no-store"
-                        }
-                    );
-
-
-                const data =
-                    await response.arrayBuffer();
-
-
-                const seconds =
-                    (performance.now() - start)
-                    / 1000;
-
-
-                const mbps =
-                    (
-                        data.byteLength
-                        * 8
-                        / seconds
-                        / 1000000
-                    ).toFixed(1);
-
-
-                number.textContent =
-                    mbps;
-
-            }
-
-            catch {
-
-                number.textContent =
-                    "X";
-
-            }
-
-        };
-
-}
-
-
-function ipTool(area) {
-
-    area.innerHTML = `
-
-        <button
-            class="action"
-            onclick="getIP()"
-        >
-            IP-Mİ ÖYRƏN
-        </button>
-
-        <pre id="ipResult">
-Hazırdır...
-        </pre>
-
-    `;
-
-}
-
-
-async function getIP() {
-
-    const result =
-        $("#ipResult");
-
-    try {
-
-        const response =
-            await fetch(
-                "https://api.ipify.org?format=json"
-            );
-
-        const data =
-            await response.json();
-
-        result.textContent =
-            `Public IP: ${data.ip}`;
-
-    }
-
-    catch {
-
-        result.textContent =
-            "IP məlumatını almaq mümkün olmadı.";
-
-    }
-
-}
-
-
-function dnsTool(area) {
-
-    area.innerHTML = `
-
-        <input
-            id="dnsHost"
-            class="field"
-            placeholder="məsələn: google.com"
-        >
-
-        <button
-            class="action"
-            onclick="checkDNS()"
-        >
-            YOXLAMA
-        </button>
-
-        <pre id="dnsResult"></pre>
-
-    `;
-
-}
-
-
-async function checkDNS() {
-
-    const host =
-        $("#dnsHost").value.trim();
-
-    if (!host) return;
-
-    const start =
-        performance.now();
-
-
-    try {
-
-        await fetch(
-            `https://dns.google/resolve?name=${encodeURIComponent(host)}`,
-            {
-                mode: "cors"
-            }
+        close.addEventListener(
+            "click",
+            closeModal
         );
 
-
-        const time =
-            Math.round(
-                performance.now() - start
-            );
-
-
-        $("#dnsResult").textContent =
-            `${host}\nDNS cavabı: ${time} ms`;
-
-    }
-
-    catch {
-
-        $("#dnsResult").textContent =
-            "DNS sorğusu uğursuz oldu.";
-
-    }
-
-}
-
-
-function pingTool(area) {
-
-    area.innerHTML = `
-
-        <input
-            id="pingHost"
-            class="field"
-            value="https://www.google.com"
-        >
-
-        <button
-            class="action"
-            onclick="runPing()"
-        >
-            PING
-        </button>
-
-        <pre id="pingResult"></pre>
-
-    `;
-
-}
-
-
-async function runPing() {
-
-    const host =
-        $("#pingHost").value;
-
-    const start =
-        performance.now();
-
-
-    try {
-
-        await fetch(
-            host,
-            {
-                mode: "no-cors",
-                cache: "no-store"
-            }
-        );
-
-
-        const ms =
-            Math.round(
-                performance.now() - start
-            );
-
-
-        $("#pingResult").textContent =
-            `Cavab müddəti: ${ms} ms`;
-
-    }
-
-    catch {
-
-        $("#pingResult").textContent =
-            "Ping ölçülmədi.";
-
-    }
-
-}
-
-
-function browserTool(area) {
-
-    area.innerHTML = `
-
-        <pre>
-Platform:
-${navigator.platform}
-
-Brauzer:
-${navigator.userAgent}
-
-Dil:
-${navigator.language}
-
-Ekran:
-${screen.width} × ${screen.height}
-
-Online:
-${navigator.onLine ? "Bəli" : "Xeyr"}
-
-CPU nüvələri:
-${navigator.hardwareConcurrency || "Naməlum"}
-
-RAM:
-${navigator.deviceMemory || "Naməlum"} GB
-        </pre>
-
-    `;
-
-}
-
-
-function connectionTool(area) {
-
-    const connection =
-        navigator.connection ||
-        navigator.mozConnection ||
-        navigator.webkitConnection;
-
-
-    area.innerHTML = `
-
-        <pre>
-Online: ${navigator.onLine ? "BƏLİ" : "XEYR"}
-
-Bağlantı tipi:
-${
-    connection
-        ? connection.effectiveType
-        : "Naməlum"
-}
-
-Downlink:
-${
-    connection
-        ? connection.downlink + " Mbps"
-        : "Naməlum"
-}
-        </pre>
-
-    `;
-
-}
-
-
-/* =========================================================
-   SECURITY
-========================================================= */
-
-function passwordTool(area) {
-
-    area.innerHTML = `
-
-        <input
-            id="passwordLength"
-            class="field"
-            type="number"
-            min="6"
-            max="100"
-            value="18"
-        >
-
-        <button
-            class="action"
-            onclick="generatePassword()"
-        >
-            ŞİFRƏ YARAT
-        </button>
-
-        <pre id="passwordResult"></pre>
-
-    `;
-
-}
-
-
-function generatePassword() {
-
-    const length =
-        Math.min(
-            100,
-            Math.max(
-                6,
-                Number(
-                    $("#passwordLength").value
-                )
-            )
-        );
-
-
-    const chars =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=";
-
-
-    let password = "";
-
-
-    for (
-        let i = 0;
-        i < length;
-        i++
-    ) {
-
-        password +=
-            chars[
-                Math.floor(
-                    Math.random()
-                    * chars.length
-                )
-            ];
-
     }
 
 
-    $("#passwordResult").textContent =
-        password;
-
-}
-
-
-function passwordCheck(area) {
-
-    area.innerHTML = `
-
-        <input
-            id="checkPassword"
-            class="field"
-            type="password"
-            placeholder="Şifrənizi yazın"
-            oninput="checkPasswordStrength()"
-        >
-
-        <pre id="strengthResult"></pre>
-
-    `;
-
-}
-
-
-function checkPasswordStrength() {
-
-    const password =
-        $("#checkPassword").value;
-
-    let score = 0;
-
-
-    if (password.length >= 8)
-        score++;
-
-    if (password.length >= 12)
-        score++;
-
-    if (/[A-Z]/.test(password))
-        score++;
-
-    if (/[0-9]/.test(password))
-        score++;
-
-    if (/[^A-Za-z0-9]/.test(password))
-        score++;
-
-
-    const labels = [
-        "ÇOX ZƏİF",
-        "ZƏİF",
-        "ORTA",
-        "YAXŞI",
-        "GÜCLÜ",
-        "ÇOX GÜCLÜ"
-    ];
-
-
-    $("#strengthResult").textContent =
-        labels[score];
-
-}
-
-
-function uuidTool(area) {
-
-    area.innerHTML = `
-
-        <button
-            class="action"
-            onclick="createUUID()"
-        >
-            UUID YARAT
-        </button>
-
-        <pre id="uuidResult"></pre>
-
-    `;
-
-}
-
-
-function createUUID() {
-
-    const uuid =
-        crypto.randomUUID
-            ? crypto.randomUUID()
-            : fallbackUUID();
-
-
-    $("#uuidResult").textContent =
-        uuid;
-
-}
-
-
-function fallbackUUID() {
-
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
-        .replace(
-            /[xy]/g,
-            function (c) {
-
-                const r =
-                    Math.random() * 16 | 0;
-
-                const v =
-                    c === "x"
-                        ? r
-                        : (r & 0x3 | 0x8);
-
-                return v.toString(16);
-
-            }
-        );
-
-}
-
-
-async function hashTool(area) {
-
-    area.innerHTML = `
-
-        <textarea
-            id="hashText"
-            class="field"
-            rows="6"
-            placeholder="Mətn..."
-        ></textarea>
-
-        <button
-            class="action"
-            onclick="createHash()"
-        >
-            SHA-256
-        </button>
-
-        <pre id="hashResult"></pre>
-
-    `;
-
-}
-
-
-async function createHash() {
-
-    const text =
-        $("#hashText").value;
-
-    const buffer =
-        await crypto.subtle.digest(
-            "SHA-256",
-            new TextEncoder().encode(text)
-        );
-
-
-    const hash =
-        Array.from(
-            new Uint8Array(buffer)
-        )
-        .map(
-            b =>
-                b.toString(16).padStart(2, "0")
-        )
-        .join("");
-
-
-    $("#hashResult").textContent =
-        hash;
-
-}
-
-
-function base64Tool(area) {
-
-    area.innerHTML = `
-
-        <textarea
-            id="base64Text"
-            class="field"
-            rows="6"
-            placeholder="Mətn..."
-        ></textarea>
-
-        <div class="office-actions">
-
-            <button onclick="encodeBase64()">
-                ENCODE
-            </button>
-
-            <button onclick="decodeBase64()">
-                DECODE
-            </button>
-
-        </div>
-
-        <pre id="base64Result"></pre>
-
-    `;
-
-}
-
-
-function encodeBase64() {
-
-    const value =
-        $("#base64Text").value;
-
-    $("#base64Result").textContent =
-        btoa(
-            unescape(
-                encodeURIComponent(value)
-            )
-        );
-
-}
-
-
-function decodeBase64() {
-
-    try {
-
-        $("#base64Result").textContent =
-            decodeURIComponent(
-                escape(
-                    atob(
-                        $("#base64Text").value
-                    )
-                )
-            );
-
-    }
-
-    catch {
-
-        $("#base64Result").textContent =
-            "Yanlış Base64 məlumatı.";
-
-    }
-
-}
-
-
-/* =========================================================
-   DEVELOPER
-========================================================= */
-
-function jsonTool(area) {
-
-    area.innerHTML = `
-
-        <textarea
-            id="jsonInput"
-            class="field"
-            rows="12"
-            placeholder='{"ad":"NEXUS"}'
-        ></textarea>
-
-        <button
-            class="action"
-            onclick="formatJSON()"
-        >
-            FORMAT
-        </button>
-
-        <pre id="jsonResult"></pre>
-
-    `;
-
-}
-
-
-function formatJSON() {
-
-    try {
-
-        const object =
-            JSON.parse(
-                $("#jsonInput").value
-            );
-
-
-        $("#jsonResult").textContent =
-            JSON.stringify(
-                object,
-                null,
-                4
-            );
-
-    }
-
-    catch {
-
-        $("#jsonResult").textContent =
-            "JSON xətası.";
-
-    }
-
-}
-
-
-function formatterTool(area, type) {
-
-    area.innerHTML = `
-
-        <textarea
-            id="formatInput"
-            class="field"
-            rows="15"
-            placeholder="${type} kodunu yaz..."
-        ></textarea>
-
-        <button
-            class="action"
-            onclick="formatGeneric('${type}')"
-        >
-            FORMAT
-        </button>
-
-        <pre id="formatResult"></pre>
-
-    `;
-
-}
-
-
-function formatGeneric(type) {
-
-    const value =
-        $("#formatInput").value;
-
-
-    $("#formatResult").textContent =
-        value
-            .replace(
-                />\s*</g,
-                ">\n<"
-            )
-            .replace(
-                /;\s*/g,
-                ";\n"
-            );
-
-}
-
-
-function javascriptTool(area) {
-
-    area.innerHTML = `
-
-        <textarea
-            id="jsInput"
-            class="field"
-            rows="13"
-            placeholder="console.log('NEXUS');"
-        ></textarea>
-
-        <button
-            class="action"
-            onclick="runJS()"
-        >
-            İŞLƏT
-        </button>
-
-        <pre id="jsResult"></pre>
-
-    `;
-
-}
-
-
-function runJS() {
-
-    const code =
-        $("#jsInput").value;
-
-
-    try {
-
-        const result =
-            Function(
-                `"use strict"; return (${code})`
-            )();
-
-
-        $("#jsResult").textContent =
-            String(result);
-
-    }
-
-    catch (error) {
-
-        $("#jsResult").textContent =
-            error.message;
-
-    }
-
-}
-
-
-function timestampTool(area) {
-
-    area.innerHTML = `
-
-        <button
-            class="action"
-            onclick="currentTimestamp()"
-        >
-            İNDİKİ TIMESTAMP
-        </button>
-
-        <pre id="timestampResult"></pre>
-
-    `;
-
-}
-
-
-function currentTimestamp() {
-
-    const now =
-        Math.floor(
-            Date.now() / 1000
-        );
-
-
-    $("#timestampResult").textContent =
-        now;
-
-}
-
-
-function colorTool(area) {
-
-    area.innerHTML = `
-
-        <input
-            id="colorInput"
-            type="color"
-            value="#8fa7ff"
-            style="
-                width:100%;
-                height:100px;
-                border:0;
-                background:transparent;
-            "
-        >
-
-        <pre id="colorResult">
-#8FA7FF
-        </pre>
-
-    `;
-
-
-    $("#colorInput").addEventListener(
-        "input",
+    modal.addEventListener(
+        "click",
         event => {
 
-            $("#colorResult").textContent =
-                event.target.value.toUpperCase();
+            if (
+                event.target === modal
+            ) {
+
+                closeModal();
+
+            }
 
         }
     );
@@ -1608,360 +650,32 @@ function colorTool(area) {
 }
 
 
-/* =========================================================
-   WORLD
-========================================================= */
+function openModal(content) {
 
-const capitals = [
+    const modal =
+        $("#modal");
 
-    {
-        city: "Bakı",
-        country: "Azərbaycan",
-        flag: "🇦🇿",
-        timezone: "Asia/Baku"
-    },
+    const contentBox =
+        $("#modalContent");
 
-    {
-        city: "Ankara",
-        country: "Türkiyə",
-        flag: "🇹🇷",
-        timezone: "Europe/Istanbul"
-    },
+    if (!modal || !contentBox) return;
 
-    {
-        city: "London",
-        country: "Böyük Britaniya",
-        flag: "🇬🇧",
-        timezone: "Europe/London"
-    },
+    contentBox.innerHTML =
+        content;
 
-    {
-        city: "Paris",
-        country: "Fransa",
-        flag: "🇫🇷",
-        timezone: "Europe/Paris"
-    },
-
-    {
-        city: "Berlin",
-        country: "Almaniya",
-        flag: "🇩🇪",
-        timezone: "Europe/Berlin"
-    },
-
-    {
-        city: "Moskva",
-        country: "Rusiya",
-        flag: "🇷🇺",
-        timezone: "Europe/Moscow"
-    },
-
-    {
-        city: "Vaşinqton",
-        country: "ABŞ",
-        flag: "🇺🇸",
-        timezone: "America/New_York"
-    },
-
-    {
-        city: "Pekin",
-        country: "Çin",
-        flag: "🇨🇳",
-        timezone: "Asia/Shanghai"
-    },
-
-    {
-        city: "Tokio",
-        country: "Yaponiya",
-        flag: "🇯🇵",
-        timezone: "Asia/Tokyo"
-    },
-
-    {
-        city: "Dubay",
-        country: "BƏƏ",
-        flag: "🇦🇪",
-        timezone: "Asia/Dubai"
-    },
-
-    {
-        city: "Seul",
-        country: "Cənubi Koreya",
-        flag: "🇰🇷",
-        timezone: "Asia/Seoul"
-    },
-
-    {
-        city: "Roma",
-        country: "İtaliya",
-        flag: "🇮🇹",
-        timezone: "Europe/Rome"
-    }
-
-];
-
-
-function worldClockTool(area) {
-
-    area.innerHTML = `
-
-        <div
-            class="clocks"
-            id="worldClocks"
-        ></div>
-
-    `;
-
-
-    function updateClocks() {
-
-        const container =
-            $("#worldClocks");
-
-        container.innerHTML =
-            capitals.map(place => {
-
-                const time =
-                    new Intl.DateTimeFormat(
-                        "az-AZ",
-                        {
-                            timeZone:
-                                place.timezone,
-
-                            hour:
-                                "2-digit",
-
-                            minute:
-                                "2-digit",
-
-                            second:
-                                "2-digit"
-                        }
-                    ).format(
-                        new Date()
-                    );
-
-
-                return `
-
-                    <div class="clock-card">
-
-                        <div class="flag">
-                            ${place.flag}
-                        </div>
-
-                        <b>
-                            ${place.city}
-                        </b>
-
-                        <small>
-                            ${place.country}
-                        </small>
-
-                        <strong>
-                            ${time}
-                        </strong>
-
-                    </div>
-
-                `;
-
-            }).join("");
-
-    }
-
-
-    updateClocks();
-
-    setInterval(
-        updateClocks,
-        1000
-    );
+    modal.classList.add("open");
 
 }
 
 
-function countriesTool(area) {
+function closeModal() {
 
-    area.innerHTML = `
+    const modal =
+        $("#modal");
 
-        <div class="clocks">
+    if (!modal) return;
 
-            ${capitals.map(c => `
-
-                <div class="clock-card">
-
-                    <div class="flag">
-                        ${c.flag}
-                    </div>
-
-                    <b>
-                        ${c.country}
-                    </b>
-
-                    <small>
-                        Paytaxt
-                    </small>
-
-                    <strong>
-                        ${c.city}
-                    </strong>
-
-                </div>
-
-            `).join("")}
-
-        </div>
-
-    `;
-
-}
-
-
-function currencyTool(area) {
-
-    area.innerHTML = `
-
-        <input
-            id="currencyAmount"
-            class="field"
-            type="number"
-            value="100"
-        >
-
-        <select
-            id="currencyFrom"
-            class="field"
-        >
-
-            <option value="AZN">
-                AZN
-            </option>
-
-            <option value="USD">
-                USD
-            </option>
-
-            <option value="EUR">
-                EUR
-            </option>
-
-            <option value="TRY">
-                TRY
-            </option>
-
-        </select>
-
-        <select
-            id="currencyTo"
-            class="field"
-        >
-
-            <option value="USD">
-                USD
-            </option>
-
-            <option value="AZN">
-                AZN
-            </option>
-
-            <option value="EUR">
-                EUR
-            </option>
-
-            <option value="TRY">
-                TRY
-            </option>
-
-        </select>
-
-        <button
-            class="action"
-            onclick="convertCurrency()"
-        >
-            ÇEVİR
-        </button>
-
-        <pre id="currencyResult"></pre>
-
-    `;
-
-}
-
-
-async function convertCurrency() {
-
-    const amount =
-        Number(
-            $("#currencyAmount").value
-        );
-
-
-    const from =
-        $("#currencyFrom").value;
-
-    const to =
-        $("#currencyTo").value;
-
-
-    try {
-
-        const response =
-            await fetch(
-                `https://api.frankfurter.app/latest?amount=${amount}&from=${from}&to=${to}`
-            );
-
-
-        const data =
-            await response.json();
-
-
-        $("#currencyResult").textContent =
-            `${amount} ${from} = ${data.rates[to]} ${to}`;
-
-    }
-
-    catch {
-
-        $("#currencyResult").textContent =
-            "Məzənnə məlumatı alınmadı.";
-
-    }
-
-}
-
-
-function timezoneTool(area) {
-
-    area.innerHTML = `
-
-        <pre>
-Bakı:
-${new Date().toLocaleString(
-    "az-AZ",
-    {
-        timeZone: "Asia/Baku"
-    }
-)}
-
-London:
-${new Date().toLocaleString(
-    "az-AZ",
-    {
-        timeZone: "Europe/London"
-    }
-)}
-
-New York:
-${new Date().toLocaleString(
-    "az-AZ",
-    {
-        timeZone: "America/New_York"
-    }
-)}
-        </pre>
-
-    `;
+    modal.classList.remove("open");
 
 }
 
@@ -1970,124 +684,54 @@ ${new Date().toLocaleString(
    WORD
 ========================================================= */
 
-function wordTool(area) {
+function openWord() {
 
-    area.innerHTML = `
+    openModal(`
 
-        <div class="word-app">
+        <div class="tool-window word-tool">
 
-            <div class="word-toolbar">
+            <div class="tool-header">
 
-                <button
-                    onclick="document.execCommand('bold')"
-                >
-                    <b>B</b>
-                </button>
+                <strong>
+                    Word
+                </strong>
 
                 <button
-                    onclick="document.execCommand('italic')"
+                    onclick="downloadWord()"
                 >
-                    <i>I</i>
-                </button>
-
-                <button
-                    onclick="document.execCommand('underline')"
-                >
-                    <u>U</u>
-                </button>
-
-                <select
-                    onchange="changeFontSize(this.value)"
-                >
-
-                    <option value="3">
-                        Normal
-                    </option>
-
-                    <option value="4">
-                        Böyük
-                    </option>
-
-                    <option value="5">
-                        Daha böyük
-                    </option>
-
-                    <option value="6">
-                        Başlıq
-                    </option>
-
-                </select>
-
-                <button
-                    onclick="document.execCommand('justifyLeft')"
-                >
-                    Sol
-                </button>
-
-                <button
-                    onclick="document.execCommand('justifyCenter')"
-                >
-                    Mərkəz
-                </button>
-
-                <button
-                    onclick="document.execCommand('justifyRight')"
-                >
-                    Sağ
+                    Yüklə
                 </button>
 
             </div>
 
-
-            <div
-                id="wordPage"
-                class="word-page"
-                contenteditable="true"
+            <input
+                id="wordTitle"
+                class="word-title"
+                placeholder="Sənədin adı"
             >
 
-                <h1>NEXUS Word</h1>
-
-                <p>
-                    Burada sənədini yazmağa başla...
-                </p>
-
-            </div>
+            <textarea
+                id="wordEditor"
+                class="word-editor"
+                placeholder="Sənədinizi burada yazın..."
+            ></textarea>
 
         </div>
 
-
-        <div class="office-actions">
-
-            <button onclick="downloadWord()">
-                DOCX YÜKLƏ
-            </button>
-
-            <button onclick="window.print()">
-                ÇAP ET
-            </button>
-
-        </div>
-
-    `;
-
-}
-
-
-function changeFontSize(size) {
-
-    document.execCommand(
-        "fontSize",
-        false,
-        size
-    );
+    `);
 
 }
 
 
 async function downloadWord() {
 
+    const title =
+        $("#wordTitle")?.value ||
+        "NEXUS Sənəd";
+
     const text =
-        $("#wordPage").innerText;
+        $("#wordEditor")?.value ||
+        "";
 
 
     if (
@@ -2095,7 +739,7 @@ async function downloadWord() {
     ) {
 
         alert(
-            "DOCX sistemi hələ yüklənməyib."
+            "Word modulu yüklənməyib."
         );
 
         return;
@@ -2103,60 +747,59 @@ async function downloadWord() {
     }
 
 
-    const {
-        Document,
-        Packer,
-        Paragraph
-    } = docx;
+    try {
+
+        const {
+            Document,
+            Packer,
+            Paragraph
+        } = docx;
 
 
-    const documentFile =
-        new Document({
+        const document =
+            new Document({
 
-            sections: [
+                sections: [
 
-                {
+                    {
 
-                    children:
-                        text.split("\n")
-                            .map(
-                                line =>
-                                    new Paragraph({
-                                        text: line
-                                    })
-                            )
+                        children:
+                            text
+                                .split("\n")
+                                .map(
+                                    line =>
+                                        new Paragraph({
+                                            text: line
+                                        })
+                                )
 
-                }
+                    }
 
-            ]
+                ]
 
-        });
+            });
 
 
-    const blob =
-        await Packer.toBlob(
-            documentFile
+        const blob =
+            await Packer.toBlob(
+                document
+            );
+
+
+        downloadBlob(
+            blob,
+            `${title}.docx`
         );
 
+    } catch (error) {
 
-    const url =
-        URL.createObjectURL(blob);
+        console.error(error);
 
+        alert(
+            "Word faylı yaradılarkən xəta baş verdi."
+        );
 
-    const link =
-        document.createElement("a");
-
-
-    link.href = url;
-
-    link.download =
-        "NEXUS-sened.docx";
-
-
-    link.click();
-
-
-    URL.revokeObjectURL(url);
+    }
 
 }
 
@@ -2165,48 +808,92 @@ async function downloadWord() {
    EXCEL
 ========================================================= */
 
-function excelTool(area) {
+function openExcel() {
 
-    area.innerHTML = `
+    openModal(`
 
-        <div class="office-actions">
+        <div class="tool-window excel-tool">
 
-            <button
-                onclick="addExcelRow()"
+            <div class="tool-header">
+
+                <strong>
+                    Excel
+                </strong>
+
+                <button
+                    onclick="downloadExcel()"
+                >
+                    XLSX yüklə
+                </button>
+
+            </div>
+
+            <div class="excel-toolbar">
+
+                <button onclick="addExcelRow()">
+                    + Sətir
+                </button>
+
+                <button onclick="addExcelColumn()">
+                    + Sütun
+                </button>
+
+            </div>
+
+            <table
+                id="excelTable"
+                class="excel-table"
             >
-                + SƏTİR
-            </button>
-
-            <button
-                onclick="downloadExcel()"
-            >
-                XLSX YÜKLƏ
-            </button>
-
-        </div>
-
-
-        <div class="sheet-wrap">
-
-            <table id="excelTable">
-
-                <thead>
-
-                    <tr>
-
-                        <th>A</th>
-                        <th>B</th>
-                        <th>C</th>
-                        <th>D</th>
-                        <th>E</th>
-
-                    </tr>
-
-                </thead>
 
                 <tbody>
 
-                    ${createExcelRows(8)}
+                    <tr>
+
+                        <td contenteditable="true">
+                            A1
+                        </td>
+
+                        <td contenteditable="true">
+                            B1
+                        </td>
+
+                        <td contenteditable="true">
+                            C1
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td contenteditable="true">
+                            A2
+                        </td>
+
+                        <td contenteditable="true">
+                            B2
+                        </td>
+
+                        <td contenteditable="true">
+                            C2
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td contenteditable="true">
+                            A3
+                        </td>
+
+                        <td contenteditable="true">
+                            B3
+                        </td>
+
+                        <td contenteditable="true">
+                            C3
+                        </td>
+
+                    </tr>
 
                 </tbody>
 
@@ -2214,54 +901,62 @@ function excelTool(area) {
 
         </div>
 
-    `;
-
-}
-
-
-function createExcelRows(count) {
-
-    let html = "";
-
-
-    for (
-        let r = 0;
-        r < count;
-        r++
-    ) {
-
-        html += `
-
-            <tr>
-
-                ${[1,2,3,4,5]
-                    .map(
-                        () =>
-                            `<td contenteditable="true"></td>`
-                    )
-                    .join("")
-                }
-
-            </tr>
-
-        `;
-
-    }
-
-
-    return html;
+    `);
 
 }
 
 
 function addExcelRow() {
 
-    $("#excelTable")
-        .querySelector("tbody")
-        .insertAdjacentHTML(
-            "beforeend",
-            createExcelRows(1)
-        );
+    const table =
+        $("#excelTable");
+
+    if (!table) return;
+
+    const columns =
+        table.rows[0]?.cells.length || 3;
+
+    const row =
+        table.insertRow();
+
+    for (
+        let i = 0;
+        i < columns;
+        i++
+    ) {
+
+        const cell =
+            row.insertCell();
+
+        cell.contentEditable =
+            "true";
+
+        cell.textContent =
+            "";
+
+    }
+
+}
+
+
+function addExcelColumn() {
+
+    const table =
+        $("#excelTable");
+
+    if (!table) return;
+
+    Array
+        .from(table.rows)
+        .forEach(row => {
+
+            const cell =
+                row.insertCell();
+
+            cell.contentEditable =
+                "true";
+
+        });
 
 }
 
@@ -2273,7 +968,7 @@ function downloadExcel() {
     ) {
 
         alert(
-            "Excel sistemi yüklənməyib."
+            "Excel modulu yüklənməyib."
         );
 
         return;
@@ -2284,16 +979,28 @@ function downloadExcel() {
     const table =
         $("#excelTable");
 
+    if (!table) return;
+
 
     const workbook =
-        XLSX.utils.table_to_book(
+        XLSX.utils.book_new();
+
+    const worksheet =
+        XLSX.utils.table_to_sheet(
             table
         );
 
 
+    XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet,
+        "NEXUS"
+    );
+
+
     XLSX.writeFile(
         workbook,
-        "NEXUS-Excel.xlsx"
+        "NEXUS.xlsx"
     );
 
 }
@@ -2303,37 +1010,34 @@ function downloadExcel() {
    CALCULATOR
 ========================================================= */
 
-function calculatorTool(area) {
+function openCalculator() {
 
-    area.innerHTML = `
+    openModal(`
 
-        <div class="calc">
+        <div class="calculator">
 
             <div
-                class="calc-display"
                 id="calcDisplay"
+                class="calc-display"
             >
                 0
             </div>
 
-            <div class="calc-grid">
+            <div class="calc-buttons">
 
                 <button onclick="calcClear()">
                     AC
                 </button>
 
-                <button onclick="calcSign()">
-                    +/−
+                <button onclick="calcDelete()">
+                    ⌫
                 </button>
 
-                <button onclick="calcPercent()">
+                <button onclick="calcInput('%')">
                     %
                 </button>
 
-                <button
-                    class="op"
-                    onclick="calcInput('/')"
-                >
+                <button onclick="calcInput('/')">
                     ÷
                 </button>
 
@@ -2350,10 +1054,7 @@ function calculatorTool(area) {
                     9
                 </button>
 
-                <button
-                    class="op"
-                    onclick="calcInput('*')"
-                >
+                <button onclick="calcInput('*')">
                     ×
                 </button>
 
@@ -2370,10 +1071,7 @@ function calculatorTool(area) {
                     6
                 </button>
 
-                <button
-                    class="op"
-                    onclick="calcInput('-')"
-                >
+                <button onclick="calcInput('-')">
                     −
                 </button>
 
@@ -2390,16 +1088,13 @@ function calculatorTool(area) {
                     3
                 </button>
 
-                <button
-                    class="op"
-                    onclick="calcInput('+')"
-                >
+                <button onclick="calcInput('+')">
                     +
                 </button>
 
 
                 <button
-                    class="wide"
+                    class="zero"
                     onclick="calcInput('0')"
                 >
                     0
@@ -2410,7 +1105,6 @@ function calculatorTool(area) {
                 </button>
 
                 <button
-                    class="op"
                     onclick="calcEquals()"
                 >
                     =
@@ -2420,69 +1114,43 @@ function calculatorTool(area) {
 
         </div>
 
-    `;
+    `);
 
 }
 
 
-let calcExpression = "";
+let calculatorExpression = "";
 
 
 function calcInput(value) {
 
-    calcExpression += value;
+    calculatorExpression +=
+        value;
 
-    updateCalc();
-
-}
-
-
-function updateCalc() {
-
-    $("#calcDisplay").textContent =
-        calcExpression || "0";
+    updateCalcDisplay();
 
 }
 
 
 function calcClear() {
 
-    calcExpression = "";
+    calculatorExpression =
+        "";
 
-    updateCalc();
-
-}
-
-
-function calcSign() {
-
-    if (!calcExpression) return;
-
-    calcExpression =
-        calcExpression.startsWith("-")
-            ? calcExpression.slice(1)
-            : "-" + calcExpression;
-
-    updateCalc();
+    updateCalcDisplay();
 
 }
 
 
-function calcPercent() {
+function calcDelete() {
 
-    const number =
-        Number(calcExpression);
+    calculatorExpression =
+        calculatorExpression.slice(
+            0,
+            -1
+        );
 
-    if (
-        Number.isFinite(number)
-    ) {
-
-        calcExpression =
-            String(number / 100);
-
-        updateCalc();
-
-    }
+    updateCalcDisplay();
 
 }
 
@@ -2491,9 +1159,18 @@ function calcEquals() {
 
     try {
 
+        let expression =
+            calculatorExpression
+                .replace(
+                    /%/g,
+                    "/100"
+                );
+
+
+        // Sadə təhlükəsiz riyazi ifadələr
         if (
             !/^[0-9+\-*/().\s]+$/
-                .test(calcExpression)
+                .test(expression)
         ) {
 
             throw new Error();
@@ -2503,643 +1180,609 @@ function calcEquals() {
 
         const result =
             Function(
-                `"use strict"; return (${calcExpression})`
+                `"use strict"; return (${expression})`
             )();
 
 
-        calcExpression =
+        calculatorExpression =
             String(result);
 
-        updateCalc();
+        updateCalcDisplay();
+
+    } catch {
+
+        calculatorExpression =
+            "";
+
+        const display =
+            $("#calcDisplay");
+
+        if (display) {
+
+            display.textContent =
+                "Xəta";
+
+        }
 
     }
 
-    catch {
+}
 
-        calcExpression = "";
 
-        $("#calcDisplay")
-            .textContent = "Error";
+function updateCalcDisplay() {
 
-    }
+    const display =
+        $("#calcDisplay");
+
+    if (!display) return;
+
+    display.textContent =
+        calculatorExpression ||
+        "0";
 
 }
 
 
 /* =========================================================
-   PERCENTAGE
+   WORLD CLOCK
 ========================================================= */
 
-function percentageTool(area) {
+function showTimezone(item) {
 
-    area.innerHTML = `
+    openModal(`
 
-        <input
-            id="percentNumber"
-            class="field"
-            type="number"
-            placeholder="Məbləğ"
-        >
+        <div class="world-clock-modal">
 
-        <input
-            id="percentValue"
-            class="field"
-            type="number"
-            placeholder="Faiz"
-        >
+            <div class="country-big-icon">
+                ${item.icon}
+            </div>
 
-        <button
-            class="action"
-            onclick="calculatePercent()"
-        >
-            HESABLA
-        </button>
+            <h2>
+                ${item.title}
+            </h2>
 
-        <pre id="percentResult"></pre>
+            <p>
+                ${item.description}
+            </p>
 
-    `;
+            <div
+                class="world-clock-time"
+                data-timezone="${item.timezone}"
+            >
+                --
+            </div>
+
+            <small>
+                Yerli vaxt
+            </small>
+
+        </div>
+
+    `);
+
+
+    updateWorldClock();
+
+}
+
+
+function openWorldClock() {
+
+    const cities =
+        modules.world;
+
+    openModal(`
+
+        <div class="world-clocks">
+
+            <h2>
+                Dünya saatları
+            </h2>
+
+            <div class="world-clock-grid">
+
+                ${cities.map(city => `
+
+                    <div
+                        class="world-clock-card"
+                        data-timezone="${city.timezone}"
+                    >
+
+                        <div>
+                            ${city.icon}
+                        </div>
+
+                        <strong>
+                            ${city.title}
+                        </strong>
+
+                        <span>
+                            ${city.description}
+                        </span>
+
+                        <b>
+                            --
+                        </b>
+
+                    </div>
+
+                `).join("")}
+
+            </div>
+
+        </div>
+
+    `);
+
+
+    updateWorldClock();
 
 }
 
 
-function calculatePercent() {
+function updateWorldClock() {
 
-    const number =
-        Number(
-            $("#percentNumber").value
-        );
+    document
+        .querySelectorAll(
+            "[data-timezone]"
+        )
+        .forEach(element => {
+
+            const timezone =
+                element.dataset.timezone;
+
+            const time =
+                new Intl.DateTimeFormat(
+                    "az-AZ",
+                    {
+                        timeZone: timezone,
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit"
+                    }
+                ).format(
+                    new Date()
+                );
 
 
-    const percent =
-        Number(
-            $("#percentValue").value
-        );
+            if (
+                element.classList.contains(
+                    "world-clock-card"
+                )
+            ) {
 
+                const clock =
+                    element.querySelector("b");
 
-    $("#percentResult").textContent =
-        `${percent}% = ${
-            number * percent / 100
-        }`;
+                if (clock) {
+
+                    clock.textContent =
+                        time;
+
+                }
+
+            } else {
+
+                element.textContent =
+                    time;
+
+            }
+
+        });
 
 }
+
+
+setInterval(
+    updateWorldClock,
+    1000
+);
 
 
 /* =========================================================
-   MEDIA
+   GLOBAL SEARCH
 ========================================================= */
 
-function audioTool(area) {
+function initSearch() {
 
-    area.innerHTML = `
+    const input =
+        $("#globalSearch");
 
-        <input
-            id="audioFiles"
-            class="field"
-            type="file"
-            accept="audio/*"
-            multiple
-        >
+    const button =
+        $("#searchBtn");
 
-        <div
-            id="audioList"
-            style="margin-top:20px;"
-        ></div>
-
-    `;
+    if (!input) return;
 
 
-    $("#audioFiles").addEventListener(
-        "change",
+    function search() {
+
+        const query =
+            input.value.trim();
+
+        if (!query) return;
+
+        window.open(
+            CONFIG.SEARCH_URL +
+            encodeURIComponent(query),
+            "_blank"
+        );
+
+    }
+
+
+    if (button) {
+
+        button.addEventListener(
+            "click",
+            search
+        );
+
+    }
+
+
+    input.addEventListener(
+        "keydown",
         event => {
 
-            const list =
-                $("#audioList");
+            if (
+                event.key === "Enter"
+            ) {
+
+                search();
+
+            }
+
+        }
+    );
+
+}
 
 
-            list.innerHTML = "";
+/* =========================================================
+   AI
+========================================================= */
+
+function initAI() {
+
+    const fab =
+        $("#aiFab");
+
+    if (!fab) return;
+
+    fab.addEventListener(
+        "click",
+        openAI
+    );
+
+}
 
 
-            Array.from(
-                event.target.files
-            )
-            .forEach(
-                file => {
+function openAI() {
 
-                    const url =
-                        URL.createObjectURL(file);
+    if (
+        document.querySelector(
+            ".ai-interface"
+        )
+    ) {
+
+        return;
+
+    }
 
 
-                    list.insertAdjacentHTML(
-                        "beforeend",
-                        `
+    const interfaceElement =
+        document.createElement("div");
 
-                            <div
-                                class="clock-card"
-                                style="margin-bottom:10px;"
-                            >
+    interfaceElement.className =
+        "ai-interface";
 
-                                <b>
-                                    ${file.name}
-                                </b>
 
-                                <audio
-                                    controls
-                                    style="
-                                        width:100%;
-                                        margin-top:10px;
-                                    "
-                                    src="${url}"
-                                ></audio>
+    interfaceElement.innerHTML = `
 
-                            </div>
+        <div class="ai-interface-inner">
 
-                        `
-                    );
+            <header class="ai-header">
+
+                <div class="ai-brand">
+
+                    <div class="ai-logo">
+                        ✦
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            NEXUS AI
+                        </strong>
+
+                        <span>
+                            SƏNİN RƏQƏMSAL KÖMƏKÇİN
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="ai-close"
+                    id="aiClose"
+                >
+                    ×
+                </button>
+
+            </header>
+
+
+            <main
+                class="ai-chat"
+                id="aiChat"
+            >
+
+                <div class="ai-welcome">
+
+                    <div class="ai-welcome-icon">
+                        ✦
+                    </div>
+
+                    <h1>
+                        Salam 👋
+                    </h1>
+
+                    <p>
+                        Mən NEXUS AI-yəm.
+                        Sənə nə barədə kömək edə bilərəm?
+                    </p>
+
+                    <div class="ai-suggestions">
+
+                        <button>
+                            Mənə bir şey öyrət
+                        </button>
+
+                        <button>
+                            Azərbaycan haqqında danış
+                        </button>
+
+                        <button>
+                            Kompüter problemlərini həll et
+                        </button>
+
+                        <button>
+                            Mənə maraqlı bir fakt de
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </main>
+
+
+            <div class="ai-input-area">
+
+                <div class="ai-input-box">
+
+                    <textarea
+                        id="aiInput"
+                        rows="1"
+                        placeholder="NEXUS AI-dan bir şey soruş..."
+                    ></textarea>
+
+                    <button
+                        id="aiSend"
+                        aria-label="Göndər"
+                    >
+                        ↑
+                    </button>
+
+                </div>
+
+                <small>
+                    NEXUS AI səhv edə bilər.
+                    Vacib məlumatları yoxlayın.
+                </small>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(
+        interfaceElement
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+
+
+    $("#aiClose")
+        ?.addEventListener(
+            "click",
+            closeAI
+        );
+
+
+    $("#aiSend")
+        ?.addEventListener(
+            "click",
+            sendAI
+        );
+
+
+    $("#aiInput")
+        ?.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Enter" &&
+                    !event.shiftKey
+                ) {
+
+                    event.preventDefault();
+
+                    sendAI();
+
+                }
+
+            }
+        );
+
+
+    document
+        .querySelectorAll(
+            ".ai-suggestions button"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const input =
+                        $("#aiInput");
+
+                    if (!input) return;
+
+                    input.value =
+                        button.textContent.trim();
+
+                    input.focus();
 
                 }
             );
 
-        }
-    );
+        });
 
 }
 
 
-function imageTool(area) {
+function closeAI() {
 
-    area.innerHTML = `
+    const ai =
+        document.querySelector(
+            ".ai-interface"
+        );
 
-        <input
-            id="imageFile"
-            class="field"
-            type="file"
-            accept="image/*"
-        >
+    if (!ai) return;
 
-        <div
-            id="imagePreview"
-            style="margin-top:20px;"
-        ></div>
+    ai.remove();
 
-    `;
-
-
-    $("#imageFile").addEventListener(
-        "change",
-        event => {
-
-            const file =
-                event.target.files[0];
-
-            if (!file) return;
-
-
-            const url =
-                URL.createObjectURL(file);
-
-
-            $("#imagePreview").innerHTML = `
-
-                <img
-                    src="${url}"
-                    style="
-                        max-width:100%;
-                        max-height:500px;
-                        border-radius:15px;
-                    "
-                >
-
-            `;
-
-        }
-    );
-
-}
-
-
-function fileInfoTool(area) {
-
-    area.innerHTML = `
-
-        <input
-            id="fileInput"
-            class="field"
-            type="file"
-        >
-
-        <pre
-            id="fileResult"
-            style="margin-top:20px;"
-        ></pre>
-
-    `;
-
-
-    $("#fileInput").addEventListener(
-        "change",
-        event => {
-
-            const file =
-                event.target.files[0];
-
-            if (!file) return;
-
-
-            $("#fileResult").textContent = `
-
-Ad:
-${file.name}
-
-Tip:
-${file.type || "Naməlum"}
-
-Ölçü:
-${(file.size / 1024).toFixed(2)} KB
-
-Son dəyişiklik:
-${new Date(
-    file.lastModified
-).toLocaleString("az-AZ")}
-
-            `;
-
-        }
-    );
+    document.body.style.overflow =
+        "";
 
 }
 
 
 /* =========================================================
-   TOOLS
-========================================================= */
-
-function notesTool(area) {
-
-    area.innerHTML = `
-
-        <textarea
-            id="notesText"
-            class="field"
-            rows="15"
-            placeholder="Qeydlərini yaz..."
-        ></textarea>
-
-        <button
-            class="action"
-            onclick="saveNotes()"
-        >
-            YADDA SAXLA
-        </button>
-
-    `;
-
-
-    const saved =
-        localStorage.getItem(
-            "nexus-notes"
-        );
-
-
-    if (saved)
-        $("#notesText").value =
-            saved;
-
-}
-
-
-function saveNotes() {
-
-    localStorage.setItem(
-        "nexus-notes",
-        $("#notesText").value
-    );
-
-
-    alert(
-        "Qeyd yadda saxlanıldı."
-    );
-
-}
-
-
-let timerInterval = null;
-
-
-function timerTool(area) {
-
-    area.innerHTML = `
-
-        <input
-            id="timerSeconds"
-            class="field"
-            type="number"
-            value="60"
-            min="1"
-        >
-
-        <div
-            id="timerDisplay"
-            style="
-                margin-top:25px;
-                font-size:45px;
-                font-family:'Space Mono';
-            "
-        >
-            01:00
-        </div>
-
-        <button
-            class="action"
-            onclick="startTimer()"
-        >
-            BAŞLA
-        </button>
-
-    `;
-
-}
-
-
-function startTimer() {
-
-    clearInterval(
-        timerInterval
-    );
-
-
-    let seconds =
-        Number(
-            $("#timerSeconds").value
-        );
-
-
-    timerInterval =
-        setInterval(
-            () => {
-
-                seconds--;
-
-                const minutes =
-                    Math.floor(
-                        seconds / 60
-                    );
-
-                const secs =
-                    seconds % 60;
-
-
-                $("#timerDisplay")
-                    .textContent =
-                    `${String(minutes).padStart(2,"0")}:${String(secs).padStart(2,"0")}`;
-
-
-                if (
-                    seconds <= 0
-                ) {
-
-                    clearInterval(
-                        timerInterval
-                    );
-
-                    alert(
-                        "Vaxt bitdi!"
-                    );
-
-                }
-
-            },
-            1000
-        );
-
-}
-
-
-let stopwatchInterval = null;
-let stopwatchSeconds = 0;
-
-
-function stopwatchTool(area) {
-
-    area.innerHTML = `
-
-        <div
-            id="stopwatchDisplay"
-            style="
-                font-family:'Space Mono';
-                font-size:45px;
-                margin-top:20px;
-            "
-        >
-            00:00:00
-        </div>
-
-        <div class="office-actions">
-
-            <button onclick="startStopwatch()">
-                BAŞLA
-            </button>
-
-            <button onclick="stopStopwatch()">
-                DAYANDIR
-            </button>
-
-            <button onclick="resetStopwatch()">
-                SIFIRLA
-            </button>
-
-        </div>
-
-    `;
-
-}
-
-
-function startStopwatch() {
-
-    clearInterval(
-        stopwatchInterval
-    );
-
-
-    stopwatchInterval =
-        setInterval(
-            () => {
-
-                stopwatchSeconds++;
-
-                const h =
-                    Math.floor(
-                        stopwatchSeconds / 3600
-                    );
-
-                const m =
-                    Math.floor(
-                        (stopwatchSeconds % 3600)
-                        / 60
-                    );
-
-                const s =
-                    stopwatchSeconds % 60;
-
-
-                $("#stopwatchDisplay")
-                    .textContent =
-                    `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
-
-            },
-            1000
-        );
-
-}
-
-
-function stopStopwatch() {
-
-    clearInterval(
-        stopwatchInterval
-    );
-
-}
-
-
-function resetStopwatch() {
-
-    stopStopwatch();
-
-    stopwatchSeconds = 0;
-
-    $("#stopwatchDisplay")
-        .textContent =
-        "00:00:00";
-
-}
-
-
-function qrTool(area) {
-
-    area.innerHTML = `
-
-        <input
-            id="qrText"
-            class="field"
-            placeholder="Mətn və ya link..."
-        >
-
-        <button
-            class="action"
-            onclick="generateQR()"
-        >
-            QR YARAT
-        </button>
-
-        <div
-            id="qrResult"
-            style="
-                margin-top:25px;
-                text-align:center;
-            "
-        ></div>
-
-    `;
-
-}
-
-
-function generateQR() {
-
-    const text =
-        $("#qrText").value.trim();
-
-
-    if (!text) return;
-
-
-    $("#qrResult").innerHTML = `
-
-        <img
-            src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(text)}"
-            alt="QR Code"
-            style="
-                width:250px;
-                max-width:100%;
-                border-radius:15px;
-            "
-        >
-
-    `;
-
-}
-
-
-/* =========================================================
-   NEXUS AI
+   SEND AI MESSAGE
 ========================================================= */
 
 async function sendAI() {
 
-    const input = $("#chatInput");
-    const body = $("#chatBody");
+    const input =
+        $("#aiInput");
 
-    if (!input || !body) return;
+    const chat =
+        $("#aiChat");
 
-    const message = input.value.trim();
+    if (!input || !chat) return;
+
+
+    const message =
+        input.value.trim();
+
 
     if (!message) return;
 
 
-    // İstifadəçinin mesajı
-    body.insertAdjacentHTML(
-        "beforeend",
-        `
-        <div class="msg user">
-            ${escapeHTML(message)}
-        </div>
-        `
+    addAIMessage(
+        "user",
+        message
     );
 
-    input.value = "";
+
+    input.value =
+        "";
 
 
-    // AI yazır göstəricisi
-    const loading = document.createElement("div");
+    conversationHistory.push({
 
-    loading.className = "msg ai";
-    loading.id = "aiLoading";
+        role: "user",
+
+        content: message
+
+    });
+
+
+    const loading =
+        document.createElement("div");
+
+    loading.className =
+        "ai-message assistant";
 
     loading.innerHTML = `
-        <span class="ai-thinking">
-            NEXUS AI yazır...
-        </span>
+
+        <div class="ai-avatar">
+            ✦
+        </div>
+
+        <div class="ai-message-content">
+
+            <span class="ai-thinking">
+                NEXUS AI yazır...
+            </span>
+
+        </div>
+
     `;
 
-    body.appendChild(loading);
 
-    body.scrollTop = body.scrollHeight;
+    chat.appendChild(
+        loading
+    );
+
+
+    scrollAI();
 
 
     try {
 
-        const response = await fetch(
-            https://nexus-ai.imranvelizade98.workers.dev/,
-            {
-                method: "POST",
+        const response =
+            await fetch(
+                CONFIG.AI_WORKER_URL,
+                {
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                    method: "POST",
 
-                body: JSON.stringify({
-                    message: message
-                })
-            }
-        );
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body: JSON.stringify({
+
+                        message: message,
+
+                        history:
+                            conversationHistory
+
+                    })
+
+                }
+            );
 
 
         const data =
             await response.json();
 
 
-        // Loading-i sil
         loading.remove();
 
 
@@ -3147,7 +1790,7 @@ async function sendAI() {
 
             throw new Error(
                 data.error ||
-                "AI server xətası"
+                "AI server xətası."
             );
 
         }
@@ -3158,65 +1801,169 @@ async function sendAI() {
             "Cavab alınmadı.";
 
 
-        body.insertAdjacentHTML(
-            "beforeend",
-            `
-            <div class="msg ai">
-                ${formatAIResponse(answer)}
-            </div>
-            `
+        conversationHistory.push({
+
+            role: "assistant",
+
+            content: answer
+
+        });
+
+
+        addAIMessage(
+            "assistant",
+            answer
         );
 
 
     } catch (error) {
 
+        console.error(
+            "NEXUS AI:",
+            error
+        );
+
+
         loading.remove();
 
 
-        body.insertAdjacentHTML(
-            "beforeend",
-            `
-            <div class="msg ai">
-                ❌ NEXUS AI-yə qoşulmaq mümkün olmadı.
-                <br><br>
-                <small>
-                    ${escapeHTML(error.message)}
-                </small>
-            </div>
-            `
+        addAIMessage(
+            "assistant",
+            "Bağlantı zamanı xəta baş verdi. Bir az sonra yenidən cəhd et."
         );
 
     }
 
 
-    body.scrollTop =
-        body.scrollHeight;
-
-}
-                        
+    scrollAI();
 
 }
 
 
-function escapeHTML(text) {
+/* =========================================================
+   AI MESSAGE
+========================================================= */
 
-    return text
+function addAIMessage(
+    role,
+    text
+) {
+
+    const chat =
+        $("#aiChat");
+
+    if (!chat) return;
+
+
+    const message =
+        document.createElement("div");
+
+
+    message.className =
+        role === "user"
+            ? "ai-message user"
+            : "ai-message assistant";
+
+
+    if (
+        role === "user"
+    ) {
+
+        message.innerHTML = `
+
+            <div class="ai-message-content">
+                ${escapeHTML(text)}
+            </div>
+
+        `;
+
+    } else {
+
+        message.innerHTML = `
+
+            <div class="ai-avatar">
+                ✦
+            </div>
+
+            <div class="ai-message-content">
+                ${formatAIResponse(text)}
+            </div>
+
+        `;
+
+    }
+
+
+    chat.appendChild(
+        message
+    );
+
+}
+
+
+function formatAIResponse(text) {
+
+    return escapeHTML(text)
+
+        .replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+        )
+
+        .replace(
+            /`([^`]+)`/g,
+            "<code>$1</code>"
+        )
+
+        .replace(
+            /\n/g,
+            "<br>"
+        );
+
+}
+
+
+function scrollAI() {
+
+    const chat =
+        $("#aiChat");
+
+    if (!chat) return;
+
+    chat.scrollTop =
+        chat.scrollHeight;
+
+}
+
+
+/* =========================================================
+   SECURITY
+========================================================= */
+
+function escapeHTML(value) {
+
+    return String(value)
+
         .replace(
             /&/g,
             "&amp;"
         )
+
         .replace(
             /</g,
             "&lt;"
         )
+
         .replace(
             />/g,
             "&gt;"
         )
+
         .replace(
             /"/g,
             "&quot;"
         )
+
         .replace(
             /'/g,
             "&#039;"
@@ -3226,113 +1973,58 @@ function escapeHTML(text) {
 
 
 /* =========================================================
-   GLOBAL SEARCH
+   EXTERNAL LINKS
 ========================================================= */
 
-function performSearch() {
-
-    const input =
-        $("#globalSearch");
-
-    if (!input) return;
-
-
-    const query =
-        input.value.trim();
-
-
-    if (!query)
-        return;
-
-
-    const url =
-        "https://www.google.com/search?q="
-        + encodeURIComponent(query);
-
+function openExternal(url) {
 
     window.open(
         url,
-        "_blank"
+        "_blank",
+        "noopener,noreferrer"
     );
 
 }
 
 
-$("#searchBtn")
-    ?.addEventListener(
-        "click",
-        performSearch
-    );
-
-
-$("#globalSearch")
-    ?.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "Enter"
-            ) {
-
-                performSearch();
-
-            }
-
-        }
-    );
-
-
 /* =========================================================
-   CLOSE MODAL
+   DOWNLOAD
 ========================================================= */
 
-$("#closeModal")
-    ?.addEventListener(
-        "click",
-        () => {
+function downloadBlob(
+    blob,
+    filename
+) {
 
-            $("#modal")
-                .classList.remove(
-                    "show"
-                );
+    const url =
+        URL.createObjectURL(blob);
 
-        }
+    const link =
+        document.createElement("a");
+
+    link.href =
+        url;
+
+    link.download =
+        filename;
+
+    document.body.appendChild(
+        link
     );
 
+    link.click();
 
-$("#modal")
-    ?.addEventListener(
-        "click",
-        event => {
+    link.remove();
 
-            if (
-                event.target === $("#modal")
-            ) {
-
-                $("#modal")
-                    .classList.remove(
-                        "show"
-                    );
-
-            }
-
-        }
+    URL.revokeObjectURL(
+        url
     );
+
+}
 
 
 /* =========================================================
-   AI BUTTON
-========================================================= */
-
-$("#aiFab")
-    ?.addEventListener(
-        "click",
-        openAI
-    );
-
-
-/* =========================================================
-   HERO SCROLL
+   SCROLL TO CATEGORIES
 ========================================================= */
 
 function scrollToCategories() {
@@ -3342,17 +2034,11 @@ function scrollToCategories() {
 
     if (!section) return;
 
+    section.scrollIntoView({
 
-    const top =
-        section.getBoundingClientRect().top
-        + window.scrollY
-        - 20;
+        behavior: "smooth",
 
-
-    window.scrollTo({
-
-        top,
-        behavior: "smooth"
+        block: "start"
 
     });
 
@@ -3360,91 +2046,90 @@ function scrollToCategories() {
 
 
 /* =========================================================
-   CLOCK
+   KEYBOARD
 ========================================================= */
 
-function updateMainClock() {
+function initKeyboard() {
 
-    const now =
-        new Date();
+    document.addEventListener(
+        "keydown",
+        event => {
 
+            if (
+                event.key === "Escape"
+            ) {
 
-    const clock =
-        $("#clock");
+                closeModal();
+                closeAI();
 
-    const date =
-        $("#date");
+            }
 
-
-    if (clock) {
-
-        clock.textContent =
-            now.toLocaleTimeString(
-                "az-AZ",
-                {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit"
-                }
-            );
-
-    }
-
-
-    if (date) {
-
-        date.textContent =
-            now.toLocaleDateString(
-                "az-AZ",
-                {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric"
-                }
-            );
-
-    }
+        }
+    );
 
 }
 
 
-updateMainClock();
+/* =========================================================
+   GLOBAL FUNCTIONS
+========================================================= */
 
-setInterval(
-    updateMainClock,
-    1000
-);
+window.openAI =
+    openAI;
+
+window.closeAI =
+    closeAI;
+
+window.sendAI =
+    sendAI;
+
+window.selectCategory =
+    selectCategory;
+
+window.scrollToCategories =
+    scrollToCategories;
+
+window.closeModal =
+    closeModal;
+
+window.openWord =
+    openWord;
+
+window.downloadWord =
+    downloadWord;
+
+window.openExcel =
+    openExcel;
+
+window.downloadExcel =
+    downloadExcel;
+
+window.addExcelRow =
+    addExcelRow;
+
+window.addExcelColumn =
+    addExcelColumn;
+
+window.openCalculator =
+    openCalculator;
+
+window.calcInput =
+    calcInput;
+
+window.calcClear =
+    calcClear;
+
+window.calcDelete =
+    calcDelete;
+
+window.calcEquals =
+    calcEquals;
+
+window.openWorldClock =
+    openWorldClock;
 
 
 /* =========================================================
-   INITIALIZATION
+   END
 ========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        renderCategories();
-
-
-        /* İlk açılışda Network göstərilir */
-
-        const first =
-            $(".cat[data-category='network']");
-
-
-        if (first) {
-
-            first.classList.add(
-                "active"
-            );
-
-            renderTools(
-                "network"
-            );
-
-        }
-
-    }
-);
+```
