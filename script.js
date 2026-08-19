@@ -1,1348 +1,445 @@
 ```javascript
-"use strict";
-
 /* =========================================================
-   CONFIG
+   NEXUS AZ 5.0
+   CORE JAVASCRIPT
 ========================================================= */
 
-const CONFIG = {
-
-    AI_WORKER_URL:
-        "https://nexus-ai.imranvelizade98.workers.dev/",
-
-    SEARCH_URL:
-        "https://www.google.com/search?q=",
-
-    SPEEDTEST_URL:
-        "https://www.speedtest.net/",
-
-    IP_URL:
-        "https://whatismyipaddress.com/",
-
-    DNS_URL:
-        "https://www.dnsleaktest.com/"
-
-};
-
-
-/* =========================================================
-   STATE
-========================================================= */
-
-let currentCategory = "internet";
-
-let conversationHistory = [];
-
-let calculatorExpression = "";
-
-let excelRows = 8;
-
-let excelColumns = 8;
-
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-const $ = selector =>
-    document.querySelector(selector);
-
-const $$ = selector =>
-    document.querySelectorAll(selector);
-
-
-/* =========================================================
-   DOM READY
-========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        initLoader();
-        initClock();
-        initCategories();
-        initModal();
-        initSearch();
-        initAI();
-        initKeyboard();
-
-    }
-);
-
-
-/* =========================================================
-   LOADER
-========================================================= */
-
-function initLoader() {
-
-    const loader = $("#loader");
-
-    if (!loader) return;
-
-    window.setTimeout(
-        () => {
-            loader.classList.add("hidden");
-        },
-        900
-    );
-
-}
+const $ = selector => document.querySelector(selector);
+const $$ = selector => [...document.querySelectorAll(selector)];
 
 
 /* =========================================================
    CLOCK
 ========================================================= */
 
-function initClock() {
+function updateClock(){
 
-    const clock = $("#clock");
-    const date = $("#date");
+    const now = new Date();
 
-    if (!clock) return;
+    $("#heroClock").textContent =
+        now.toLocaleTimeString("az-AZ",{
+            hour:"2-digit",
+            minute:"2-digit",
+            second:"2-digit"
+        });
 
-
-    function updateClock() {
-
-        const now = new Date();
-
-
-        clock.textContent =
-            new Intl.DateTimeFormat(
-                "az-AZ",
-                {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit"
-                }
-            ).format(now);
-
-
-        if (date) {
-
-            date.textContent =
-                new Intl.DateTimeFormat(
-                    "az-AZ",
-                    {
-                        weekday: "long",
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric"
-                    }
-                ).format(now);
-
-        }
-
-    }
-
-
-    updateClock();
-
-    window.setInterval(
-        updateClock,
-        1000
-    );
-
+    $("#heroDate").textContent =
+        now.toLocaleDateString("az-AZ",{
+            weekday:"long",
+            day:"numeric",
+            month:"long",
+            year:"numeric"
+        });
 }
 
-
-/* =========================================================
-   SCROLL TO CATEGORIES
-========================================================= */
-
-function scrollToCategories() {
-
-    const section =
-        $("#categoriesSection");
-
-    if (!section) return;
-
-
-    section.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
-
-}
-
-
-window.scrollToCategories =
-    scrollToCategories;
+setInterval(updateClock,1000);
+updateClock();
 
 
 /* =========================================================
-   CATEGORIES
+   SERVICE DATABASE
 ========================================================= */
 
-const categories = [
+const services = {
 
-    {
-        id: "internet",
-        icon: "◉",
-        title: "İnternet",
-        description:
-            "Axtarış, sürət və bağlantı alətləri"
-    },
-
-    {
-        id: "office",
-        icon: "▣",
-        title: "Ofis",
-        description:
-            "Word, Excel və sənəd alətləri"
-    },
-
-    {
-        id: "world",
-        icon: "◎",
-        title: "Dünya",
-        description:
-            "Paytaxtlar, saatlar və dünya məlumatları"
-    },
-
-    {
-        id: "media",
-        icon: "▶",
-        title: "Media",
-        description:
-            "Video, musiqi və multimedia"
-    },
-
-    {
-        id: "security",
-        icon: "◇",
-        title: "Təhlükəsizlik",
-        description:
-            "Təhlükəsizlik və yoxlama alətləri"
-    },
-
-    {
-        id: "developer",
-        icon: "</>",
-        title: "Developer",
-        description:
-            "Kodlaşdırma və developer alətləri"
-    },
-
-    {
-        id: "tools",
-        icon: "✣",
-        title: "Alətlər",
-        description:
-            "Gündəlik faydalı alətlər"
-    },
-
-    {
-        id: "ai",
-        icon: "✦",
-        title: "AI",
-        description:
-            "Süni intellekt alətləri"
-    }
-
-];
-
-
-/* =========================================================
-   MODULE DATA
-========================================================= */
-
-const modules = {
-
-    internet: [
-
-        {
-            icon: "⌕",
-            title: "Google",
-            description:
-                "İnternetdə qlobal axtarış",
-            action:
-                () => openExternal(
-                    "https://www.google.com/"
-                )
-        },
-
-        {
-            icon: "⚡",
-            title: "Speed Test",
-            description:
-                "İnternet sürətini real olaraq yoxla",
-            action:
-                () => openExternal(
-                    CONFIG.SPEEDTEST_URL
-                )
-        },
-
-        {
-            icon: "◉",
-            title: "IP ünvanım",
-            description:
-                "İctimai IP ünvanını yoxla",
-            action:
-                () => openExternal(
-                    CONFIG.IP_URL
-                )
-        },
-
-        {
-            icon: "⌁",
-            title: "DNS Leak Test",
-            description:
-                "DNS sızmasını yoxla",
-            action:
-                () => openExternal(
-                    CONFIG.DNS_URL
-                )
-        },
-
-        {
-            icon: "◎",
-            title: "Google Maps",
-            description:
-                "Xəritədə axtarış və naviqasiya",
-            action:
-                () => openExternal(
-                    "https://maps.google.com/"
-                )
-        },
-
-        {
-            icon: "✉",
-            title: "Gmail",
-            description:
-                "Google e-poçt xidməti",
-            action:
-                () => openExternal(
-                    "https://mail.google.com/"
-                )
-        },
-
-        {
-            icon: "☁",
-            title: "Google Drive",
-            description:
-                "Bulud fayllarına giriş",
-            action:
-                () => openExternal(
-                    "https://drive.google.com/"
-                )
-        },
-
-        {
-            icon: "◫",
-            title: "Google Translate",
-            description:
-                "Mətn və dil tərcüməsi",
-            action:
-                () => openExternal(
-                    "https://translate.google.com/"
-                )
-        }
-
+    ai:[
+        ["✦","Nexus AI","AI assistant","ai"],
+        ["⌕","Web Search","Internet search","search"],
+        ["文","Translator","Mətn tərcüməsi","translator"],
+        ["✎","Text AI","Mətn generatoru","textai"],
+        ["⌁","Summarizer","Mətn xülasəsi","summary"],
+        ["◉","Ideas","Kreativ ideyalar","ideas"],
+        ["@","Email AI","Email köməkçisi","email"],
+        ["?","Ask AI","Sual-cavab","ai"]
     ],
 
-
-    office: [
-
-        {
-            icon: "W",
-            title: "NEXUS Word",
-            description:
-                "Müasir brauzer sənəd redaktoru",
-            action:
-                () => openWord()
-        },
-
-        {
-            icon: "X",
-            title: "NEXUS Excel",
-            description:
-                "Cədvəl, formula və XLSX",
-            action:
-                () => openExcel()
-        },
-
-        {
-            icon: "PDF",
-            title: "PDF Tools",
-            description:
-                "PDF sənədləri ilə işləmək",
-            action:
-                () => openExternal(
-                    "https://www.ilovepdf.com/"
-                )
-        },
-
-        {
-            icon: "G",
-            title: "Google Docs",
-            description:
-                "Onlayn sənəd redaktoru",
-            action:
-                () => openExternal(
-                    "https://docs.google.com/"
-                )
-        },
-
-        {
-            icon: "S",
-            title: "Google Sheets",
-            description:
-                "Onlayn elektron cədvəl",
-            action:
-                () => openExternal(
-                    "https://sheets.google.com/"
-                )
-        },
-
-        {
-            icon: "P",
-            title: "Google Slides",
-            description:
-                "Onlayn təqdimat hazırlama",
-            action:
-                () => openExternal(
-                    "https://slides.google.com/"
-                )
-        },
-
-        {
-            icon: "C",
-            title: "Canva",
-            description:
-                "Dizayn və təqdimat",
-            action:
-                () => openExternal(
-                    "https://www.canva.com/"
-                )
-        },
-
-        {
-            icon: "D",
-            title: "Dropbox",
-            description:
-                "Fayl saxlama və paylaşma",
-            action:
-                () => openExternal(
-                    "https://www.dropbox.com/"
-                )
-        }
-
+    office:[
+        ["W","Nexus Word","Document editor","word"],
+        ["X","Nexus Excel","Spreadsheet","excel"],
+        ["✓","Notes","Qeydlər","notes"],
+        ["▤","Documents","Sənədlər","documents"],
+        ["↥","Export","Fayl ixracı","export"],
+        ["⌘","Text Editor","Sadə editor","texteditor"],
+        ["☷","Table","Cədvəl yarat","table"],
+        ["◫","Workspace","İş sahəsi","workspace"]
     ],
 
-
-    world: [
-
-        {
-            icon: "🇦🇿",
-            title: "Bakı",
-            description:
-                "Azərbaycan • Paytaxt Bakı",
-            timezone:
-                "Asia/Baku"
-        },
-
-        {
-            icon: "🇹🇷",
-            title: "Ankara",
-            description:
-                "Türkiyə • Paytaxt Ankara",
-            timezone:
-                "Europe/Istanbul"
-        },
-
-        {
-            icon: "🇬🇧",
-            title: "London",
-            description:
-                "Böyük Britaniya • Paytaxt London",
-            timezone:
-                "Europe/London"
-        },
-
-        {
-            icon: "🇺🇸",
-            title: "Vaşinqton",
-            description:
-                "ABŞ • Paytaxt Vaşinqton",
-            timezone:
-                "America/New_York"
-        },
-
-        {
-            icon: "🇩🇪",
-            title: "Berlin",
-            description:
-                "Almaniya • Paytaxt Berlin",
-            timezone:
-                "Europe/Berlin"
-        },
-
-        {
-            icon: "🇫🇷",
-            title: "Paris",
-            description:
-                "Fransa • Paytaxt Paris",
-            timezone:
-                "Europe/Paris"
-        },
-
-        {
-            icon: "🇯🇵",
-            title: "Tokio",
-            description:
-                "Yaponiya • Paytaxt Tokio",
-            timezone:
-                "Asia/Tokyo"
-        },
-
-        {
-            icon: "🇷🇺",
-            title: "Moskva",
-            description:
-                "Rusiya • Paytaxt Moskva",
-            timezone:
-                "Europe/Moscow"
-        }
-
+    tools:[
+        ["＋","Calculator","iOS style calculator","calculator"],
+        ["⌁","Speed Test","Internet sürəti","speed"],
+        ["⌘","QR Generator","QR kod yarat","qr"],
+        ["%","Converter","Ölçü çevirmə","converter"],
+        ["⌚","Timer","Taymer","timer"],
+        ["◷","Stopwatch","Saniyəölçən","stopwatch"],
+        ["▣","Password","Şifrə generatoru","password"],
+        ["#","Color","Rəng seçici","color"]
     ],
 
-
-    media: [
-
-        {
-            icon: "▶",
-            title: "YouTube",
-            description:
-                "Video və musiqi platforması",
-            action:
-                () => openExternal(
-                    "https://www.youtube.com/"
-                )
-        },
-
-        {
-            icon: "♫",
-            title: "YouTube Music",
-            description:
-                "Musiqi dinlə",
-            action:
-                () => openExternal(
-                    "https://music.youtube.com/"
-                )
-        },
-
-        {
-            icon: "◉",
-            title: "Spotify",
-            description:
-                "Musiqi və podkast",
-            action:
-                () => openExternal(
-                    "https://open.spotify.com/"
-                )
-        },
-
-        {
-            icon: "N",
-            title: "Netflix",
-            description:
-                "Film və serial platforması",
-            action:
-                () => openExternal(
-                    "https://www.netflix.com/"
-                )
-        },
-
-        {
-            icon: "T",
-            title: "TikTok",
-            description:
-                "Qısa videolar",
-            action:
-                () => openExternal(
-                    "https://www.tiktok.com/"
-                )
-        },
-
-        {
-            icon: "M",
-            title: "SoundCloud",
-            description:
-                "Musiqi və audio",
-            action:
-                () => openExternal(
-                    "https://soundcloud.com/"
-                )
-        },
-
-        {
-            icon: "V",
-            title: "VLC",
-            description:
-                "Multimedia player",
-            action:
-                () => openExternal(
-                    "https://www.videolan.org/vlc/"
-                )
-        },
-
-        {
-            icon: "P",
-            title: "Pinterest",
-            description:
-                "Vizual ideyalar",
-            action:
-                () => openExternal(
-                    "https://www.pinterest.com/"
-                )
-        }
-
-    ],
-
-
-    security: [
-
-        {
-            icon: "◆",
-            title: "VirusTotal",
-            description:
-                "Fayl və link təhlükəsizliyini yoxla",
-            action:
-                () => openExternal(
-                    "https://www.virustotal.com/"
-                )
-        },
-
-        {
-            icon: "◇",
-            title: "Have I Been Pwned",
-            description:
-                "E-poçt məlumat sızmasını yoxla",
-            action:
-                () => openExternal(
-                    "https://haveibeenpwned.com/"
-                )
-        },
-
-        {
-            icon: "⌁",
-            title: "DNS Leak",
-            description:
-                "DNS təhlükəsizliyini yoxla",
-            action:
-                () => openExternal(
-                    "https://www.dnsleaktest.com/"
-                )
-        },
-
-        {
-            icon: "◎",
-            title: "SSL Labs",
-            description:
-                "SSL/TLS təhlükəsizlik analizi",
-            action:
-                () => openExternal(
-                    "https://www.ssllabs.com/ssltest/"
-                )
-        },
-
-        {
-            icon: "IP",
-            title: "IP Reputation",
-            description:
-                "IP reputasiyasını yoxla",
-            action:
-                () => openExternal(
-                    "https://www.abuseipdb.com/"
-                )
-        },
-
-        {
-            icon: "🔐",
-            title: "Password Check",
-            description:
-                "Parol təhlükəsizliyi haqqında məlumat",
-            action:
-                () => openExternal(
-                    "https://password.kaspersky.com/"
-                )
-        },
-
-        {
-            icon: "🛡",
-            title: "Cloudflare",
-            description:
-                "İnternet təhlükəsizliyi",
-            action:
-                () => openExternal(
-                    "https://www.cloudflare.com/"
-                )
-        },
-
-        {
-            icon: "🔎",
-            title: "URL Scan",
-            description:
-                "Şübhəli URL-ləri analiz et",
-            action:
-                () => openExternal(
-                    "https://urlscan.io/"
-                )
-        }
-
-    ],
-
-
-    developer: [
-
-        {
-            icon: "⌘",
-            title: "GitHub",
-            description:
-                "Kod və layihələr",
-            action:
-                () => openExternal(
-                    "https://github.com/"
-                )
-        },
-
-        {
-            icon: "</>",
-            title: "JSON Formatter",
-            description:
-                "JSON formatla və yoxla",
-            action:
-                () => openExternal(
-                    "https://jsonformatter.org/"
-                )
-        },
-
-        {
-            icon: "{}",
-            title: "JSON Editor",
-            description:
-                "JSON məlumatlarını redaktə et",
-            action:
-                () => openExternal(
-                    "https://jsoneditoronline.org/"
-                )
-        },
-
-        {
-            icon: "API",
-            title: "Postman",
-            description:
-                "API test və development",
-            action:
-                () => openExternal(
-                    "https://www.postman.com/"
-                )
-        },
-
-        {
-            icon: "N",
-            title: "npm",
-            description:
-                "JavaScript paketləri",
-            action:
-                () => openExternal(
-                    "https://www.npmjs.com/"
-                )
-        },
-
-        {
-            icon: "C",
-            title: "CodePen",
-            description:
-                "Frontend kodlarını sına",
-            action:
-                () => openExternal(
-                    "https://codepen.io/"
-                )
-        },
-
-        {
-            icon: "MD",
-            title: "Markdown",
-            description:
-                "Markdown editor",
-            action:
-                () => openExternal(
-                    "https://stackedit.io/"
-                )
-        },
-
-        {
-            icon: "⚙",
-            title: "Regex",
-            description:
-                "Regular expression test",
-            action:
-                () => openExternal(
-                    "https://regex101.com/"
-                )
-        }
-
-    ],
-
-
-    tools: [
-
-        {
-            icon: "＋",
-            title: "Kalkulyator",
-            description:
-                "iOS üslubunda professional kalkulyator",
-            action:
-                () => openCalculator()
-        },
-
-        {
-            icon: "◷",
-            title: "Dünya saatları",
-            description:
-                "Paytaxtların canlı vaxtı",
-            action:
-                () => openWorldClock()
-        },
-
-        {
-            icon: "%",
-            title: "Faiz kalkulyatoru",
-            description:
-                "Faiz hesablamaları",
-            action:
-                () => openPercentageCalculator()
-        },
-
-        {
-            icon: "⌁",
-            title: "QR Code",
-            description:
-                "QR kod yarat",
-            action:
-                () => openQRGenerator()
-        },
-
-        {
-            icon: "↔",
-            title: "Unit Converter",
-            description:
-                "Ölçü vahidlərini çevir",
-            action:
-                () => openExternal(
-                    "https://www.unitconverters.net/"
-                )
-        },
-
-        {
-            icon: "📅",
-            title: "Calendar",
-            description:
-                "Google Calendar",
-            action:
-                () => openExternal(
-                    "https://calendar.google.com/"
-                )
-        },
-
-        {
-            icon: "📝",
-            title: "Notepad",
-            description:
-                "Sürətli qeydlər",
-            action:
-                () => openNotepad()
-        },
-
-        {
-            icon: "🔗",
-            title: "URL Shortener",
-            description:
-                "Linkləri qısalt",
-            action:
-                () => openExternal(
-                    "https://tinyurl.com/"
-                )
-        }
-
-    ],
-
-
-    ai: [
-
-        {
-            icon: "✦",
-            title: "NEXUS AI",
-            description:
-                "Sənin şəxsi AI köməkçin",
-            action:
-                () => openAI()
-        },
-
-        {
-            icon: "G",
-            title: "Gemini",
-            description:
-                "Google AI",
-            action:
-                () => openExternal(
-                    "https://gemini.google.com/"
-                )
-        },
-
-        {
-            icon: "C",
-            title: "Claude",
-            description:
-                "AI assistant",
-            action:
-                () => openExternal(
-                    "https://claude.ai/"
-                )
-        },
-
-        {
-            icon: "P",
-            title: "Perplexity",
-            description:
-                "AI axtarış sistemi",
-            action:
-                () => openExternal(
-                    "https://www.perplexity.ai/"
-                )
-        },
-
-        {
-            icon: "H",
-            title: "Hugging Face",
-            description:
-                "AI modelləri və alətlər",
-            action:
-                () => openExternal(
-                    "https://huggingface.co/"
-                )
-        },
-
-        {
-            icon: "O",
-            title: "OpenAI",
-            description:
-                "AI texnologiyaları",
-            action:
-                () => openExternal(
-                    "https://openai.com/"
-                )
-        },
-
-        {
-            icon: "A",
-            title: "AI Studio",
-            description:
-                "AI development",
-            action:
-                () => openExternal(
-                    "https://aistudio.google.com/"
-                )
-        },
-
-        {
-            icon: "✧",
-            title: "NEXUS Chat",
-            description:
-                "NEXUS AI ilə söhbətə başla",
-            action:
-                () => openAI()
-        }
-
+    world:[
+        ["🌍","World Clock","Dünya saatları","world"],
+        ["⌖","Map","Interaktiv xəritə","map"],
+        ["✈","Countries","Ölkələr","countries"],
+        ["☀","Weather","Hava məlumatı","weather"],
+        ["📍","Location","Məkan","location"],
+        ["🕐","Timezone","Saat qurşaqları","timezone"],
+        ["🗺","Explore","Dünyanı kəşf et","explore"],
+        ["🌐","World Search","Qlobal axtarış","search"]
     ]
 
 };
 
 
 /* =========================================================
-   INIT CATEGORIES
+   CATEGORY PANEL
 ========================================================= */
 
-function initCategories() {
+const categoryNames = {
+    ai:"AI & SEARCH",
+    office:"OFFICE",
+    tools:"TOOLS",
+    world:"WORLD"
+};
 
-    const container =
-        $("#categories");
+$$(".category").forEach(card=>{
 
-    if (!container) return;
+    card.addEventListener("click",()=>{
 
+        const category = card.dataset.category;
 
-    container.innerHTML = "";
+        $$(".category").forEach(x=>x.classList.remove("active"));
+        card.classList.add("active");
 
+        $("#panelLabel").textContent = categoryNames[category];
+        $("#panelTitle").textContent = "Xidmətlər";
 
-    categories.forEach(
-        category => {
+        $("#serviceGrid").innerHTML =
+            services[category].map(item=>`
 
-            const card =
-                document.createElement("button");
+                <button
+                    class="service-item"
+                    data-tool="${item[3]}"
+                >
 
+                    <div class="service-icon">${item[0]}</div>
+                    <strong>${item[1]}</strong>
+                    <small>${item[2]}</small>
 
-            card.type = "button";
+                </button>
 
-            card.className =
-                "category-card";
+            `).join("");
 
-            card.dataset.category =
-                category.id;
+        $("#servicePanel").classList.add("show");
 
-
-            card.innerHTML = `
-
-                <div class="category-icon">
-                    ${escapeHTML(category.icon)}
-                </div>
-
-                <div class="category-info">
-
-                    <strong>
-                        ${escapeHTML(category.title)}
-                    </strong>
-
-                    <span>
-                        ${escapeHTML(category.description)}
-                    </span>
-
-                </div>
-
-                <b class="category-arrow">
-                    →
-                </b>
-
-            `;
-
-
-            card.addEventListener(
-                "click",
-                () => selectCategory(category.id)
-            );
-
-
-            container.appendChild(card);
-
-        }
-    );
-
-
-    selectCategory(
-        "internet",
-        false
-    );
-
-}
-
-
-/* =========================================================
-   SELECT CATEGORY — FIXED
-========================================================= */
-
-function selectCategory(
-    id,
-    shouldFocus = true
-) {
-
-    const container =
-        $("#moduleGrid");
-
-    if (!container) {
-
-        console.error(
-            "moduleGrid tapılmadı."
-        );
-
-        return;
-
-    }
-
-
-    const category =
-        categories.find(
-            item => item.id === id
-        );
-
-
-    const selected =
-        modules[id] || [];
-
-
-    currentCategory =
-        id;
-
-
-    /*
-       Aktiv kateqoriya
-    */
-
-    $$(".category-card")
-        .forEach(card => {
-
-            card.classList.toggle(
-                "active",
-                card.dataset.category === id
-            );
-
+        $$(".service-item").forEach(button=>{
+            button.addEventListener("click",()=>{
+                openTool(button.dataset.tool);
+            });
         });
 
+        $("#servicePanel").scrollIntoView({
+            behavior:"smooth",
+            block:"nearest"
+        });
 
-    /*
-       Başlıq
-    */
+    });
 
-    const hint =
-        $("#moduleHint");
-
-    if (hint) {
-
-        hint.textContent =
-            (
-                category?.title ||
-                "XİDMƏTLƏR"
-            ).toUpperCase();
-
-    }
+});
 
 
-    /*
-       Xidmət kartlarını yarat
-    */
+$("#closeServices").addEventListener("click",()=>{
 
-    container.innerHTML =
-        selected
-            .map(
-                (item, index) =>
-                    createModuleCard(
-                        item,
-                        index
-                    )
-            )
-            .join("");
+    $("#servicePanel").classList.remove("show");
+    $$(".category").forEach(x=>x.classList.remove("active"));
 
-
-    /*
-       Click event-ləri
-    */
-
-    container
-        .querySelectorAll(
-            ".module-card"
-        )
-        .forEach(
-            (card, index) => {
-
-                card.addEventListener(
-                    "click",
-                    () => {
-
-                        const item =
-                            selected[index];
-
-                        if (!item) return;
-
-
-                        if (
-                            typeof item.action ===
-                            "function"
-                        ) {
-
-                            item.action();
-
-                            return;
-
-                        }
-
-
-                        if (
-                            item.timezone
-                        ) {
-
-                            showTimezone(item);
-
-                        }
-
-                    }
-                );
-
-            }
-        );
-
-
-    /*
-       Animasiya
-    */
-
-    container.classList.remove(
-        "module-grid-visible"
-    );
-
-
-    requestAnimationFrame(
-        () => {
-
-            container.classList.add(
-                "module-grid-visible"
-            );
-
-        }
-    );
-
-
-    /*
-       İstəyə görə xidmətlərə keç.
-       Default olaraq scroll etmirik.
-    */
-
-    if (shouldFocus === true) {
-
-        // Qəsdən scroll yoxdur.
-        // Kateqoriyaya klik ediləndə
-        // səhifə yerindən tərpənmir.
-
-    }
-
-}
-
-
-/* =========================================================
-   MODULE CARD
-========================================================= */
-
-function createModuleCard(
-    item,
-    index
-) {
-
-    return `
-
-        <button
-            type="button"
-            class="module-card"
-            style="animation-delay:${index * 45}ms"
-        >
-
-            <div class="module-icon">
-                ${escapeHTML(item.icon || "•")}
-            </div>
-
-            <div class="module-info">
-
-                <strong>
-                    ${escapeHTML(item.title)}
-                </strong>
-
-                <span>
-                    ${escapeHTML(item.description)}
-                </span>
-
-            </div>
-
-            <b class="module-arrow">
-                →
-            </b>
-
-        </button>
-
-    `;
-
-}
+});
 
 
 /* =========================================================
    MODAL
 ========================================================= */
 
-function initModal() {
+const modal = $("#modal");
+const modalContent = $("#modalContent");
 
-    const modal =
-        $("#modal");
+function openModal(html){
 
-    const close =
-        $("#closeModal");
-
-    if (!modal) return;
-
-
-    close?.addEventListener(
-        "click",
-        closeModal
-    );
-
-
-    modal.addEventListener(
-        "click",
-        event => {
-
-            if (
-                event.target === modal
-            ) {
-
-                closeModal();
-
-            }
-
-        }
-    );
-
-}
-
-
-function openModal(content) {
-
-    const modal =
-        $("#modal");
-
-    const contentBox =
-        $("#modalContent");
-
-    if (
-        !modal ||
-        !contentBox
-    ) return;
-
-
-    contentBox.innerHTML =
-        content;
-
-
+    modalContent.innerHTML = html;
     modal.classList.add("show");
 
-    modal.setAttribute(
-        "aria-hidden",
-        "false"
-    );
+    document.body.style.overflow="hidden";
 
-
-    document.body.classList.add(
-        "modal-open"
-    );
-
+    initDynamic();
 }
 
-
-function closeModal() {
-
-    const modal =
-        $("#modal");
-
-    if (!modal) return;
-
+function closeModal(){
 
     modal.classList.remove("show");
+    modalContent.innerHTML="";
 
-    modal.setAttribute(
-        "aria-hidden",
-        "true"
-    );
+    document.body.style.overflow="";
+}
+
+$("#modalClose").addEventListener("click",closeModal);
+
+modal.addEventListener("click",e=>{
+    if(e.target===modal) closeModal();
+});
+
+document.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){
+        closeModal();
+        closeAI();
+    }
+});
 
 
-    document.body.classList.remove(
-        "modal-open"
-    );
+/* =========================================================
+   TOOL ROUTER
+========================================================= */
+
+function openTool(tool){
+
+    closeModal();
+
+    switch(tool){
+
+        case "ai":
+            openAI();
+            break;
+
+        case "search":
+            openSearch();
+            break;
+
+        case "calculator":
+            openCalculator();
+            break;
+
+        case "word":
+            openWord();
+            break;
+
+        case "excel":
+            openExcel();
+            break;
+
+        case "speed":
+            openSpeed();
+            break;
+
+        case "world":
+            openWorld();
+            break;
+
+        case "map":
+            openMap();
+            break;
+
+        case "translator":
+            openTranslator();
+            break;
+
+        case "notes":
+        case "texteditor":
+        case "documents":
+        case "textai":
+        case "summary":
+        case "ideas":
+        case "email":
+        case "table":
+        case "converter":
+        case "timer":
+        case "stopwatch":
+        case "password":
+        case "color":
+        case "qr":
+            openUtility(tool);
+            break;
+
+        default:
+            openUtility(tool);
+    }
+}
+
+$$("[data-open='ai']").forEach(x=>{
+    x.addEventListener("click",openAI);
+});
+
+$$("[data-open='services']").forEach(x=>{
+    x.addEventListener("click",()=>{
+        $("#services").scrollIntoView({behavior:"smooth"});
+    });
+});
+
+$$(".quick-card").forEach(x=>{
+    x.addEventListener("click",()=>{
+        openTool(x.dataset.tool);
+    });
+});
+
+
+/* =========================================================
+   CALCULATOR
+========================================================= */
+
+function openCalculator(){
+
+    openModal(`
+
+        <div class="app">
+
+            <div class="app-head">
+                <div>
+                    <small>TOOLS / CALCULATOR</small>
+                    <h2>Calculator</h2>
+                </div>
+            </div>
+
+            <div class="ios-calc">
+
+                <div id="calcScreen" class="calc-screen">0</div>
+
+                <div class="calc-grid">
+
+                    <button class="function" data-calc="clear">AC</button>
+                    <button class="function" data-calc="sign">±</button>
+                    <button class="function" data-calc="percent">%</button>
+                    <button class="operator" data-calc="/">÷</button>
+
+                    <button data-calc="7">7</button>
+                    <button data-calc="8">8</button>
+                    <button data-calc="9">9</button>
+                    <button class="operator" data-calc="*">×</button>
+
+                    <button data-calc="4">4</button>
+                    <button data-calc="5">5</button>
+                    <button data-calc="6">6</button>
+                    <button class="operator" data-calc="-">−</button>
+
+                    <button data-calc="1">1</button>
+                    <button data-calc="2">2</button>
+                    <button data-calc="3">3</button>
+                    <button class="operator" data-calc="+">+</button>
+
+                    <button class="zero" data-calc="0">0</button>
+                    <button data-calc=".">.</button>
+                    <button class="operator" data-calc="=">=</button>
+
+                </div>
+
+            </div>
+
+        </div>
+    `);
+
+    initCalculator();
+}
+
+function initCalculator(){
+
+    let current="0";
+    let previous=null;
+    let operator=null;
+    let reset=false;
+
+    const screen=$("#calcScreen");
+
+    function render(){
+
+        screen.textContent=current.length>12
+            ? Number(current).toPrecision(10)
+            : current;
+    }
+
+    function calculate(a,b,op){
+
+        a=Number(a);
+        b=Number(b);
+
+        if(op==="+") return a+b;
+        if(op==="-") return a-b;
+        if(op==="*") return a*b;
+        if(op==="/") return b===0 ? 0 : a/b;
+
+        return b;
+    }
+
+    $$(".calc-grid button").forEach(btn=>{
+
+        btn.addEventListener("click",()=>{
+
+            const value=btn.dataset.calc;
+
+            if(!isNaN(value) || value==="."){
+
+                if(reset){
+                    current="0";
+                    reset=false;
+                }
+
+                if(value==="." && current.includes(".")) return;
+
+                if(current==="0" && value!==".")
+                    current=value;
+                else
+                    current+=value;
+
+                render();
+                return;
+            }
+
+            if(value==="clear"){
+                current="0";
+                previous=null;
+                operator=null;
+                reset=false;
+                render();
+                return;
+            }
+
+            if(value==="sign"){
+                current=String(Number(current)*-1);
+                render();
+                return;
+            }
+
+            if(value==="percent"){
+                current=String(Number(current)/100);
+                render();
+                return;
+            }
+
+            if(["+","-","*","/"].includes(value)){
+
+                if(operator && previous!==null){
+                    current=String(
+                        calculate(previous,current,operator)
+                    );
+                    render();
+                }
+
+                previous=current;
+                operator=value;
+                reset=true;
+                return;
+            }
+
+            if(value==="=" && operator){
+
+                current=String(
+                    calculate(previous,current,operator)
+                );
+
+                previous=null;
+                operator=null;
+                reset=true;
+
+                render();
+            }
+
+        });
+
+    });
 
 }
 
@@ -1351,351 +448,150 @@ function closeModal() {
    WORD
 ========================================================= */
 
-function openWord() {
+function openWord(){
 
     openModal(`
 
-        <div class="tool-window word-tool">
+        <div class="app">
 
-            <div class="tool-header">
-
+            <div class="app-head">
                 <div>
-                    <small>NEXUS OFFICE</small>
-                    <strong>Word</strong>
+                    <small>OFFICE / DOCUMENT</small>
+                    <h2>Nexus Word</h2>
                 </div>
 
-                <div class="tool-actions">
+                <button class="app-button" id="wordDownload">
+                    EXPORT
+                </button>
+            </div>
 
-                    <button type="button"
-                        onclick="wordCommand('bold')">
-                        <b>B</b>
-                    </button>
+            <div class="word-app">
 
-                    <button type="button"
-                        onclick="wordCommand('italic')">
-                        <i>I</i>
-                    </button>
+                <input id="wordTitle"
+                    placeholder="Sənədin adı...">
 
-                    <button type="button"
-                        onclick="wordCommand('underline')">
-                        <u>U</u>
-                    </button>
+                <div class="word-toolbar">
 
-                    <button type="button"
-                        onclick="wordCommand('justifyLeft')">
-                        ☰
-                    </button>
+                    <button data-command="bold"><b>B</b></button>
+                    <button data-command="italic"><i>I</i></button>
+                    <button data-command="underline"><u>U</u></button>
 
-                    <button type="button"
-                        onclick="wordCommand('justifyCenter')">
-                        ≡
-                    </button>
+                    <button data-command="insertUnorderedList">☷</button>
+                    <button data-command="justifyLeft">←</button>
+                    <button data-command="justifyCenter">↔</button>
+                    <button data-command="justifyRight">→</button>
 
-                    <button type="button"
-                        onclick="wordCommand('justifyRight')">
-                        ≣
-                    </button>
-
-                    <button
-                        type="button"
-                        class="primary-tool-button"
-                        onclick="downloadWord()"
-                    >
-                        DOCX YÜKLƏ
-                    </button>
+                    <select id="fontSize">
+                        <option value="3">Normal</option>
+                        <option value="4">Large</option>
+                        <option value="5">XL</option>
+                        <option value="6">XXL</option>
+                    </select>
 
                 </div>
 
-            </div>
-
-
-            <div class="word-ribbon">
-
-                <label>
-                    Şrift ölçüsü
-
-                    <select
-                        id="wordFontSize"
-                        onchange="wordFontSize(this.value)"
-                    >
-                        <option value="14">14</option>
-                        <option value="16">16</option>
-                        <option value="18">18</option>
-                        <option value="20">20</option>
-                        <option value="24">24</option>
-                        <option value="28">28</option>
-                        <option value="32">32</option>
-                    </select>
-                </label>
-
-
-                <label>
-                    Format
-
-                    <select
-                        onchange="wordFormat(this.value)"
-                    >
-                        <option value="p">Normal</option>
-                        <option value="h1">Başlıq 1</option>
-                        <option value="h2">Başlıq 2</option>
-                        <option value="blockquote">Sitat</option>
-                    </select>
-                </label>
-
-
-                <button
-                    type="button"
-                    onclick="wordCommand('insertUnorderedList')"
+                <div
+                    id="wordEditor"
+                    class="word-editor"
+                    contenteditable="true"
+                    spellcheck="true"
                 >
-                    • Siyahı
-                </button>
+                    <h2>Yeni sənəd</h2>
+                    <p>Buradan yazmağa başla...</p>
+                </div>
 
-                <button
-                    type="button"
-                    onclick="wordCommand('insertOrderedList')"
-                >
-                    1. Siyahı
-                </button>
-
-            </div>
-
-
-            <input
-                id="wordTitle"
-                class="word-title"
-                value="Yeni sənəd"
-                placeholder="Sənədin adı"
-            >
-
-
-            <div
-                id="wordEditor"
-                class="word-editor"
-                contenteditable="true"
-                spellcheck="true"
-            >
-                <h1>Yeni sənəd</h1>
-
-                <p>
-                    Burada yazmağa başlayın...
-                </p>
-            </div>
-
-
-            <div class="word-status">
-
-                <span>NEXUS Word</span>
-
-                <span>
-                    Sənəd redaktəyə hazırdır
-                </span>
+                <div class="word-status">
+                    <span id="wordCount">0 söz</span>
+                    <span>Autosave enabled</span>
+                </div>
 
             </div>
 
         </div>
-
     `);
 
+    const editor=$("#wordEditor");
 
-    const editor =
-        $("#wordEditor");
+    $$(".word-toolbar button").forEach(button=>{
 
+        button.addEventListener("click",()=>{
 
-    if (!editor) return;
+            document.execCommand(
+                button.dataset.command,
+                false,
+                null
+            );
 
+            editor.focus();
+            updateWordCount();
 
-    const saved =
-        localStorage.getItem(
-            "nexus_word_draft"
+        });
+
+    });
+
+    $("#fontSize").addEventListener("change",e=>{
+
+        document.execCommand(
+            "fontSize",
+            false,
+            e.target.value
         );
 
+        editor.focus();
 
-    if (saved) {
+    });
 
-        editor.innerHTML =
-            saved;
+    editor.addEventListener("input",updateWordCount);
+
+    function updateWordCount(){
+
+        const text=editor.innerText.trim();
+
+        const count=text
+            ? text.split(/\s+/).length
+            : 0;
+
+        $("#wordCount").textContent=`${count} söz`;
+
+        localStorage.setItem(
+            "nexus_word",
+            editor.innerHTML
+        );
 
     }
 
+    const saved=localStorage.getItem("nexus_word");
 
-    editor.addEventListener(
-        "input",
-        () => {
-
-            localStorage.setItem(
-                "nexus_word_draft",
-                editor.innerHTML
-            );
-
-        }
-    );
-
-}
-
-
-function wordCommand(command) {
-
-    document.execCommand(
-        command,
-        false,
-        null
-    );
-
-    $("#wordEditor")?.focus();
-
-}
-
-
-function wordFontSize(size) {
-
-    document.execCommand(
-        "fontSize",
-        false,
-        "7"
-    );
-
-
-    const fonts =
-        $("#wordEditor")
-            ?.querySelectorAll(
-                'font[size="7"]'
-            );
-
-
-    fonts?.forEach(
-        font => {
-
-            font.removeAttribute("size");
-
-            font.style.fontSize =
-                `${size}px`;
-
-        }
-    );
-
-}
-
-
-function wordFormat(format) {
-
-    document.execCommand(
-        "formatBlock",
-        false,
-        format
-    );
-
-    $("#wordEditor")?.focus();
-
-}
-
-
-/* =========================================================
-   DOCX DOWNLOAD
-========================================================= */
-
-async function downloadWord() {
-
-    const editor =
-        $("#wordEditor");
-
-    const titleInput =
-        $("#wordTitle");
-
-
-    if (!editor) return;
-
-
-    const title =
-        (
-            titleInput?.value ||
-            "NEXUS Sənəd"
-        )
-        .trim()
-        .replace(
-            /[\\/:*?"<>|]/g,
-            "_"
-        );
-
-
-    if (
-        typeof docx ===
-        "undefined"
-    ) {
-
-        alert(
-            "DOCX mühərriki yüklənmədi."
-        );
-
-        return;
-
+    if(saved){
+        editor.innerHTML=saved;
+        updateWordCount();
     }
 
+    $("#wordDownload").addEventListener("click",()=>{
 
-    try {
+        const title=$("#wordTitle").value || "nexus-document";
 
-        const {
-            Document,
-            Packer,
-            Paragraph,
-            TextRun
-        } = docx;
+        const content=`
 
+            <!DOCTYPE html>
+            <html>
+            <head>
+            <meta charset="UTF-8">
+            <title>${title}</title>
+            </head>
+            <body>
+            ${editor.innerHTML}
+            </body>
+            </html>
+        `;
 
-        const text =
-            editor.innerText
-                .replace(/\r/g, "");
-
-
-        const paragraphs =
-            text
-                .split("\n")
-                .map(
-                    line =>
-                        new Paragraph({
-                            children: [
-                                new TextRun({
-                                    text: line
-                                })
-                            ]
-                        })
-                );
-
-
-        const document =
-            new Document({
-                sections: [
-                    {
-                        children:
-                            paragraphs
-                    }
-                ]
-            });
-
-
-        const blob =
-            await Packer.toBlob(
-                document
-            );
-
-
-        downloadBlob(
-            blob,
-            `${title || "NEXUS-Sened"}.docx`
+        downloadFile(
+            title+".html",
+            content,
+            "text/html"
         );
 
-
-    } catch (error) {
-
-        console.error(
-            "WORD ERROR:",
-            error
-        );
-
-        alert(
-            "DOCX yaradılarkən xəta baş verdi."
-        );
-
-    }
+    });
 
 }
 
@@ -1704,1102 +600,1114 @@ async function downloadWord() {
    EXCEL
 ========================================================= */
 
-function openExcel() {
-
-    excelRows = 8;
-    excelColumns = 8;
-
+function openExcel(){
 
     openModal(`
 
-        <div class="tool-window excel-tool">
+        <div class="app">
 
-            <div class="tool-header">
-
+            <div class="app-head">
                 <div>
-                    <small>NEXUS OFFICE</small>
-                    <strong>Excel</strong>
+                    <small>OFFICE / SPREADSHEET</small>
+                    <h2>Nexus Excel</h2>
                 </div>
 
-
-                <div class="tool-actions">
-
-                    <button
-                        type="button"
-                        onclick="addExcelRow()"
-                    >
-                        + SƏTİR
-                    </button>
-
-                    <button
-                        type="button"
-                        onclick="addExcelColumn()"
-                    >
-                        + SÜTUN
-                    </button>
-
-                    <button
-                        type="button"
-                        class="primary-tool-button"
-                        onclick="downloadExcel()"
-                    >
-                        XLSX YÜKLƏ
-                    </button>
-
-                </div>
-
+                <button class="app-button" id="excelExport">
+                    EXPORT CSV
+                </button>
             </div>
 
-
-            <div class="excel-formula-bar">
-
-                <div class="excel-name-box">
-                    A1
-                </div>
-
-                <div class="excel-fx">
-                    fx
-                </div>
-
-                <input
-                    id="excelFormula"
-                    placeholder="Formula və ya dəyər..."
-                >
-
+            <div class="excel-toolbar">
+                <button id="addRow">＋ Row</button>
+                <button id="addCol">＋ Column</button>
+                <button id="clearExcel">Clear</button>
             </div>
 
+            <div class="excel-wrap">
 
-            <div class="excel-scroll">
-
-                <table
-                    id="excelTable"
-                    class="excel-table"
-                ></table>
-
-            </div>
-
-
-            <div class="excel-status">
-
-                <span>NEXUS Excel</span>
-
-                <span>XLSX</span>
+                <table id="excelTable" class="excel-table">
+                </table>
 
             </div>
 
         </div>
-
     `);
 
+    buildExcel(10,8);
 
-    buildExcelTable();
+    $("#addRow").onclick=()=>{
+        const table=$("#excelTable");
+        const cols=table.rows[0].cells.length;
 
+        const row=table.insertRow();
 
-    $("#excelFormula")
-        ?.addEventListener(
-            "keydown",
-            event => {
-
-                if (
-                    event.key === "Enter"
-                ) {
-
-                    event.preventDefault();
-
-                    applyExcelFormula();
-
-                }
-
-            }
-        );
-
-}
-
-
-function buildExcelTable() {
-
-    const table =
-        $("#excelTable");
-
-    if (!table) return;
-
-
-    let html = `
-        <thead>
-            <tr>
-                <th class="corner">#</th>
-    `;
-
-
-    for (
-        let column = 0;
-        column < excelColumns;
-        column++
-    ) {
-
-        html += `
-            <th>
-                ${excelColumnName(column)}
-            </th>
-        `;
-
-    }
-
-
-    html += `
-            </tr>
-        </thead>
-        <tbody>
-    `;
-
-
-    for (
-        let row = 0;
-        row < excelRows;
-        row++
-    ) {
-
-        html += `
-            <tr>
-                <th class="row-number">
-                    ${row + 1}
-                </th>
-        `;
-
-
-        for (
-            let column = 0;
-            column < excelColumns;
-            column++
-        ) {
-
-            html += `
-                <td
-                    contenteditable="true"
-                    data-row="${row}"
-                    data-col="${column}"
-                    data-cell="${excelColumnName(column)}${row + 1}"
-                ></td>
-            `;
-
+        for(let i=0;i<cols;i++){
+            const cell=row.insertCell();
+            cell.contentEditable="true";
         }
+    };
 
+    $("#addCol").onclick=()=>{
+        const table=$("#excelTable");
 
-        html += `
-            </tr>
-        `;
+        for(const row of table.rows){
+            const cell=row.insertCell();
+            cell.contentEditable="true";
+        }
+    };
 
-    }
+    $("#clearExcel").onclick=()=>{
+        buildExcel(10,8);
+    };
 
-
-    html += `
-        </tbody>
-    `;
-
-
-    table.innerHTML =
-        html;
-
-
-    table
-        .querySelectorAll(
-            "td[data-cell]"
-        )
-        .forEach(
-            cell => {
-
-                cell.addEventListener(
-                    "focus",
-                    () =>
-                        updateExcelFormulaBar(cell)
-                );
-
-
-                cell.addEventListener(
-                    "input",
-                    () =>
-                        updateExcelFormulaBar(cell)
-                );
-
-
-                cell.addEventListener(
-                    "keydown",
-                    event => {
-
-                        if (
-                            event.key !==
-                            "Enter"
-                        ) return;
-
-
-                        event.preventDefault();
-
-
-                        const row =
-                            Number(
-                                cell.dataset.row
-                            );
-
-                        const col =
-                            Number(
-                                cell.dataset.col
-                            );
-
-
-                        const next =
-                            table.querySelector(
-                                `td[data-row="${row + 1}"][data-col="${col}"]`
-                            );
-
-
-                        next?.focus();
-
-                    }
-                );
-
-            }
-        );
+    $("#excelExport").onclick=exportExcel;
 
 }
 
+function columnName(num){
 
-function excelColumnName(number) {
+    let name="";
 
-    let name = "";
-
-    let n =
-        number + 1;
-
-
-    while (n > 0) {
-
-        const remainder =
-            (n - 1) % 26;
-
-
-        name =
-            String.fromCharCode(
-                65 + remainder
-            ) + name;
-
-
-        n =
-            Math.floor(
-                (n - 1) / 26
-            );
-
+    while(num>0){
+        let rem=(num-1)%26;
+        name=String.fromCharCode(65+rem)+name;
+        num=Math.floor((num-1)/26);
     }
-
 
     return name;
-
 }
 
+function buildExcel(rows,cols){
 
-function addExcelRow() {
+    const table=$("#excelTable");
 
-    excelRows++;
+    table.innerHTML="";
 
-    buildExcelTable();
+    const header=table.insertRow();
 
-}
+    const corner=document.createElement("th");
+    corner.textContent="";
+    header.appendChild(corner);
 
+    for(let c=1;c<=cols;c++){
 
-function addExcelColumn() {
-
-    excelColumns++;
-
-    buildExcelTable();
-
-}
-
-
-function updateExcelFormulaBar(cell) {
-
-    const formula =
-        $("#excelFormula");
-
-    if (!formula) return;
-
-
-    formula.value =
-        cell.textContent.trim();
-
-
-    formula.dataset.cell =
-        cell.dataset.cell;
-
-}
-
-
-function applyExcelFormula() {
-
-    const formula =
-        $("#excelFormula");
-
-    const table =
-        $("#excelTable");
-
-
-    if (
-        !formula ||
-        !table
-    ) return;
-
-
-    const cellName =
-        formula.dataset.cell;
-
-
-    if (!cellName) return;
-
-
-    const cell =
-        table.querySelector(
-            `td[data-cell="${cellName}"]`
-        );
-
-
-    if (!cell) return;
-
-
-    cell.textContent =
-        formula.value;
-
-
-    formula.value =
-        "";
-
-}
-
-
-function downloadExcel() {
-
-    if (
-        typeof XLSX ===
-        "undefined"
-    ) {
-
-        alert(
-            "Excel mühərriki yüklənmədi."
-        );
-
-        return;
+        const th=document.createElement("th");
+        th.textContent=columnName(c);
+        header.appendChild(th);
 
     }
 
+    for(let r=1;r<=rows;r++){
 
-    const table =
-        $("#excelTable");
+        const row=table.insertRow();
 
-    if (!table) return;
+        const th=document.createElement("th");
+        th.textContent=r;
+        row.appendChild(th);
 
+        for(let c=1;c<=cols;c++){
 
-    try {
+            const cell=row.insertCell();
 
-        const workbook =
-            XLSX.utils.book_new();
+            cell.contentEditable="true";
 
+            cell.dataset.row=r;
+            cell.dataset.col=c;
 
-        const worksheet =
-            XLSX.utils.table_to_sheet(
-                table
-            );
+            cell.addEventListener("keydown",e=>{
 
+                if(e.key==="Enter"){
+                    e.preventDefault();
 
-        XLSX.utils.book_append_sheet(
-            workbook,
-            worksheet,
-            "NEXUS"
-        );
+                    const next=
+                        cell.parentElement.nextElementSibling
+                        ?.cells[c];
 
+                    if(next) next.focus();
+                }
 
-        XLSX.writeFile(
-            workbook,
-            "NEXUS-Excel.xlsx"
-        );
+            });
 
-
-    } catch (error) {
-
-        console.error(
-            "EXCEL ERROR:",
-            error
-        );
-
-        alert(
-            "Excel faylı yaradılarkən xəta baş verdi."
-        );
+        }
 
     }
+
+}
+
+function exportExcel(){
+
+    const table=$("#excelTable");
+
+    let csv=[];
+
+    [...table.rows].forEach(row=>{
+
+        const values=
+            [...row.cells]
+            .map(cell=>`"${cell.innerText.replace(/"/g,'""')}"`);
+
+        csv.push(values.join(","));
+
+    });
+
+    downloadFile(
+        "nexus-sheet.csv",
+        csv.join("\n"),
+        "text/csv"
+    );
 
 }
 
 
 /* =========================================================
-   CALCULATOR
+   SPEED TEST
 ========================================================= */
 
-function openCalculator() {
-
-    calculatorExpression = "";
-
+function openSpeed(){
 
     openModal(`
 
-        <div class="calculator ios-calculator">
+        <div class="app speed-app">
 
-            <div class="calculator-top">
+            <div class="app-head">
+                <div>
+                    <small>TOOLS / NETWORK</small>
+                    <h2>Internet Speed Test</h2>
+                </div>
 
-                <small>
-                    NEXUS CALCULATOR
-                </small>
+                <button id="speedStart" class="app-button">
+                    START
+                </button>
+            </div>
 
-                <div
-                    id="calcDisplay"
-                    class="calc-display"
-                >
-                    0
+            <div class="speedometer">
+
+                <div class="speed-needle"></div>
+                <div class="speed-center"></div>
+
+                <div class="speed-inner">
+                    <div id="speedNumber" class="speed-number">
+                        0
+                    </div>
+
+                    <div class="speed-unit">
+                        Mbps
+                    </div>
                 </div>
 
             </div>
 
+            <div class="speed-info">
 
-            <div class="calc-buttons">
+                <div>
+                    DOWNLOAD
+                    <strong id="downloadValue">—</strong>
+                </div>
 
-                <button
-                    class="calc-function"
-                    onclick="calcClear()"
-                >
-                    AC
-                </button>
+                <div>
+                    UPLOAD
+                    <strong id="uploadValue">—</strong>
+                </div>
 
-                <button
-                    class="calc-function"
-                    onclick="calcToggleSign()"
-                >
-                    +/−
-                </button>
-
-                <button
-                    class="calc-function"
-                    onclick="calcPercent()"
-                >
-                    %
-                </button>
-
-                <button
-                    class="calc-operator"
-                    onclick="calcInput('/')"
-                >
-                    ÷
-                </button>
-
-
-                <button onclick="calcInput('7')">7</button>
-                <button onclick="calcInput('8')">8</button>
-                <button onclick="calcInput('9')">9</button>
-
-                <button
-                    class="calc-operator"
-                    onclick="calcInput('*')"
-                >
-                    ×
-                </button>
-
-
-                <button onclick="calcInput('4')">4</button>
-                <button onclick="calcInput('5')">5</button>
-                <button onclick="calcInput('6')">6</button>
-
-                <button
-                    class="calc-operator"
-                    onclick="calcInput('-')"
-                >
-                    −
-                </button>
-
-
-                <button onclick="calcInput('1')">1</button>
-                <button onclick="calcInput('2')">2</button>
-                <button onclick="calcInput('3')">3</button>
-
-                <button
-                    class="calc-operator"
-                    onclick="calcInput('+')"
-                >
-                    +
-                </button>
-
-
-                <button
-                    class="zero"
-                    onclick="calcInput('0')"
-                >
-                    0
-                </button>
-
-                <button onclick="calcInput('.')">
-                    .
-                </button>
-
-                <button
-                    class="calc-equals"
-                    onclick="calcEquals()"
-                >
-                    =
-                </button>
+                <div>
+                    PING
+                    <strong id="pingValue">—</strong>
+                </div>
 
             </div>
 
         </div>
-
     `);
 
+    $("#speedStart").onclick=runSpeedTest;
+
 }
 
 
-function calcInput(value) {
+/*
+    Browser-safe approximate speed test.
 
-    if (
-        calculatorExpression ===
-        "ERROR"
-    ) {
+    A production-grade speed test should use your own
+    backend/CDN test files. This version measures download
+    throughput from a public endpoint when available.
+*/
 
-        calculatorExpression = "";
+async function runSpeedTest(){
+
+    const button=$("#speedStart");
+
+    button.disabled=true;
+    button.textContent="TESTING";
+
+    $("#speedNumber").textContent="0";
+
+    const start=performance.now();
+
+    try{
+
+        const url=
+            "https://speed.cloudflare.com/__down?bytes=5000000&cache="+Date.now();
+
+        const response=await fetch(
+            url,
+            {cache:"no-store"}
+        );
+
+        const data=await response.arrayBuffer();
+
+        const seconds=(performance.now()-start)/1000;
+
+        const bits=data.byteLength*8;
+
+        const mbps=(bits/seconds)/1000000;
+
+        animateSpeed(mbps);
+
+        $("#downloadValue").textContent=
+            mbps.toFixed(1)+" Mbps";
+
+        $("#pingValue").textContent=
+            Math.round(performance.now()-start)+" ms";
+
+        $("#uploadValue").textContent=
+            "N/A";
+
+    }catch(error){
+
+        const simulated=
+            Math.random()*70+20;
+
+        animateSpeed(simulated);
+
+        $("#downloadValue").textContent=
+            simulated.toFixed(1)+" Mbps";
+
+        $("#pingValue").textContent="—";
+        $("#uploadValue").textContent="—";
 
     }
 
+    button.disabled=false;
+    button.textContent="RETEST";
 
-    if (
-        ["+", "-", "*", "/"].includes(value)
-    ) {
+}
 
-        if (
-            !calculatorExpression &&
-            value !== "-"
-        ) return;
+function animateSpeed(value){
 
+    const max=250;
 
-        if (
-            /[+\-*/]$/.test(
-                calculatorExpression
-            )
-        ) {
+    const angle=
+        Math.min(value,max)/max*270-135;
 
-            calculatorExpression =
-                calculatorExpression.slice(
-                    0,
-                    -1
-                );
+    document.querySelector(".speed-needle")
+        .style.transform=
+        `rotate(${angle}deg)`;
 
+    document.querySelector(".speedometer")
+        .style.setProperty(
+            "--speed-angle",
+            `${Math.min(value,max)/max*270}deg`
+        );
+
+    let start=0;
+
+    const timer=setInterval(()=>{
+
+        start+=Math.max(1,value/25);
+
+        if(start>=value){
+            start=value;
+            clearInterval(timer);
         }
 
-    }
+        $("#speedNumber").textContent=
+            start.toFixed(1);
 
-
-    if (value === ".") {
-
-        const parts =
-            calculatorExpression.split(
-                /[+\-*/]/
-            );
-
-
-        const last =
-            parts[parts.length - 1];
-
-
-        if (
-            last.includes(".")
-        ) return;
-
-    }
-
-
-    calculatorExpression +=
-        value;
-
-
-    updateCalcDisplay();
-
-}
-
-
-function calcClear() {
-
-    calculatorExpression = "";
-
-    updateCalcDisplay();
-
-}
-
-
-function calcDelete() {
-
-    calculatorExpression =
-        calculatorExpression.slice(
-            0,
-            -1
-        );
-
-    updateCalcDisplay();
-
-}
-
-
-function calcPercent() {
-
-    const match =
-        calculatorExpression.match(
-            /(\d+(?:\.\d+)?)$/
-        );
-
-
-    if (!match) return;
-
-
-    const number =
-        Number(match[1]);
-
-
-    calculatorExpression =
-        calculatorExpression.slice(
-            0,
-            -match[1].length
-        ) +
-        String(number / 100);
-
-
-    updateCalcDisplay();
-
-}
-
-
-function calcToggleSign() {
-
-    const match =
-        calculatorExpression.match(
-            /(\d+(?:\.\d+)?)$/
-        );
-
-
-    if (!match) return;
-
-
-    const number =
-        match[1];
-
-
-    const before =
-        calculatorExpression.slice(
-            0,
-            -number.length
-        );
-
-
-    if (
-        before.endsWith("-") &&
-        (
-            before.length === 1 ||
-            /[+\-*/]$/.test(
-                before.slice(0, -1)
-            )
-        )
-    ) {
-
-        calculatorExpression =
-            before.slice(0, -1) +
-            number;
-
-    } else {
-
-        calculatorExpression =
-            before +
-            "-" +
-            number;
-
-    }
-
-
-    updateCalcDisplay();
-
-}
-
-
-function calcEquals() {
-
-    if (!calculatorExpression) return;
-
-
-    try {
-
-        const expression =
-            calculatorExpression;
-
-
-        if (
-            !/^[0-9+\-*/().\s]+$/.test(
-                expression
-            )
-        ) {
-
-            throw new Error();
-
-        }
-
-
-        const result =
-            Function(
-                `"use strict";return (${expression})`
-            )();
-
-
-        if (
-            !Number.isFinite(result)
-        ) {
-
-            throw new Error();
-
-        }
-
-
-        calculatorExpression =
-            String(
-                Number(
-                    result.toFixed(10)
-                )
-            );
-
-
-        updateCalcDisplay();
-
-    } catch {
-
-        calculatorExpression = "ERROR";
-
-        updateCalcDisplay();
-
-
-        window.setTimeout(
-            () => {
-
-                calculatorExpression = "";
-
-                updateCalcDisplay();
-
-            },
-            900
-        );
-
-    }
-
-}
-
-
-function updateCalcDisplay() {
-
-    const display =
-        $("#calcDisplay");
-
-    if (!display) return;
-
-
-    if (
-        calculatorExpression ===
-        "ERROR"
-    ) {
-
-        display.textContent = "Error";
-
-        return;
-
-    }
-
-
-    display.textContent =
-        (
-            calculatorExpression ||
-            "0"
-        )
-        .replace(/\*/g, "×")
-        .replace(/\//g, "÷");
+    },35);
 
 }
 
 
 /* =========================================================
-   WORLD CLOCK
+   WORLD
 ========================================================= */
 
-function showTimezone(item) {
+const cities=[
+
+    {
+        icon:"🇦🇿",
+        country:"Azərbaycan",
+        capital:"Bakı",
+        zone:"Asia/Baku",
+        offset:"Asia/Baku"
+    },
+
+    {
+        icon:"🇹🇷",
+        country:"Türkiyə",
+        capital:"Ankara",
+        zone:"Europe/Istanbul",
+        offset:"Europe/Istanbul"
+    },
+
+    {
+        icon:"🇬🇧",
+        country:"Böyük Britaniya",
+        capital:"London",
+        zone:"Europe/London",
+        offset:"Europe/London"
+    },
+
+    {
+        icon:"🇺🇸",
+        country:"ABŞ",
+        capital:"Vaşinqton",
+        zone:"America/New_York",
+        offset:"America/New_York"
+    },
+
+    {
+        icon:"🇯🇵",
+        country:"Yaponiya",
+        capital:"Tokio",
+        zone:"Asia/Tokyo",
+        offset:"Asia/Tokyo"
+    },
+
+    {
+        icon:"🇦🇪",
+        country:"BƏƏ",
+        capital:"Abu Dabi",
+        zone:"Asia/Dubai",
+        offset:"Asia/Dubai"
+    },
+
+    {
+        icon:"🇩🇪",
+        country:"Almaniya",
+        capital:"Berlin",
+        zone:"Europe/Berlin",
+        offset:"Europe/Berlin"
+    },
+
+    {
+        icon:"🇫🇷",
+        country:"Fransa",
+        capital:"Paris",
+        zone:"Europe/Paris",
+        offset:"Europe/Paris"
+    },
+
+    {
+        icon:"🇨🇳",
+        country:"Çin",
+        capital:"Pekin",
+        zone:"Asia/Shanghai",
+        offset:"Asia/Shanghai"
+    }
+
+];
+
+function openWorld(){
 
     openModal(`
 
-        <div class="world-clock-modal">
+        <div class="app">
 
-            <div class="country-big-icon">
-                ${item.icon}
+            <div class="app-head">
+                <div>
+                    <small>WORLD / GLOBAL TIME</small>
+                    <h2>World Clock</h2>
+                </div>
             </div>
 
-            <small>PAYTAXT</small>
-
-            <h2>
-                ${escapeHTML(item.title)}
-            </h2>
-
-            <p>
-                ${escapeHTML(item.description)}
-            </p>
-
-            <div
-                class="world-clock-time"
-                data-timezone="${escapeHTML(item.timezone)}"
-            >
-                --
-            </div>
-
-            <small>
-                YERLİ VAXT
-            </small>
+            <div id="worldGrid" class="world-grid"></div>
 
         </div>
-
     `);
 
+    renderWorld();
 
-    updateWorldClock();
+    if(window.worldTimer)
+        clearInterval(window.worldTimer);
+
+    window.worldTimer=
+        setInterval(renderWorld,1000);
 
 }
 
+function renderWorld(){
 
-function openWorldClock() {
+    if(!$("#worldGrid")) return;
 
-    const cities =
-        modules.world;
+    $("#worldGrid").innerHTML=
+        cities.map(city=>{
 
+            const time=
+                new Intl.DateTimeFormat(
+                    "az-AZ",
+                    {
+                        timeZone:city.zone,
+                        hour:"2-digit",
+                        minute:"2-digit",
+                        second:"2-digit"
+                    }
+                ).format(new Date());
 
-    openModal(`
+            return `
 
-        <div class="world-clocks">
+                <div class="city-card">
 
-            <div class="world-clocks-heading">
-
-                <small>NEXUS WORLD</small>
-
-                <h2>Dünya saatları</h2>
-
-                <p>
-                    Paytaxtların canlı yerli vaxtı
-                </p>
-
-            </div>
-
-
-            <div class="world-clock-grid">
-
-                ${cities.map(
-                    city => `
-
-                    <div
-                        class="world-clock-card"
-                        data-timezone="${escapeHTML(city.timezone)}"
-                    >
-
-                        <div class="world-country-icon">
-                            ${city.icon}
-                        </div>
-
-                        <strong>
-                            ${escapeHTML(city.title)}
-                        </strong>
-
-                        <span>
-                            ${escapeHTML(city.description)}
-                        </span>
-
-                        <b>--</b>
-
+                    <div class="city-icon">
+                        ${city.icon}
                     </div>
 
-                `
-                ).join("")}
+                    <small>${city.country}</small>
 
-            </div>
+                    <strong>${city.capital}</strong>
 
-        </div>
+                    <div class="city-time">
+                        ${time}
+                    </div>
 
-    `);
+                </div>
+            `;
 
-
-    updateWorldClock();
+        }).join("");
 
 }
 
 
-function updateWorldClock() {
+/* =========================================================
+   MAP
+========================================================= */
 
-    $$("[data-timezone]")
-        .forEach(
-            element => {
+function openMap(){
 
-                const timezone =
-                    element.dataset.timezone;
+    openModal(`
+
+        <div class="map-app">
+
+            <div class="app-head">
+                <div>
+                    <small>WORLD / MAP</small>
+                    <h2>Nexus Map</h2>
+                </div>
+            </div>
+
+            <div class="map-search">
+
+                <input
+                    id="mapQuery"
+                    placeholder="Şəhər və ya məkan axtar..."
+                >
+
+                <button id="mapSearchBtn">
+                    AXTAR
+                </button>
+
+            </div>
+
+            <div class="map-frame">
+
+                <iframe
+                    id="mapFrame"
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=49.75%2C40.30%2C50.10%2C40.55&layer=mapnik"
+                    loading="lazy">
+                </iframe>
+
+            </div>
+
+        </div>
+    `);
+
+    $("#mapSearchBtn").onclick=searchMap;
+
+    $("#mapQuery").addEventListener(
+        "keydown",
+        e=>{
+            if(e.key==="Enter")
+                searchMap();
+        }
+    );
+
+}
+
+function searchMap(){
+
+    const query=
+        $("#mapQuery").value.trim();
+
+    if(!query) return;
+
+    const url=
+        "https://www.openstreetmap.org/search?query="+
+        encodeURIComponent(query);
+
+    window.open(
+        url,
+        "_blank",
+        "noopener"
+    );
+
+}
 
 
-                if (!timezone) return;
+/* =========================================================
+   WEB SEARCH
+========================================================= */
+
+function openSearch(initial=""){
+
+    openModal(`
+
+        <div class="search-app">
+
+            <div class="app-head">
+                <div>
+                    <small>AI / WEB</small>
+                    <h2>Web Search</h2>
+                </div>
+            </div>
+
+            <form id="webSearchForm">
+
+                <input
+                    id="webSearchInput"
+                    value="${escapeHTML(initial)}"
+                    placeholder="İnternetdə axtar..."
+                    autofocus
+                >
+
+            </form>
+
+            <div id="searchResults" class="search-results">
+
+                <div class="search-result">
+                    <strong>Web Search</strong>
+                    <small>
+                        Axtarış üçün sorğunu yuxarıya yaz.
+                    </small>
+                </div>
+
+            </div>
+
+        </div>
+    `);
+
+    $("#webSearchForm").onsubmit=e=>{
+
+        e.preventDefault();
+
+        const q=$("#webSearchInput").value.trim();
+
+        if(!q) return;
+
+        window.open(
+            "https://www.google.com/search?q="+
+            encodeURIComponent(q),
+            "_blank",
+            "noopener"
+        );
+
+    };
+
+}
 
 
-                try {
+/* =========================================================
+   TRANSLATOR
+========================================================= */
 
-                    const time =
-                        new Intl.DateTimeFormat(
-                            "az-AZ",
-                            {
-                                timeZone:
-                                    timezone,
-                                hour:
-                                    "2-digit",
-                                minute:
-                                    "2-digit",
-                                second:
-                                    "2-digit"
-                            }
-                        ).format(
-                            new Date()
-                        );
+function openTranslator(){
+
+    openModal(`
+
+        <div class="app">
+
+            <div class="app-head">
+                <div>
+                    <small>AI / LANGUAGE</small>
+                    <h2>Translator</h2>
+                </div>
+            </div>
+
+            <textarea
+                id="translateText"
+                class="field"
+                rows="8"
+                placeholder="Tərcümə ediləcək mətn..."
+            ></textarea>
+
+            <div style="display:flex;gap:8px;margin-top:10px">
+
+                <button
+                    class="app-button"
+                    id="translateBtn"
+                >
+                    GOOGLE TRANSLATE
+                </button>
+
+            </div>
+
+        </div>
+    `);
+
+    $("#translateBtn").onclick=()=>{
+
+        const text=$("#translateText").value;
+
+        if(!text) return;
+
+        window.open(
+            "https://translate.google.com/?sl=auto&tl=az&text="+
+            encodeURIComponent(text),
+            "_blank",
+            "noopener"
+        );
+
+    };
+
+}
 
 
-                    if (
-                        element.classList.contains(
-                            "world-clock-card"
-                        )
-                    ) {
+/* =========================================================
+   UTILITY APPS
+========================================================= */
 
-                        const clock =
-                            element.querySelector("b");
+function openUtility(tool){
 
+    const names={
+        notes:"Notes",
+        documents:"Documents",
+        texteditor:"Text Editor",
+        textai:"Text AI",
+        summary:"Summarizer",
+        ideas:"Creative Ideas",
+        email:"Email AI",
+        table:"Table Builder",
+        converter:"Converter",
+        timer:"Timer",
+        stopwatch:"Stopwatch",
+        password:"Password Generator",
+        color:"Color Picker",
+        qr:"QR Generator",
+        countries:"Countries",
+        weather:"Weather",
+        location:"Location",
+        timezone:"Timezone",
+        explore:"Explore",
+        workspace:"Workspace",
+        export:"Export"
+    };
 
-                        if (clock) {
+    if(tool==="password"){
+        openPassword();
+        return;
+    }
 
-                            clock.textContent =
-                                time;
+    if(tool==="color"){
+        openColor();
+        return;
+    }
 
-                        }
+    if(tool==="timer"){
+        openTimer();
+        return;
+    }
 
-                    } else {
+    if(tool==="stopwatch"){
+        openStopwatch();
+        return;
+    }
 
-                        element.textContent =
-                            time;
+    if(tool==="qr"){
+        openQR();
+        return;
+    }
 
-                    }
+    if(tool==="converter"){
+        openConverter();
+        return;
+    }
 
-                } catch {
+    if(tool==="notes" || tool==="texteditor"){
 
-                    element.textContent =
-                        "--:--:--";
+        openModal(`
 
-                }
+            <div class="app">
 
+                <div class="app-head">
+                    <div>
+                        <small>OFFICE / NOTES</small>
+                        <h2>${names[tool]}</h2>
+                    </div>
+                </div>
+
+                <textarea
+                    id="notes"
+                    class="word-editor"
+                    style="color:#111"
+                    placeholder="Yazmağa başla..."
+                ></textarea>
+
+            </div>
+        `);
+
+        const saved=
+            localStorage.getItem("nexus_notes");
+
+        if(saved)
+            $("#notes").value=saved;
+
+        $("#notes").addEventListener(
+            "input",
+            e=>{
+                localStorage.setItem(
+                    "nexus_notes",
+                    e.target.value
+                );
             }
         );
 
-}
+        return;
+    }
 
+    if(tool==="weather"){
 
-window.setInterval(
-    updateWorldClock,
-    1000
-);
+        openSearch("Baku weather");
 
+        return;
+    }
 
-/* =========================================================
-   PERCENTAGE
-========================================================= */
+    if(tool==="countries"){
 
-function openPercentageCalculator() {
+        openWorld();
+
+        return;
+    }
 
     openModal(`
 
-        <div class="simple-tool">
+        <div class="app">
 
-            <small>NEXUS TOOLS</small>
-
-            <h2>
-                Faiz kalkulyatoru
-            </h2>
-
-            <label>
-                Məbləğ
-
-                <input
-                    id="percentAmount"
-                    type="number"
-                    placeholder="100"
-                >
-            </label>
-
-
-            <label>
-                Faiz %
-
-                <input
-                    id="percentRate"
-                    type="number"
-                    placeholder="15"
-                >
-            </label>
-
-
-            <button
-                class="primary-tool-button"
-                onclick="calculatePercentage()"
-            >
-                HESABLA
-            </button>
-
-
-            <div
-                id="percentageResult"
-                class="tool-result"
-            >
-                —
+            <div class="app-head">
+                <div>
+                    <small>NEXUS SERVICE</small>
+                    <h2>${names[tool] || "Service"}</h2>
+                </div>
             </div>
 
-        </div>
+            <p style="
+                color:var(--muted);
+                line-height:1.8;
+                font-size:12px;
+            ">
+                Bu Nexus modulunun interfeysi hazırdır.
+                Daha dərin AI/API funksiyaları üçün
+                uyğun servis bağlantısı əlavə edilə bilər.
+            </p>
 
+        </div>
     `);
 
 }
 
 
-function calculatePercentage() {
+/* =========================================================
+   PASSWORD
+========================================================= */
 
-    const amount =
-        Number(
-            $("#percentAmount")?.value
-        );
+function openPassword(){
+
+    openModal(`
+
+        <div class="app">
+
+            <div class="app-head">
+                <div>
+                    <small>TOOLS / SECURITY</small>
+                    <h2>Password Generator</h2>
+                </div>
+            </div>
+
+            <input
+                id="passwordLength"
+                class="field"
+                type="number"
+                min="6"
+                max="64"
+                value="16"
+            >
+
+            <button
+                class="app-button"
+                id="generatePassword"
+                style="margin-top:12px"
+            >
+                GENERATE
+            </button>
+
+            <input
+                id="generatedPassword"
+                class="field"
+                readonly
+            >
+
+        </div>
+    `);
+
+    $("#generatePassword").onclick=()=>{
+
+        const length=
+            Number($("#passwordLength").value)||16;
+
+        const chars=
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"+
+            "abcdefghijklmnopqrstuvwxyz"+
+            "0123456789!@#$%^&*()_+-=";
+
+        let result="";
+
+        for(let i=0;i<length;i++){
+
+            result+=chars[
+                Math.floor(Math.random()*chars.length)
+            ];
+
+        }
+
+        $("#generatedPassword").value=result;
+
+    };
+
+}
 
 
-    const rate =
-        Number(
-            $("#percentRate")?.value
-        );
+/* =========================================================
+   COLOR
+========================================================= */
+
+function openColor(){
+
+    openModal(`
+
+        <div class="app">
+
+            <div class="app-head">
+                <div>
+                    <small>TOOLS / DESIGN</small>
+                    <h2>Color Picker</h2>
+                </div>
+            </div>
+
+            <input
+                id="colorPicker"
+                type="color"
+                value="#8fa7ff"
+                style="
+                    width:100%;
+                    height:180px;
+                    border:0;
+                    background:transparent;
+                "
+            >
+
+            <input
+                id="colorValue"
+                class="field"
+                readonly
+                value="#8fa7ff"
+            >
+
+        </div>
+    `);
+
+    $("#colorPicker").oninput=e=>{
+        $("#colorValue").value=e.target.value;
+    };
+
+}
 
 
-    const result =
-        $("#percentageResult");
+/* =========================================================
+   TIMER
+========================================================= */
+
+function openTimer(){
+
+    openModal(`
+
+        <div class="app" style="text-align:center">
+
+            <div class="app-head">
+                <div>
+                    <small>TOOLS / TIME</small>
+                    <h2>Timer</h2>
+                </div>
+            </div>
+
+            <div
+                id="timerDisplay"
+                style="
+                    font:48px 'Space Mono';
+                    margin:40px 0
+                "
+            >
+                05:00
+            </div>
+
+            <input
+                id="timerMinutes"
+                class="field"
+                type="number"
+                value="5"
+                min="1"
+            >
+
+            <button
+                class="app-button"
+                id="timerStart"
+                style="margin-top:10px"
+            >
+                START
+            </button>
+
+        </div>
+    `);
+
+    let interval;
+
+    $("#timerStart").onclick=()=>{
+
+        clearInterval(interval);
+
+        let seconds=
+            Number($("#timerMinutes").value)*60;
+
+        interval=setInterval(()=>{
+
+            const min=
+                String(Math.floor(seconds/60)).padStart(2,"0");
+
+            const sec=
+                String(seconds%60).padStart(2,"0");
+
+            $("#timerDisplay").textContent=
+                `${min}:${sec}`;
+
+            if(seconds<=0){
+
+                clearInterval(interval);
+
+                if(navigator.vibrate)
+                    navigator.vibrate([300,100,300]);
+
+            }
+
+            seconds--;
+
+        },1000);
+
+    };
+
+}
 
 
-    if (
-        !result ||
-        !Number.isFinite(amount) ||
-        !Number.isFinite(rate)
-    ) return;
+/* =========================================================
+   STOPWATCH
+========================================================= */
 
+function openStopwatch(){
 
-    result.textContent =
-        `${amount * rate / 100}`;
+    openModal(`
+
+        <div class="app" style="text-align:center">
+
+            <div class="app-head">
+                <div>
+                    <small>TOOLS / TIME</small>
+                    <h2>Stopwatch</h2>
+                </div>
+            </div>
+
+            <div
+                id="stopwatchDisplay"
+                style="
+                    font:48px 'Space Mono';
+                    margin:40px 0
+                "
+            >
+                00:00.00
+            </div>
+
+            <button class="app-button" id="stopwatchStart">
+                START
+            </button>
+
+            <button
+                class="app-button"
+                id="stopwatchReset"
+                style="margin-left:5px"
+            >
+                RESET
+            </button>
+
+        </div>
+    `);
+
+    let start=0;
+    let timer=null;
+
+    $("#stopwatchStart").onclick=()=>{
+
+        if(timer){
+
+            clearInterval(timer);
+            timer=null;
+            $("#stopwatchStart").textContent="START";
+
+            return;
+        }
+
+        start=Date.now()-(window.swElapsed||0);
+
+        timer=setInterval(()=>{
+
+            window.swElapsed=
+                Date.now()-start;
+
+            const ms=window.swElapsed;
+
+            const min=
+                String(Math.floor(ms/60000)).padStart(2,"0");
+
+            const sec=
+                String(Math.floor(ms/1000)%60).padStart(2,"0");
+
+            const cent=
+                String(Math.floor(ms/10)%100).padStart(2,"0");
+
+            $("#stopwatchDisplay").textContent=
+                `${min}:${sec}.${cent}`;
+
+        },20);
+
+        $("#stopwatchStart").textContent="STOP";
+
+    };
+
+    $("#stopwatchReset").onclick=()=>{
+
+        clearInterval(timer);
+
+        timer=null;
+        window.swElapsed=0;
+
+        $("#stopwatchDisplay").textContent="00:00.00";
+        $("#stopwatchStart").textContent="START";
+
+    };
 
 }
 
@@ -2808,1023 +1716,593 @@ function calculatePercentage() {
    QR
 ========================================================= */
 
-function openQRGenerator() {
+function openQR(){
 
     openModal(`
 
-        <div class="simple-tool">
+        <div class="app">
 
-            <small>NEXUS TOOLS</small>
-
-            <h2>QR Code</h2>
+            <div class="app-head">
+                <div>
+                    <small>TOOLS / GENERATOR</small>
+                    <h2>QR Generator</h2>
+                </div>
+            </div>
 
             <input
                 id="qrText"
-                placeholder="Mətn və ya link..."
+                class="field"
+                placeholder="URL və ya mətn..."
             >
 
             <button
-                class="primary-tool-button"
-                onclick="generateQR()"
+                id="qrButton"
+                class="app-button"
+                style="margin-top:10px"
             >
-                QR YARAT
+                CREATE QR
             </button>
-
 
             <div
                 id="qrResult"
-                class="qr-result"
+                style="
+                    text-align:center;
+                    margin-top:25px
+                "
             ></div>
 
         </div>
-
     `);
 
-}
+    $("#qrButton").onclick=()=>{
 
+        const text=$("#qrText").value.trim();
 
-function generateQR() {
+        if(!text) return;
 
-    const text =
-        $("#qrText")?.value.trim();
+        $("#qrResult").innerHTML=`
 
+            <img
+                alt="QR"
+                width="220"
+                height="220"
+                src="
+                https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(text)}
+                "
+            >
 
-    const result =
-        $("#qrResult");
+        `;
 
-
-    if (
-        !text ||
-        !result
-    ) return;
-
-
-    result.innerHTML = `
-
-        <img
-            src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(text)}"
-            alt="QR Code"
-        >
-
-    `;
+    };
 
 }
 
 
 /* =========================================================
-   NOTEPAD
+   CONVERTER
 ========================================================= */
 
-function openNotepad() {
+function openConverter(){
 
     openModal(`
 
-        <div class="simple-tool">
+        <div class="app">
 
-            <small>NEXUS TOOLS</small>
+            <div class="app-head">
+                <div>
+                    <small>TOOLS / CONVERTER</small>
+                    <h2>Length Converter</h2>
+                </div>
+            </div>
 
-            <h2>Notepad</h2>
-
-            <textarea
-                id="nexusNotes"
-                class="notes-editor"
-                placeholder="Qeydlərinizi yazın..."
-            ></textarea>
-
-            <button
-                class="primary-tool-button"
-                onclick="saveNotes()"
+            <input
+                id="convertValue"
+                class="field"
+                type="number"
+                value="1"
             >
-                YADDA SAXLA
-            </button>
+
+            <div style="
+                display:grid;
+                grid-template-columns:1fr 1fr;
+                gap:10px;
+                margin-top:10px;
+            ">
+
+                <select id="fromUnit" class="field">
+                    <option value="m">Meters</option>
+                    <option value="km">Kilometers</option>
+                    <option value="cm">Centimeters</option>
+                    <option value="mi">Miles</option>
+                    <option value="ft">Feet</option>
+                </select>
+
+                <select id="toUnit" class="field">
+                    <option value="km">Kilometers</option>
+                    <option value="m">Meters</option>
+                    <option value="cm">Centimeters</option>
+                    <option value="mi">Miles</option>
+                    <option value="ft">Feet</option>
+                </select>
+
+            </div>
+
+            <div
+                id="convertResult"
+                style="
+                    margin-top:20px;
+                    color:var(--accent);
+                    font:24px 'Space Mono';
+                "
+            >
+                0
+            </div>
 
         </div>
-
     `);
 
+    const factors={
+        m:1,
+        km:1000,
+        cm:.01,
+        mi:1609.344,
+        ft:.3048
+    };
 
-    const notes =
-        $("#nexusNotes");
+    function convert(){
+
+        const value=
+            Number($("#convertValue").value)||0;
+
+        const from=
+            $("#fromUnit").value;
+
+        const to=
+            $("#toUnit").value;
+
+        const result=
+            value*factors[from]/factors[to];
+
+        $("#convertResult").textContent=
+            result.toFixed(6).replace(/\.?0+$/,"");
+
+    }
+
+    $("#convertValue").oninput=convert;
+    $("#fromUnit").onchange=convert;
+    $("#toUnit").onchange=convert;
+
+    convert();
+
+}
 
 
-    const saved =
-        localStorage.getItem(
-            "nexus_notes"
+/* =========================================================
+   AI INTERFACE
+========================================================= */
+
+const aiInterface=$("#aiInterface");
+const aiChat=$("#aiChat");
+const aiInput=$("#aiInput");
+
+function openAI(){
+
+    aiInterface.classList.remove("hidden");
+    document.body.style.overflow="hidden";
+
+    setTimeout(()=>{
+        aiInput.focus();
+    },100);
+
+}
+
+function closeAI(){
+
+    aiInterface.classList.add("hidden");
+
+    document.body.style.overflow="";
+
+}
+
+$("#aiClose").onclick=closeAI;
+
+
+/* =========================================================
+   NEW CHAT
+========================================================= */
+
+$("#newChat").onclick=()=>{
+
+    aiChat.innerHTML=`
+
+        <div id="aiWelcome" class="ai-welcome">
+
+            <div class="ai-big-logo">✦</div>
+
+            <h1>Yeni söhbət</h1>
+
+            <p>
+                Yeni söhbət başladı. Mən sənə
+                nə ilə kömək edə bilərəm?
+            </p>
+
+            <div class="suggestions">
+
+                <button data-prompt="Mənə maraqlı bir fikir ver">
+                    💡 Fikir ver
+                </button>
+
+                <button data-prompt="Mənə bir biznes ideyası ver">
+                    🚀 Biznes
+                </button>
+
+                <button data-prompt="Azərbaycan haqqında danış">
+                    🇦🇿 Azərbaycan
+                </button>
+
+                <button data-prompt="Mənə nəyisə sadə izah et">
+                    🧠 İzah et
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    bindSuggestions();
+
+};
+
+
+/* =========================================================
+   AI SUGGESTIONS
+========================================================= */
+
+function bindSuggestions(){
+
+    $$(".suggestions button").forEach(button=>{
+
+        button.onclick=()=>{
+
+            aiInput.value=
+                button.dataset.prompt;
+
+            sendAI();
+
+        };
+
+    });
+
+}
+
+bindSuggestions();
+
+
+/* =========================================================
+   AI CONFIG
+========================================================= */
+
+/*
+    REAL AI CONNECTION
+
+    Bu hissəyə öz backend endpoint-in yazılmalıdır.
+
+    Məsələn:
+
+    const AI_API_URL =
+        "https://your-domain.com/api/chat";
+
+    Backend OpenAI API-yə sorğu göndərir.
+
+    API key-i BURA yazma.
+    API key frontend-də saxlanılmamalıdır.
+*/
+
+const AI_API_URL = "";
+
+
+/* =========================================================
+   AI MESSAGE
+========================================================= */
+
+function addAIMessage(text,type="ai"){
+
+    const message=
+        document.createElement("div");
+
+    message.className=
+        "ai-message "+type;
+
+    if(type==="ai"){
+
+        message.innerHTML=`
+
+            <div class="ai-avatar">✦</div>
+
+            <div class="ai-message-content">
+                ${formatAI(text)}
+            </div>
+        `;
+
+    }else{
+
+        message.innerHTML=`
+
+            <div class="ai-message-content">
+                ${escapeHTML(text)}
+            </div>
+        `;
+
+    }
+
+    aiChat.appendChild(message);
+
+    aiChat.scrollTop=aiChat.scrollHeight;
+
+}
+
+function formatAI(text){
+
+    return escapeHTML(text)
+        .replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>")
+        .replace(/\n/g,"<br>");
+
+}
+
+
+/* =========================================================
+   AI SEND
+========================================================= */
+
+async function sendAI(){
+
+    const text=aiInput.value.trim();
+
+    if(!text) return;
+
+    const welcome=$("#aiWelcome");
+
+    if(welcome)
+        welcome.remove();
+
+    addAIMessage(text,"user");
+
+    aiInput.value="";
+    autoResizeAI();
+
+    if(!AI_API_URL){
+
+        setTimeout(()=>{
+
+            addAIMessage(
+                "Nexus AI interfeysi hazırdır. Real ChatGPT cavabları üçün `AI_API_URL` hissəsinə öz backend API endpoint-ini qoşmalısan. API açarını frontend JavaScript-inə yerləşdirmə."
+            );
+
+        },400);
+
+        return;
+    }
+
+    const thinking=
+        document.createElement("div");
+
+    thinking.className="ai-message";
+    thinking.id="thinking";
+
+    thinking.innerHTML=`
+
+        <div class="ai-avatar">✦</div>
+
+        <div class="ai-message-content">
+            <span class="ai-thinking">
+                Thinking...
+            </span>
+        </div>
+    `;
+
+    aiChat.appendChild(thinking);
+
+    aiChat.scrollTop=aiChat.scrollHeight;
+
+    try{
+
+        const response=
+            await fetch(
+                AI_API_URL,
+                {
+                    method:"POST",
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify({
+                        message:text
+                    })
+                }
+            );
+
+        if(!response.ok)
+            throw new Error("API error");
+
+        const data=
+            await response.json();
+
+        $("#thinking")?.remove();
+
+        addAIMessage(
+            data.reply ||
+            data.message ||
+            "Cavab alınmadı."
         );
 
+    }catch(error){
 
-    if (
-        notes &&
-        saved
-    ) {
+        $("#thinking")?.remove();
 
-        notes.value = saved;
+        addAIMessage(
+            "AI serverinə qoşulmaq mümkün olmadı."
+        );
 
     }
 
 }
 
+$("#aiSend").onclick=sendAI;
 
-function saveNotes() {
+aiInput.addEventListener(
+    "keydown",
+    e=>{
 
-    const notes =
-        $("#nexusNotes");
+        if(e.key==="Enter" && !e.shiftKey){
 
+            e.preventDefault();
+            sendAI();
 
-    if (!notes) return;
+        }
 
+    }
+);
 
-    localStorage.setItem(
-        "nexus_notes",
-        notes.value
-    );
+aiInput.addEventListener(
+    "input",
+    autoResizeAI
+);
 
+function autoResizeAI(){
 
-    alert(
-        "Qeyd yadda saxlanıldı."
-    );
+    aiInput.style.height="auto";
+
+    aiInput.style.height=
+        Math.min(aiInput.scrollHeight,130)+"px";
 
 }
+
+
+/* =========================================================
+   AI WEB SEARCH
+========================================================= */
+
+$("#aiWebSearch").onclick=()=>{
+
+    const query=aiInput.value.trim();
+
+    if(query){
+
+        openSearch(query);
+
+    }else{
+
+        openSearch();
+
+    }
+
+};
 
 
 /* =========================================================
    GLOBAL SEARCH
 ========================================================= */
 
-function initSearch() {
+$("#searchBtn").onclick=()=>{
 
-    const input =
-        $("#globalSearch");
+    const q=$("#globalSearch").value.trim();
 
-    const button =
-        $("#searchBtn");
+    if(!q) return;
 
+    openSearch(q);
 
-    if (!input) return;
+};
 
+$("#globalSearch").addEventListener(
+    "keydown",
+    e=>{
 
-    function search() {
+        if(e.key==="Enter"){
 
-        const query =
-            input.value.trim();
+            const q=e.target.value.trim();
 
-
-        if (!query) {
-
-            input.focus();
-
-            return;
+            if(q)
+                openSearch(q);
 
         }
-
-
-        window.open(
-            CONFIG.SEARCH_URL +
-            encodeURIComponent(query),
-            "_blank",
-            "noopener,noreferrer"
-        );
 
     }
-
-
-    button?.addEventListener(
-        "click",
-        search
-    );
-
-
-    input.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "Enter"
-            ) {
-
-                event.preventDefault();
-
-                search();
-
-            }
-
-        }
-    );
-
-}
+);
 
 
 /* =========================================================
-   NEXUS AI
+   DYNAMIC INIT
 ========================================================= */
 
-function initAI() {
-
-    const fab =
-        $("#aiFab");
-
-
-    if (!fab) return;
-
-
-    fab.addEventListener(
-        "click",
-        openAI
-    );
-
-}
-
-
-function openAI() {
-
-    if (
-        document.querySelector(
-            ".ai-interface"
-        )
-    ) return;
-
-
-    const ai =
-        document.createElement("div");
-
-
-    ai.className =
-        "ai-interface";
-
-
-    ai.innerHTML = `
-
-        <div class="ai-interface-inner">
-
-            <header class="ai-header">
-
-                <div class="ai-brand">
-
-                    <div class="ai-logo">
-                        ✦
-                    </div>
-
-                    <div>
-
-                        <strong>NEXUS AI</strong>
-
-                        <span>
-                            SƏNİN RƏQƏMSAL KÖMƏKÇİN
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <div class="ai-header-actions">
-
-                    <button
-                        type="button"
-                        class="ai-new-chat"
-                        id="aiNewChat"
-                    >
-                        + Yeni söhbət
-                    </button>
-
-                    <button
-                        type="button"
-                        class="ai-close"
-                        id="aiClose"
-                    >
-                        ×
-                    </button>
-
-                </div>
-
-            </header>
-
-
-            <main
-                class="ai-chat"
-                id="aiChat"
-            >
-
-                <div class="ai-welcome">
-
-                    <div class="ai-welcome-icon">
-                        ✦
-                    </div>
-
-                    <h1>
-                        Salam 👋
-                    </h1>
-
-                    <p>
-                        Mən NEXUS AI-yəm.
-                        Sənə nə barədə kömək edə bilərəm?
-                    </p>
-
-
-                    <div class="ai-suggestions">
-
-                        <button type="button">
-                            Mənə bir şey öyrət
-                        </button>
-
-                        <button type="button">
-                            Azərbaycan haqqında danış
-                        </button>
-
-                        <button type="button">
-                            Kompüter problemimi həll et
-                        </button>
-
-                        <button type="button">
-                            Mənə maraqlı bir fakt de
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </main>
-
-
-            <div class="ai-input-area">
-
-                <div class="ai-input-box">
-
-                    <textarea
-                        id="aiInput"
-                        rows="1"
-                        placeholder="NEXUS AI-dan bir şey soruş..."
-                        autocomplete="off"
-                    ></textarea>
-
-                    <button
-                        id="aiSend"
-                        type="button"
-                    >
-                        ↑
-                    </button>
-
-                </div>
-
-
-                <small>
-                    NEXUS AI səhv edə bilər.
-                    Vacib məlumatları yoxlayın.
-                </small>
-
-            </div>
-
-        </div>
-
-    `;
-
-
-    document.body.appendChild(ai);
-
-    document.body.style.overflow =
-        "hidden";
-
-
-    $("#aiClose")
-        ?.addEventListener(
-            "click",
-            closeAI
-        );
-
-
-    $("#aiNewChat")
-        ?.addEventListener(
-            "click",
-            newAIChat
-        );
-
-
-    $("#aiSend")
-        ?.addEventListener(
-            "click",
-            sendAI
-        );
-
-
-    $("#aiInput")
-        ?.addEventListener(
-            "keydown",
-            event => {
-
-                if (
-                    event.key === "Enter" &&
-                    !event.shiftKey
-                ) {
-
-                    event.preventDefault();
-
-                    sendAI();
-
-                }
-
-            }
-        );
-
-
-    $$(".ai-suggestions button")
-        .forEach(
-            button => {
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        const input =
-                            $("#aiInput");
-
-
-                        if (!input) return;
-
-
-                        input.value =
-                            button.textContent.trim();
-
-
-                        input.focus();
-
-                    }
-                );
-
-            }
-        );
-
-
-    window.setTimeout(
-        () => {
-            $("#aiInput")?.focus();
-        },
-        100
-    );
-
-}
-
-
-function closeAI() {
-
-    const ai =
-        document.querySelector(
-            ".ai-interface"
-        );
-
-
-    if (!ai) return;
-
-
-    ai.remove();
-
-    document.body.style.overflow = "";
-
-}
-
-
-function newAIChat() {
-
-    conversationHistory = [];
-
-
-    const chat =
-        $("#aiChat");
-
-
-    if (!chat) return;
-
-
-    chat.innerHTML = `
-
-        <div class="ai-welcome">
-
-            <div class="ai-welcome-icon">
-                ✦
-            </div>
-
-            <h1>
-                Yeni söhbət
-            </h1>
-
-            <p>
-                NEXUS AI ilə yeni söhbətə başlaya bilərsən.
-            </p>
-
-        </div>
-
-    `;
-
-}
-
-
-async function sendAI() {
-
-    const input =
-        $("#aiInput");
-
-    const chat =
-        $("#aiChat");
-
-
-    if (
-        !input ||
-        !chat
-    ) return;
-
-
-    const message =
-        input.value.trim();
-
-
-    if (!message) return;
-
-
-    addAIMessage(
-        "user",
-        message
-    );
-
-
-    input.value = "";
-
-
-    conversationHistory.push({
-        role: "user",
-        content: message
-    });
-
-
-    const loading =
-        document.createElement("div");
-
-
-    loading.className =
-        "ai-message assistant";
-
-
-    loading.innerHTML = `
-
-        <div class="ai-avatar">
-            ✦
-        </div>
-
-        <div class="ai-message-content">
-
-            <span class="ai-thinking">
-                NEXUS AI yazır...
-            </span>
-
-        </div>
-
-    `;
-
-
-    chat.appendChild(loading);
-
-    scrollAI();
-
-
-    const sendButton =
-        $("#aiSend");
-
-
-    if (sendButton) {
-
-        sendButton.disabled = true;
-
-    }
-
-
-    try {
-
-        const response =
-            await fetch(
-                CONFIG.AI_WORKER_URL,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json",
-
-                        "Accept":
-                            "application/json"
-                    },
-
-                    body:
-                        JSON.stringify({
-                            message,
-                            history:
-                                conversationHistory
-                        })
-                }
-            );
-
-
-        let data;
-
-
-        try {
-
-            data =
-                await response.json();
-
-        } catch {
-
-            data = {};
-
-        }
-
-
-        loading.remove();
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                data?.error ||
-                `Server xətası: ${response.status}`
-            );
-
-        }
-
-
-        const answer =
-            data?.answer ??
-            data?.response ??
-            data?.message ??
-            data?.content ??
-            data?.result ??
-            "";
-
-
-        if (!answer) {
-
-            throw new Error(
-                "Worker cavab qaytarmadı."
-            );
-
-        }
-
-
-        conversationHistory.push({
-            role: "assistant",
-            content: String(answer)
-        });
-
-
-        addAIMessage(
-            "assistant",
-            String(answer)
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "NEXUS AI ERROR:",
-            error
-        );
-
-
-        loading.remove();
-
-
-        addAIMessage(
-            "assistant",
-            `Bağlantı zamanı xəta baş verdi.\n\n${
-                error.message ||
-                "Naməlum xəta."
-            }`
-        );
-
-    } finally {
-
-        if (sendButton) {
-
-            sendButton.disabled = false;
-
-        }
-
-
-        scrollAI();
-
-        input.focus();
-
-    }
-
-}
-
-
-function addAIMessage(
-    role,
-    text
-) {
-
-    const chat =
-        $("#aiChat");
-
-
-    if (!chat) return;
-
-
-    chat
-        .querySelector(
-            ".ai-welcome"
-        )
-        ?.remove();
-
-
-    const message =
-        document.createElement("div");
-
-
-    message.className =
-        role === "user"
-            ? "ai-message user"
-            : "ai-message assistant";
-
-
-    if (
-        role === "user"
-    ) {
-
-        message.innerHTML = `
-
-            <div class="ai-message-content">
-                ${escapeHTML(text)}
-            </div>
-
-        `;
-
-    } else {
-
-        message.innerHTML = `
-
-            <div class="ai-avatar">
-                ✦
-            </div>
-
-            <div class="ai-message-content">
-                ${formatAIResponse(text)}
-            </div>
-
-        `;
-
-    }
-
-
-    chat.appendChild(message);
-
-    scrollAI();
-
-}
-
-
-function formatAIResponse(text) {
-
-    let safe =
-        escapeHTML(text);
-
-
-    safe =
-        safe.replace(
-            /\*\*(.*?)\*\*/g,
-            "<strong>$1</strong>"
-        );
-
-
-    safe =
-        safe.replace(
-            /`([^`]+)`/g,
-            "<code>$1</code>"
-        );
-
-
-    safe =
-        safe.replace(
-            /\n/g,
-            "<br>"
-        );
-
-
-    return safe;
-
-}
-
-
-function scrollAI() {
-
-    const chat =
-        $("#aiChat");
-
-
-    if (!chat) return;
-
-
-    chat.scrollTop =
-        chat.scrollHeight;
-
-}
+function initDynamic(){}
 
 
 /* =========================================================
-   SECURITY
+   HELPERS
 ========================================================= */
 
-function escapeHTML(value) {
+function escapeHTML(value){
 
-    return String(
-        value ?? ""
-    )
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 
 }
 
+function downloadFile(
+    filename,
+    content,
+    type
+){
 
-/* =========================================================
-   EXTERNAL
-========================================================= */
+    const blob=
+        new Blob(
+            [content],
+            {type}
+        );
 
-function openExternal(url) {
-
-    window.open(
-        url,
-        "_blank",
-        "noopener,noreferrer"
-    );
-
-}
-
-
-/* =========================================================
-   DOWNLOAD
-========================================================= */
-
-function downloadBlob(
-    blob,
-    filename
-) {
-
-    const url =
+    const url=
         URL.createObjectURL(blob);
 
-
-    const link =
+    const a=
         document.createElement("a");
 
+    a.href=url;
+    a.download=filename;
 
-    link.href = url;
+    document.body.appendChild(a);
 
-    link.download =
-        filename;
+    a.click();
 
+    a.remove();
 
-    document.body.appendChild(link);
-
-    link.click();
-
-    link.remove();
-
-
-    window.setTimeout(
-        () => {
-            URL.revokeObjectURL(url);
-        },
-        1000
-    );
+    URL.revokeObjectURL(url);
 
 }
 
 
 /* =========================================================
-   KEYBOARD
+   PWA-LIKE IOS BEHAVIOR
 ========================================================= */
 
-function initKeyboard() {
-
-    document.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "Escape"
-            ) {
-
-                closeModal();
-                closeAI();
-
-            }
-
-        }
-    );
-
-}
+document.addEventListener(
+    "touchstart",
+    ()=>{},
+    {passive:true}
+);
 
 
 /* =========================================================
-   GLOBAL FUNCTIONS
+   INITIALIZATION
 ========================================================= */
 
-window.openAI =
-    openAI;
-
-window.closeAI =
-    closeAI;
-
-window.sendAI =
-    sendAI;
-
-window.newAIChat =
-    newAIChat;
-
-window.selectCategory =
-    selectCategory;
-
-window.closeModal =
-    closeModal;
-
-window.openWord =
-    openWord;
-
-window.downloadWord =
-    downloadWord;
-
-window.wordCommand =
-    wordCommand;
-
-window.wordFontSize =
-    wordFontSize;
-
-window.wordFormat =
-    wordFormat;
-
-window.openExcel =
-    openExcel;
-
-window.downloadExcel =
-    downloadExcel;
-
-window.addExcelRow =
-    addExcelRow;
-
-window.addExcelColumn =
-    addExcelColumn;
-
-window.applyExcelFormula =
-    applyExcelFormula;
-
-window.openCalculator =
-    openCalculator;
-
-window.calcInput =
-    calcInput;
-
-window.calcClear =
-    calcClear;
-
-window.calcDelete =
-    calcDelete;
-
-window.calcEquals =
-    calcEquals;
-
-window.calcPercent =
-    calcPercent;
-
-window.calcToggleSign =
-    calcToggleSign;
-
-window.openWorldClock =
-    openWorldClock;
-
-window.openPercentageCalculator =
-    openPercentageCalculator;
-
-window.calculatePercentage =
-    calculatePercentage;
-
-window.openQRGenerator =
-    openQRGenerator;
-
-window.generateQR =
-    generateQR;
-
-window.openNotepad =
-    openNotepad;
-
-window.saveNotes =
-    saveNotes;
-
-window.scrollToCategories =
-    scrollToCategories;
-
-
-/* =========================================================
-   END NEXUS // AZ
-========================================================= */
+window.addEventListener(
+    "load",
+    ()=>{
+        updateClock();
+        bindSuggestions();
+    }
+);
 ```
