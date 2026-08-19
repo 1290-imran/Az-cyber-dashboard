@@ -85,28 +85,33 @@ function renderCategories() {
 
   html += `<div id="toolsDrawer" class="tools-drawer"></div>`;
   container.innerHTML = html;
+
+  if (activeCatId) {
+    updateDrawer();
+  }
 }
 
 function toggleCategory(id) {
   if (activeCatId === id) {
     activeCatId = null;
-    renderCategories();
-    return;
+  } else {
+    activeCatId = id;
   }
-
-  activeCatId = id;
   renderCategories();
+}
 
-  const cat = C.find(x => x[0] === id);
+function updateDrawer() {
+  const cat = C.find(x => x[0] === activeCatId);
   const toolsDrawer = $('#toolsDrawer');
-  
+  if(!cat || !toolsDrawer) return;
+
   let drawerHtml = `
     <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #fff2;padding-bottom:10px">
       <div>
         <small style="color:#8290ff;letter-spacing:1px">${cat[1]}</small>
         <h3 style="margin:2px 0 0;color:#fff">${cat[2]} Alətləri</h3>
       </div>
-      <button class="action" onclick="toggleCategory('${id}')">Bağla ×</button>
+      <button class="action" onclick="toggleCategory('${activeCatId}')">Bağla ×</button>
     </div>
     <div class="tools-grid">
   `;
@@ -128,7 +133,9 @@ function toggleCategory(id) {
   toolsDrawer.classList.add('open');
 }
 
-renderCategories();
+document.addEventListener('DOMContentLoaded', () => {
+  renderCategories();
+});
 
 // --- TOOL MODALS ---
 function openTool(id) {
@@ -138,6 +145,8 @@ function openTool(id) {
   }
 
   const tool = allTools().find(x => x[0] === id);
+  if(!tool) return;
+
   $('#toolCategoryLabel').textContent = tool.catName.toUpperCase();
   $('#toolTitle').textContent = tool[1];
   
@@ -163,7 +172,6 @@ function getToolHTML(id) {
           <button onclick="execWordCmd('underline')"><u>U</u></button>
           <button onclick="execWordCmd('insertUnorderedList')">• Siyahı</button>
           <button onclick="execWordCmd('formatBlock', 'H2')">Başlıq</button>
-          <button onclick="execWordCmd('foreColor', '#8290ff')">Mətn Rəngi</button>
         </div>
         <div id="wordEditor" class="word-editor" contenteditable="true">Mətni bura daxil edin...</div>
         <div style="margin-top:12px;display:flex;gap:10px">
@@ -270,7 +278,7 @@ function initToolLogic(id) {
         attribution: '© OpenStreetMap'
       }).addTo(map);
 
-      L.marker([40.4093, 49.8671]).addTo(map).bindPopup('🏙️ Bakı, Azərbaycan (Flame Towers)').openPopup();
+      L.marker([40.4093, 49.8671]).addTo(map).bindPopup('🏙️ Bakı, Azərbaycan').openPopup();
     }, 200);
   }
 
@@ -316,10 +324,8 @@ async function renderWorldClocks() {
   container.innerHTML = html;
 }
 
-// --- WORD EDITOR ---
-function execWordCmd(cmd, val = null) {
-  document.execCommand(cmd, false, val);
-}
+// --- HELPER FUNCTIONS ---
+function execWordCmd(cmd, val = null) { document.execCommand(cmd, false, val); }
 function downloadWord() {
   const content = $('#wordEditor').innerHTML;
   const blob = new Blob([content], { type: 'text/html' });
@@ -329,7 +335,6 @@ function downloadWord() {
   a.click();
 }
 
-// --- EXCEL SHEET ---
 let excelRowCount = 5;
 function addExcelRow() {
   excelRowCount++;
@@ -354,7 +359,6 @@ function exportExcelCSV() {
   a.click();
 }
 
-// --- iOS CALCULATOR ---
 let calcVal = '0';
 function calcNum(n) {
   if (calcVal === '0') calcVal = n;
@@ -369,15 +373,10 @@ function calcAction(op) {
   $('#calcDisplay').textContent = calcVal;
 }
 function calcEqual() {
-  try {
-    calcVal = eval(calcVal.replace(/×/g, '*').replace(/÷/g, '/')).toString();
-  } catch(e) {
-    calcVal = 'Xəta';
-  }
+  try { calcVal = eval(calcVal.replace(/×/g, '*').replace(/÷/g, '/')).toString(); } catch(e) { calcVal = 'Xəta'; }
   $('#calcDisplay').textContent = calcVal;
 }
 
-// --- HELPER TOOLS ---
 async function fetchIP() {
   try {
     const r = await fetch('https://api.ipify.org?format=json');
@@ -400,41 +399,19 @@ function generateQR() {
   $('#out').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(val)}" style="background:#fff;padding:8px;border-radius:10px">`;
 }
 
-// --- SEARCH MODAL ---
+// --- SEARCH & CHATGPT ---
 function openSearchModal() {
   $('#searchModal').classList.add('open');
   $('#searchInput').focus();
 }
-const searchBtn = $('#searchBtn');
-if(searchBtn) searchBtn.onclick = openSearchModal;
 
-function handleSearch() {
-  const q = $('#searchInput').value.toLowerCase();
-  const results = $('#searchResults');
-  if (!q) { results.innerHTML = ''; return; }
-
-  const filtered = allTools().filter(t => t[1].toLowerCase().includes(q) || t[2].toLowerCase().includes(q));
-  results.innerHTML = filtered.map(t => `
-    <div style="padding:10px;border-bottom:1px solid #fff1;cursor:pointer;display:flex;align-items:center;gap:10px" onclick="closeAllModals();openTool('${t[0]}')">
-      <span style="color:#8290ff;font-weight:bold">${t[3]}</span>
-      <div>
-        <b style="color:#fff;display:block">${t[1]}</b>
-        <small style="color:#68758d">${t.catName}</small>
-      </div>
-    </div>
-  `).join('') || '<div style="padding:15px;color:#68758d">Heç bir alət tapılmadı.</div>';
-}
-
-// --- REAL CHATGPT MODAL ---
 function openChatGPTModal() {
   closeAllModals();
   $('#chatgptModal').classList.add('open');
   $('#chatInput').focus();
 }
 
-let chatMessages = [
-  { role: 'assistant', text: 'Salam! Mən sizin rəqəmsal köməkçiniz NEXUS AI-yam. Sizə necə kömək edim?' }
-];
+let chatMessages = [{ role: 'assistant', text: 'Salam! Mən sizin rəqəmsal köməkçiniz NEXUS AI-yam. Sizə necə kömək edim?' }];
 
 function renderChat() {
   const container = $('#chatMessages');
@@ -459,21 +436,12 @@ function sendChatMessage(e) {
   renderChat();
 
   setTimeout(() => {
-    let aiReply = getSimulatedAIResponse(text);
-    chatMessages.push({ role: 'assistant', text: aiReply });
+    chatMessages.push({ role: 'assistant', text: `"${text}" sorğunuz NEXUS AI tərəfindən qəbul olundu.` });
     renderChat();
   }, 600);
 }
 
-function getSimulatedAIResponse(q) {
-  q = q.toLowerCase();
-  if (q.includes('salam') || q.includes('helo')) return "Xoş gördük! NEXUS AI mərkəzində sizə necə dəstək ola bilərəm?";
-  if (q.includes('kod') || q.includes('python') || q.includes('js')) return "Kodlaşdırma mövzusunda kömək etməyə hazıram. Xahiş edirəm tələbinizi və ya xəta verən kodu yazın.";
-  if (q.includes('kimdir') || q.includes('nədir')) return "NEXUS AI platformanın daxilinə inteqrasiya edilmiş, sürətli və geniş biliyə malik süni intellekt modelidir.";
-  return `"${q}" sorğunuz analitik modul tərəfindən emal olundu. Real GPT backend qoşulduqda dərhal API canlı məlumatlarını təqdim edəcəkdir.`;
-}
-
 function startNewChat() {
-  chatMessages = [{ role: 'assistant', text: 'Yeni söhbət başladııldı. Sualınızı daxil edin.' }];
+  chatMessages = [{ role: 'assistant', text: 'Yeni söhbət başladııldı.' }];
   renderChat();
 }
