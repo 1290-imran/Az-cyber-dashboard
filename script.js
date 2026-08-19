@@ -1,9 +1,7 @@
 /* =========================================================
-   NEXUS // AZ — v4.0
+   NEXUS // AZ 4.1
    MAIN APPLICATION
 ========================================================= */
-
-"use strict";
 
 
 /* =========================================================
@@ -14,1664 +12,2224 @@ const $ = (selector) => document.querySelector(selector);
 
 const $$ = (selector) => document.querySelectorAll(selector);
 
-function escapeHTML(value) {
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
+const categories = [
+
+    {
+        id: "network",
+        icon: "⌁",
+        title: "Network",
+        description: "Şəbəkə və internet"
+    },
+
+    {
+        id: "security",
+        icon: "◇",
+        title: "Security",
+        description: "Təhlükəsizlik"
+    },
+
+    {
+        id: "developer",
+        icon: "</>",
+        title: "Developer",
+        description: "Kod və terminal"
+    },
+
+    {
+        id: "world",
+        icon: "◎",
+        title: "World",
+        description: "Xəritə və saatlar"
+    },
+
+    {
+        id: "office",
+        icon: "▦",
+        title: "Office",
+        description: "Word, Excel və iş"
+    },
+
+    {
+        id: "media",
+        icon: "♫",
+        title: "Media",
+        description: "Audio və media"
+    },
+
+    {
+        id: "system",
+        icon: "◈",
+        title: "System",
+        description: "Sistem alətləri"
+    },
+
+    {
+        id: "utility",
+        icon: "⌗",
+        title: "Utility",
+        description: "Gündəlik alətlər"
+    }
+
+];
+
+
+/* =========================================================
+   TOOLS
+========================================================= */
+
+const tools = {
+
+    network: [
+
+        {
+            id: "speed",
+            icon: "◉",
+            title: "Speed Test",
+            description: "İnternet bağlantısının sürətini yoxla."
+        },
+
+        {
+            id: "ip",
+            icon: "⌁",
+            title: "IP & DNS",
+            description: "Public IP və DNS məlumatlarını göstər."
+        },
+
+        {
+            id: "ping",
+            icon: "≈",
+            title: "Ping",
+            description: "Bağlantı gecikməsini ölç."
+        }
+
+    ],
+
+
+    security: [
+
+        {
+            id: "password",
+            icon: "◇",
+            title: "Şifrə generatoru",
+            description: "Güclü təsadüfi parol yarat."
+        },
+
+        {
+            id: "url",
+            icon: "↗",
+            title: "URL Analyzer",
+            description: "URL strukturunu analiz et."
+        },
+
+        {
+            id: "headers",
+            icon: "▣",
+            title: "Security Headers",
+            description: "Saytın təhlükəsizlik header-lərini yoxla."
+        }
+
+    ],
+
+
+    developer: [
+
+        {
+            id: "terminal",
+            icon: "_",
+            title: "NEXUS Terminal",
+            description: "Təhlükəsiz developer terminalı."
+        },
+
+        {
+            id: "json",
+            icon: "{}",
+            title: "JSON Formatter",
+            description: "JSON məlumatını formatla."
+        },
+
+        {
+            id: "base64",
+            icon: "⇄",
+            title: "Base64",
+            description: "Base64 encode və decode."
+        }
+
+    ],
+
+
+    world: [
+
+        {
+            id: "map",
+            icon: "◎",
+            title: "Live World",
+            description: "Dünya xəritəsi və naviqasiya."
+        },
+
+        {
+            id: "clocks",
+            icon: "◷",
+            title: "Dünya saatları",
+            description: "Paytaxtlar üzrə canlı vaxt."
+        },
+
+        {
+            id: "timezone",
+            icon: "⌚",
+            title: "Time Zone",
+            description: "Saat qurşaqları və UTC."
+        }
+
+    ],
+
+
+    office: [
+
+        {
+            id: "word",
+            icon: "W",
+            title: "NEXUS Word",
+            description: "Sənəd yarat, redaktə et və DOCX saxla."
+        },
+
+        {
+            id: "excel",
+            icon: "X",
+            title: "NEXUS Excel",
+            description: "XLSX faylları ilə işləyin."
+        },
+
+        {
+            id: "calculator",
+            icon: "×",
+            title: "Calculator",
+            description: "iOS üslubunda kalkulyator."
+        },
+
+        {
+            id: "qr",
+            icon: "⌗",
+            title: "QR Generator",
+            description: "Mətn və linkdən QR yarat."
+        }
+
+    ],
+
+
+    media: [
+
+        {
+            id: "player",
+            icon: "♫",
+            title: "Music Player",
+            description: "Audio fayllarını real player-də səsləndir."
+        },
+
+        {
+            id: "youtube",
+            icon: "▶",
+            title: "YouTube",
+            description: "YouTube-da axtarış et."
+        }
+
+    ],
+
+
+    system: [
+
+        {
+            id: "device",
+            icon: "▣",
+            title: "Device Info",
+            description: "Cihaz və brauzer məlumatları."
+        },
+
+        {
+            id: "storage",
+            icon: "◫",
+            title: "Storage",
+            description: "Brauzer yaddaş məlumatları."
+        }
+
+    ],
+
+
+    utility: [
+
+        {
+            id: "search",
+            icon: "⌕",
+            title: "Global Search",
+            description: "Google üzərindən internetdə axtar."
+        },
+
+        {
+            id: "notes",
+            icon: "✎",
+            title: "Quick Notes",
+            description: "Qeydlərini avtomatik saxla."
+        },
+
+        {
+            id: "timer",
+            icon: "◷",
+            title: "Timer",
+            description: "Countdown taymeri."
+        }
+
+    ]
+
+};
+
+
+/* =========================================================
+   RENDER CATEGORIES
+========================================================= */
+
+function renderCategories() {
+
+    const container = $("#categories");
+
+    if (!container) return;
+
+    container.innerHTML = categories.map((category, index) => {
+
+        return `
+            <button
+                class="cat ${index === 0 ? "active" : ""}"
+                data-category="${category.id}"
+            >
+
+                <div class="cat-icon">
+                    ${category.icon}
+                </div>
+
+                <b>
+                    ${category.title}
+                </b>
+
+                <small>
+                    ${category.description}
+                </small>
+
+            </button>
+        `;
+
+    }).join("");
+
+
+    $$(".cat").forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            $$(".cat").forEach(item => {
+                item.classList.remove("active");
+            });
+
+            button.classList.add("active");
+
+            renderTools(
+                button.dataset.category
+            );
+
+        });
+
+    });
+
 }
 
-function showToast(message) {
 
-    const toast = $("#toast");
+/* =========================================================
+   RENDER TOOLS
+========================================================= */
 
-    if (!toast) return;
+function renderTools(category) {
 
-    toast.textContent = message;
-    toast.classList.add("show");
+    const container = $("#moduleGrid");
 
-    clearTimeout(window.toastTimer);
+    if (!container) return;
 
-    window.toastTimer = setTimeout(() => {
-        toast.classList.remove("show");
-    }, 2500);
+    const selectedCategory =
+        categories.find(
+            item => item.id === category
+        );
+
+
+    $("#moduleHint").textContent =
+        selectedCategory
+            ? selectedCategory.title.toUpperCase()
+            : "MODULE";
+
+
+    const categoryTools =
+        tools[category] || [];
+
+
+    container.innerHTML =
+        categoryTools.map(tool => {
+
+            return `
+                <article class="tool">
+
+                    <div class="tool-icon">
+                        ${tool.icon}
+                    </div>
+
+                    <h3>
+                        ${tool.title}
+                    </h3>
+
+                    <p>
+                        ${tool.description}
+                    </p>
+
+                    <button
+                        onclick="openTool('${tool.id}')"
+                    >
+                        AÇ →
+                    </button>
+
+                </article>
+            `;
+
+        }).join("");
+
 }
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function openModal() {
+
+    $("#modal").classList.add("show");
+
+}
+
+
+function closeModal() {
+
+    $("#modal").classList.remove("show");
+
+}
+
+
+$("#closeModal")?.addEventListener(
+    "click",
+    closeModal
+);
+
+
+$("#modal")?.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target.id === "modal"
+        ) {
+
+            closeModal();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   OPEN TOOL
+========================================================= */
+
+function openTool(type) {
+
+    openModal();
+
+    const content =
+        $("#modalContent");
+
+
+    if (!content) return;
+
+
+    switch (type) {
+
+        case "calculator":
+            calculator(content);
+            break;
+
+        case "word":
+            word(content);
+            break;
+
+        case "excel":
+            excel(content);
+            break;
+
+        case "speed":
+            speedTest(content);
+            break;
+
+        case "clocks":
+            worldClocks(content);
+            break;
+
+        case "map":
+            worldMap(content);
+            break;
+
+        case "player":
+            musicPlayer(content);
+            break;
+
+        case "password":
+            passwordGenerator(content);
+            break;
+
+        case "qr":
+            qrGenerator(content);
+            break;
+
+        case "json":
+            jsonFormatter(content);
+            break;
+
+        case "base64":
+            base64Tool(content);
+            break;
+
+        case "terminal":
+            terminal(content);
+            break;
+
+        case "ip":
+            ipTool(content);
+            break;
+
+        case "ping":
+            pingTool(content);
+            break;
+
+        case "url":
+            urlAnalyzer(content);
+            break;
+
+        case "headers":
+            securityHeaders(content);
+            break;
+
+        case "search":
+            globalSearchTool(content);
+            break;
+
+        case "notes":
+            notesTool(content);
+            break;
+
+        case "timer":
+            timerTool(content);
+            break;
+
+        case "device":
+            deviceInfo(content);
+            break;
+
+        case "storage":
+            storageInfo(content);
+            break;
+
+        case "youtube":
+            youtubeTool(content);
+            break;
+
+        default:
+
+            content.innerHTML = `
+                <div class="modal-inner">
+
+                    <h2>
+                        ${type}
+                    </h2>
+
+                    <p>
+                        Bu modul hazırlanır.
+                    </p>
+
+                </div>
+            `;
+
+    }
+
+}
+
+
+/* =========================================================
+   GLOBAL SEARCH
+========================================================= */
+
+function performGoogleSearch(query) {
+
+    query = query.trim();
+
+    if (!query) return;
+
+    window.open(
+        "https://www.google.com/search?q=" +
+        encodeURIComponent(query),
+        "_blank",
+        "noopener,noreferrer"
+    );
+
+}
+
+
+$("#searchBtn")?.addEventListener(
+    "click",
+    () => {
+
+        performGoogleSearch(
+            $("#globalSearch").value
+        );
+
+    }
+);
+
+
+$("#globalSearch")?.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key === "Enter") {
+
+            performGoogleSearch(
+                event.target.value
+            );
+
+        }
+
+    }
+);
 
 
 /* =========================================================
    CLOCK
 ========================================================= */
 
-function updateClock() {
+function updateMainClock() {
 
     const now = new Date();
 
-    const time = now.toLocaleTimeString("az-AZ", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false
-    });
+    const clock =
+        $("#clock");
 
-    const date = now.toLocaleDateString("az-AZ", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long"
-    });
+    const date =
+        $("#date");
 
-    const clock = $("#clock");
-    const dateElement = $("#date");
-    const quickClock = $("#quickClock");
 
-    if (clock) clock.textContent = time;
+    if (clock) {
 
-    if (dateElement) {
-        dateElement.textContent =
-            date.charAt(0).toUpperCase() + date.slice(1);
+        clock.textContent =
+            now.toLocaleTimeString(
+                "az-AZ",
+                {
+                    hour12: false
+                }
+            );
+
     }
 
-    if (quickClock) {
-        quickClock.textContent = time.slice(0, 5);
+
+    if (date) {
+
+        date.textContent =
+            now.toLocaleDateString(
+                "az-AZ",
+                {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric"
+                }
+            );
+
     }
+
 }
 
-updateClock();
 
-setInterval(updateClock, 1000);
+updateMainClock();
+
+setInterval(
+    updateMainClock,
+    1000
+);
 
 
 /* =========================================================
-   CATEGORY DATA
+   CALCULATOR
 ========================================================= */
 
-const categories = {
+let calculatorState = {
 
-    network: {
+    value: "0",
 
-        number: "01 / NETWORK",
+    previous: null,
 
-        title: "Şəbəkə Mərkəzi",
+    operator: null,
 
-        description:
-            "Şəbəkə bağlantısı, IP, DNS və internet diaqnostikası.",
-
-        services: [
-
-            {
-                icon: "IP",
-                title: "Mənim IP ünvanım",
-                description: "İctimai IP ünvanınızı göstər.",
-                action: "ip"
-            },
-
-            {
-                icon: "DNS",
-                title: "DNS yoxlayıcı",
-                description: "DNS server məlumatlarını yoxla.",
-                action: "dns"
-            },
-
-            {
-                icon: "NET",
-                title: "Bağlantı testi",
-                description: "İnternet bağlantısının vəziyyətini yoxla.",
-                action: "connection"
-            },
-
-            {
-                icon: "URL",
-                title: "URL analizatoru",
-                description: "Sayt ünvanının strukturunu analiz et.",
-                action: "url"
-            },
-
-            {
-                icon: "PING",
-                title: "Ping testi",
-                description: "Brauzer üzərindən bağlantı testi.",
-                action: "ping"
-            },
-
-            {
-                icon: "QR",
-                title: "Wi-Fi QR",
-                description: "Wi-Fi məlumatlarından QR kod yarat.",
-                action: "wifi"
-            }
-
-        ]
-
-    },
-
-
-    security: {
-
-        number: "02 / SECURITY",
-
-        title: "Təhlükəsizlik",
-
-        description:
-            "Gündəlik istifadə üçün təhlükəsizlik və məlumat qoruma alətləri.",
-
-        services: [
-
-            {
-                icon: "KEY",
-                title: "Şifrə generatoru",
-                description: "Güclü təsadüfi şifrə yarat.",
-                action: "password"
-            },
-
-            {
-                icon: "HASH",
-                title: "Hash generator",
-                description: "Mətn üçün SHA-256 hash hesabla.",
-                action: "hash"
-            },
-
-            {
-                icon: "B64",
-                title: "Base64",
-                description: "Mətni Base64 formatına çevir.",
-                action: "base64"
-            },
-
-            {
-                icon: "PASS",
-                title: "Şifrə gücü",
-                description: "Şifrənin təxmini gücünü yoxla.",
-                action: "strength"
-            }
-
-        ]
-
-    },
-
-
-    developer: {
-
-        number: "03 / DEVELOPER",
-
-        title: "Developer",
-
-        description:
-            "Kod yazanlar üçün gündəlik texniki alətlər.",
-
-        services: [
-
-            {
-                icon: "</>",
-                title: "JSON formatter",
-                description: "JSON məlumatını formatla və yoxla.",
-                action: "json"
-            },
-
-            {
-                icon: "{}",
-                title: "Code Pad",
-                description: "Brauzerdə rahat kod yaz.",
-                action: "code"
-            },
-
-            {
-                icon: "REG",
-                title: "Regex tester",
-                description: "Regular expression nümunələrini yoxla.",
-                action: "regex"
-            },
-
-            {
-                icon: "URL",
-                title: "URL encoder",
-                description: "URL mətnini encode/decode et.",
-                action: "urlencode"
-            },
-
-            {
-                icon: "CMD",
-                title: "NEXUS Terminal",
-                description: "Brauzer əsaslı təhlükəsiz terminal simulyatoru.",
-                action: "terminal"
-            },
-
-            {
-                icon: "TIME",
-                title: "Unix timestamp",
-                description: "Timestamp məlumatını çevir.",
-                action: "timestamp"
-            }
-
-        ]
-
-    },
-
-
-    world: {
-
-        number: "04 / WORLD",
-
-        title: "World Center",
-
-        description:
-            "Dünya xəritəsi, saatlar və naviqasiya üçün sürətli giriş.",
-
-        services: [
-
-            {
-                icon: "MAP",
-                title: "Live World Map",
-                description: "İnteraktiv dünya xəritəsini aç.",
-                action: "map"
-            },
-
-            {
-                icon: "NAV",
-                title: "Naviqator",
-                description: "Google Maps üzərindən marşrut axtar.",
-                action: "navigator"
-            },
-
-            {
-                icon: "TIME",
-                title: "Dünya saatları",
-                description: "Müxtəlif şəhərlərin yerli vaxtına bax.",
-                action: "worldclock"
-            },
-
-            {
-                icon: "LOC",
-                title: "Mənim mövqeyim",
-                description: "Brauzerin icazəsi ilə mövqeyini müəyyən et.",
-                action: "location"
-            }
-
-        ]
-
-    },
-
-
-    media: {
-
-        number: "05 / MEDIA",
-
-        title: "Media",
-
-        description:
-            "Musiqi və media üçün sadə, müasir alətlər.",
-
-        services: [
-
-            {
-                icon: "♫",
-                title: "NEXUS Music",
-                description: "Seçilmiş Azərbaycan və türk musiqi siyahısı.",
-                action: "music"
-            },
-
-            {
-                icon: "VOL",
-                title: "Audio",
-                description: "Brauzerdə audio fayl aç.",
-                action: "audio"
-            },
-
-            {
-                icon: "YT",
-                title: "Video axtarışı",
-                description: "YouTube üzərindən sürətli axtarış.",
-                action: "youtube"
-            }
-
-        ]
-
-    },
-
-
-    office: {
-
-        number: "06 / OFFICE",
-
-        title: "NEXUS Office",
-
-        description:
-            "İş və gündəlik ofis istifadəsi üçün praktik alətlər.",
-
-        services: [
-
-            {
-                icon: "CAL",
-                title: "Kalkulyator",
-                description: "Sürətli hesablamalar apar.",
-                action: "calculator"
-            },
-
-            {
-                icon: "QR",
-                title: "QR kod generatoru",
-                description: "Link və ya mətn üçün QR kod yarat.",
-                action: "qr"
-            },
-
-            {
-                icon: "DOC",
-                title: "Mətn redaktoru",
-                description: "Sadə sənəd və qeyd hazırlamaq üçün.",
-                action: "notes"
-            },
-
-            {
-                icon: "CV",
-                title: "Söz sayı",
-                description: "Mətnin söz və simvol sayını hesabla.",
-                action: "wordcount"
-            },
-
-            {
-                icon: "%",
-                title: "Faiz kalkulyatoru",
-                description: "Faizləri sürətli hesabla.",
-                action: "percent"
-            },
-
-            {
-                icon: "DATE",
-                title: "Tarix hesablayıcı",
-                description: "İki tarix arasındakı müddəti hesabla.",
-                action: "datediff"
-            }
-
-        ]
-
-    },
-
-
-    system: {
-
-        number: "07 / SYSTEM",
-
-        title: "System",
-
-        description:
-            "Cihaz, brauzer və ekran haqqında məlumatlar.",
-
-        services: [
-
-            {
-                icon: "CPU",
-                title: "Cihaz məlumatları",
-                description: "Brauzer və cihaz haqqında məlumat.",
-                action: "device"
-            },
-
-            {
-                icon: "SCR",
-                title: "Ekran məlumatları",
-                description: "Ekran ölçüsünü və piksel məlumatlarını göstər.",
-                action: "screen"
-            },
-
-            {
-                icon: "BROW",
-                title: "Brauzer məlumatları",
-                description: "İstifadə olunan brauzer məlumatlarını göstər.",
-                action: "browser"
-            },
-
-            {
-                icon: "STOR",
-                title: "Local Storage",
-                description: "Brauzerin lokal yaddaş vəziyyətini göstər.",
-                action: "storage"
-            }
-
-        ]
-
-    }
+    reset: false
 
 };
 
 
-/* =========================================================
-   CATEGORY OPEN
-========================================================= */
+function calculator(content) {
 
-function openCategory(categoryName) {
+    content.innerHTML = `
 
-    const category = categories[categoryName];
+        <div class="modal-inner">
 
-    if (!category) return;
+            <h2>
+                NEXUS Calculator
+            </h2>
 
-    $("#categoryNumber").textContent = category.number;
-    $("#categoryTitle").textContent = category.title;
-    $("#categoryDescription").textContent = category.description;
+            <div class="calc">
 
-    const grid = $("#servicesGrid");
+                <div
+                    id="calculatorDisplay"
+                    class="calc-display"
+                >
+                    0
+                </div>
 
-    grid.innerHTML = "";
 
-    category.services.forEach(service => {
+                <div class="calc-grid">
 
-        const card = document.createElement("button");
+                    <button onclick="calcPress('AC')">
+                        AC
+                    </button>
 
-        card.className = "service-card";
+                    <button onclick="calcPress('±')">
+                        ±
+                    </button>
 
-        card.innerHTML = `
-            <div class="service-icon">
-                ${escapeHTML(service.icon)}
+                    <button onclick="calcPress('%')">
+                        %
+                    </button>
+
+                    <button
+                        class="op"
+                        onclick="calcPress('÷')"
+                    >
+                        ÷
+                    </button>
+
+
+                    <button onclick="calcPress('7')">
+                        7
+                    </button>
+
+                    <button onclick="calcPress('8')">
+                        8
+                    </button>
+
+                    <button onclick="calcPress('9')">
+                        9
+                    </button>
+
+                    <button
+                        class="op"
+                        onclick="calcPress('×')"
+                    >
+                        ×
+                    </button>
+
+
+                    <button onclick="calcPress('4')">
+                        4
+                    </button>
+
+                    <button onclick="calcPress('5')">
+                        5
+                    </button>
+
+                    <button onclick="calcPress('6')">
+                        6
+                    </button>
+
+                    <button
+                        class="op"
+                        onclick="calcPress('−')"
+                    >
+                        −
+                    </button>
+
+
+                    <button onclick="calcPress('1')">
+                        1
+                    </button>
+
+                    <button onclick="calcPress('2')">
+                        2
+                    </button>
+
+                    <button onclick="calcPress('3')">
+                        3
+                    </button>
+
+                    <button
+                        class="op"
+                        onclick="calcPress('+')"
+                    >
+                        +
+                    </button>
+
+
+                    <button
+                        class="wide"
+                        onclick="calcPress('0')"
+                    >
+                        0
+                    </button>
+
+                    <button onclick="calcPress('.')">
+                        .
+                    </button>
+
+                    <button
+                        class="op"
+                        onclick="calcPress('=')"
+                    >
+                        =
+                    </button>
+
+                </div>
+
             </div>
 
-            <h3>
-                ${escapeHTML(service.title)}
-            </h3>
+        </div>
 
-            <p>
-                ${escapeHTML(service.description)}
-            </p>
-        `;
+    `;
 
-        card.addEventListener("click", () => {
-            openTool(service.action, service.title, category.title);
-        });
-
-        grid.appendChild(card);
-
-    });
-
-    $("#categoryModal").classList.add("active");
-
-    document.body.style.overflow = "hidden";
 }
 
 
-/* =========================================================
-   CLOSE MODALS
-========================================================= */
+function calcPress(value) {
 
-function closeModal(id) {
+    const display =
+        $("#calculatorDisplay");
 
-    const modal = $("#" + id);
+    if (!display) return;
 
-    if (modal) {
-        modal.classList.remove("active");
+
+    if (value === "AC") {
+
+        calculatorState = {
+
+            value: "0",
+
+            previous: null,
+
+            operator: null,
+
+            reset: false
+
+        };
+
+        display.textContent = "0";
+
+        return;
+
     }
+
+
+    if (value === "±") {
+
+        calculatorState.value =
+            String(
+                parseFloat(
+                    calculatorState.value
+                ) * -1
+            );
+
+        display.textContent =
+            calculatorState.value;
+
+        return;
+
+    }
+
+
+    if (value === "%") {
+
+        calculatorState.value =
+            String(
+                parseFloat(
+                    calculatorState.value
+                ) / 100
+            );
+
+        display.textContent =
+            calculatorState.value;
+
+        return;
+
+    }
+
 
     if (
-        !document.querySelector(".modal-overlay.active") &&
-        !$("#aiModal").classList.contains("active")
+        "0123456789.".includes(value)
     ) {
-        document.body.style.overflow = "";
-    }
-}
 
-$$("[data-close]").forEach(button => {
+        if (
+            calculatorState.reset ||
+            calculatorState.value === "0"
+        ) {
 
-    button.addEventListener("click", () => {
-        closeModal(button.dataset.close);
-    });
+            calculatorState.value =
+                value === "."
+                    ? "0."
+                    : value;
 
-});
+            calculatorState.reset =
+                false;
 
-
-$$(".modal-overlay").forEach(overlay => {
-
-    overlay.addEventListener("click", event => {
-
-        if (event.target === overlay) {
-            closeModal(overlay.id);
         }
 
-    });
+        else if (
+            value !== "." ||
+            !calculatorState.value.includes(".")
+        ) {
 
-});
+            calculatorState.value += value;
 
-
-/* =========================================================
-   CATEGORY BUTTONS
-========================================================= */
-
-$$(".category-card").forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        openCategory(button.dataset.category);
-
-    });
-
-});
+        }
 
 
-/* =========================================================
-   TOOL OPEN
-========================================================= */
+        display.textContent =
+            calculatorState.value;
 
-function openTool(action, title, categoryTitle) {
+        return;
 
-    $("#toolCategory").textContent =
-        categoryTitle.toUpperCase();
+    }
 
-    $("#toolTitle").textContent = title;
 
-    const content = $("#toolContent");
+    if (
+        ["+","−","×","÷"].includes(value)
+    ) {
 
-    content.innerHTML = "";
+        calculatorState.previous =
+            parseFloat(
+                calculatorState.value
+            );
 
-    renderTool(action, content);
+        calculatorState.operator =
+            value;
 
-    $("#categoryModal").classList.remove("active");
+        calculatorState.reset =
+            true;
 
-    $("#toolModal").classList.add("active");
+        return;
+
+    }
+
+
+    if (
+        value === "=" &&
+        calculatorState.operator
+    ) {
+
+        const a =
+            calculatorState.previous;
+
+        const b =
+            parseFloat(
+                calculatorState.value
+            );
+
+        let result;
+
+
+        switch (
+            calculatorState.operator
+        ) {
+
+            case "+":
+                result = a + b;
+                break;
+
+            case "−":
+                result = a - b;
+                break;
+
+            case "×":
+                result = a * b;
+                break;
+
+            case "÷":
+                result =
+                    b === 0
+                        ? "Error"
+                        : a / b;
+                break;
+
+        }
+
+
+        calculatorState.value =
+            String(result);
+
+        calculatorState.operator =
+            null;
+
+        calculatorState.previous =
+            null;
+
+        calculatorState.reset =
+            true;
+
+        display.textContent =
+            calculatorState.value;
+
+    }
 
 }
 
 
 /* =========================================================
-   TOOL RENDERER
+   PASSWORD GENERATOR
 ========================================================= */
 
-function renderTool(action, container) {
+function passwordGenerator(content) {
 
-    switch (action) {
+    content.innerHTML = `
 
-        case "ip":
+        <div class="modal-inner">
 
-            container.innerHTML = `
-                <div class="tool-result" id="ipResult">
-                    IP məlumatı yoxlanılır...
-                </div>
-            `;
+            <h2>
+                Təhlükəsiz şifrə generatoru
+            </h2>
 
-            fetchIP();
+            <input
+                id="generatedPassword"
+                class="field"
+                readonly
+            >
 
-            break;
-
-
-        case "dns":
-
-            container.innerHTML = `
-                <div class="tool-field">
-                    <input
-                        class="tool-input"
-                        id="dnsInput"
-                        placeholder="example.com"
-                    >
-
-                    <button
-                        class="tool-action"
-                        onclick="checkDNS()"
-                    >
-                        Yoxla
-                    </button>
-                </div>
-
-                <div
-                    class="tool-result"
-                    id="dnsResult"
-                >
-                    Domen daxil edin.
-                </div>
-            `;
-
-            break;
-
-
-        case "connection":
-
-            container.innerHTML = `
-                <div class="tool-result">
-                    Brauzer bağlantısı:
-                    ${navigator.onLine ? "ONLAYN ✓" : "OFFLAYN ✕"}
-
-                    <br><br>
-
-                    Platforma:
-                    ${escapeHTML(navigator.platform)}
-
-                    <br><br>
-
-                    Dil:
-                    ${escapeHTML(navigator.language)}
-                </div>
-            `;
-
-            break;
-
-
-        case "url":
-
-            container.innerHTML = `
-                <div class="tool-field">
-
-                    <input
-                        class="tool-input"
-                        id="urlToolInput"
-                        placeholder="https://example.com/path?test=1"
-                    >
-
-                    <button
-                        class="tool-action"
-                        onclick="analyzeURLTool()"
-                    >
-                        Analiz et
-                    </button>
-
-                </div>
-
-                <div
-                    class="tool-result"
-                    id="urlToolResult"
-                >
-                    Gözləyir...
-                </div>
-            `;
-
-            break;
-
-
-        case "ping":
-
-            container.innerHTML = `
-                <div class="tool-field">
-
-                    <input
-                        class="tool-input"
-                        id="pingInput"
-                        placeholder="https://example.com"
-                        value="https://example.com"
-                    >
-
-                    <button
-                        class="tool-action"
-                        onclick="runPing()"
-                    >
-                        Test et
-                    </button>
-
-                </div>
-
-                <div
-                    class="tool-result"
-                    id="pingResult"
-                >
-                    Hazır.
-                </div>
-            `;
-
-            break;
-
-
-        case "wifi":
-
-            container.innerHTML = `
-                <div class="tool-field">
-
-                    <input
-                        class="tool-input"
-                        id="wifiName"
-                        placeholder="Wi-Fi adı"
-                    >
-
-                    <input
-                        class="tool-input"
-                        id="wifiPassword"
-                        placeholder="Wi-Fi şifrəsi"
-                        type="password"
-                    >
-
-                    <button
-                        class="tool-action"
-                        onclick="generateWiFiQR()"
-                    >
-                        QR yarat
-                    </button>
-
-                </div>
-
-                <div
-                    class="tool-result"
-                    id="wifiResult"
-                >
-                    QR burada görünəcək.
-                </div>
-            `;
-
-            break;
-
-
-        case "password":
-
-            container.innerHTML = `
-                <div class="tool-field">
-
-                    <input
-                        class="tool-input"
-                        id="passwordLength"
-                        type="number"
-                        value="18"
-                        min="6"
-                        max="64"
-                    >
-
-                    <button
-                        class="tool-action"
-                        onclick="generateSecurePassword()"
-                    >
-                        Yarat
-                    </button>
-
-                </div>
-
-                <div
-                    class="tool-result"
-                    id="passwordResult"
-                >
-                    —
-                </div>
-            `;
-
-            break;
-
-
-        case "hash":
-
-            container.innerHTML = `
-                <textarea
-                    class="tool-textarea"
-                    id="hashInput"
-                    placeholder="Hash hesablamaq üçün mətn..."
-                ></textarea>
+            <div class="office-actions">
 
                 <button
-                    class="tool-action"
-                    onclick="generateHash()"
+                    onclick="generatePassword()"
                 >
-                    SHA-256 hesabla
+                    Yarat
                 </button>
 
-                <div
-                    class="tool-result"
-                    id="hashResult"
-                >
-                    —
-                </div>
-            `;
-
-            break;
-
-
-        case "base64":
-
-            container.innerHTML = `
-                <textarea
-                    class="tool-textarea"
-                    id="base64Input"
-                    placeholder="Mətn..."
-                ></textarea>
-
-                <div class="tool-field">
-
-                    <button
-                        class="tool-action"
-                        onclick="encodeBase64()"
-                    >
-                        Encode
-                    </button>
-
-                    <button
-                        class="tool-action"
-                        onclick="decodeBase64()"
-                    >
-                        Decode
-                    </button>
-
-                </div>
-
-                <div
-                    class="tool-result"
-                    id="base64Result"
-                >
-                    —
-                </div>
-            `;
-
-            break;
-
-
-        case "strength":
-
-            container.innerHTML = `
-                <input
-                    class="tool-input"
-                    id="strengthInput"
-                    type="password"
-                    placeholder="Şifrəni yaz..."
-                    oninput="checkPasswordStrength()"
-                >
-
-                <div
-                    class="tool-result"
-                    id="strengthResult"
-                >
-                    Şifrə daxil edin.
-                </div>
-            `;
-
-            break;
-
-
-        case "json":
-
-            container.innerHTML = `
-                <textarea
-                    class="tool-textarea"
-                    id="jsonInput"
-                    placeholder='{"name":"NEXUS","version":4}'
-                ></textarea>
-
                 <button
-                    class="tool-action"
-                    onclick="formatJSON()"
-                >
-                    Formatla
-                </button>
-
-                <div
-                    class="tool-result"
-                    id="jsonResult"
-                >
-                    —
-                </div>
-            `;
-
-            break;
-
-
-        case "code":
-
-            container.innerHTML = `
-                <textarea
-                    class="tool-textarea"
-                    id="codePad"
-                    placeholder="// Kodunu burada yaza bilərsən..."
-                    style="min-height:300px;font-family:monospace;"
-                ></textarea>
-
-                <button
-                    class="tool-action"
-                    onclick="copyCode()"
+                    onclick="copyPassword()"
                 >
                     Kopyala
                 </button>
-            `;
 
-            break;
+            </div>
 
+        </div>
 
-        case "regex":
+    `;
 
-            container.innerHTML = `
-                <input
-                    class="tool-input"
-                    id="regexPattern"
-                    placeholder="Regex nümunəsi"
-                >
+    generatePassword();
 
-                <textarea
-                    class="tool-textarea"
-                    id="regexText"
-                    placeholder="Test ediləcək mətn..."
-                ></textarea>
+}
 
-                <button
-                    class="tool-action"
-                    onclick="testRegex()"
-                >
-                    Test et
-                </button>
 
-                <div
-                    class="tool-result"
-                    id="regexResult"
-                >
-                    —
-                </div>
-            `;
+function generatePassword() {
 
-            break;
+    const chars =
+        "ABCDEFGHJKLMNPQRSTUVWXYZ" +
+        "abcdefghijkmnopqrstuvwxyz" +
+        "23456789!@#$%^&*";
 
+    let password = "";
 
-        case "urlencode":
+    for (
+        let i = 0;
+        i < 20;
+        i++
+    ) {
 
-            container.innerHTML = `
-                <textarea
-                    class="tool-textarea"
-                    id="urlEncodeInput"
-                    placeholder="Mətn və ya URL..."
-                ></textarea>
+        password +=
+            chars[
+                Math.floor(
+                    Math.random() *
+                    chars.length
+                )
+            ];
 
-                <div class="tool-field">
+    }
 
-                    <button
-                        class="tool-action"
-                        onclick="encodeURL()"
-                    >
-                        Encode
-                    </button>
 
-                    <button
-                        class="tool-action"
-                        onclick="decodeURL()"
-                    >
-                        Decode
-                    </button>
+    const field =
+        $("#generatedPassword");
 
-                </div>
+    if (field) {
 
-                <div
-                    class="tool-result"
-                    id="urlEncodeResult"
-                >
-                    —
-                </div>
-            `;
-
-            break;
-
-
-        case "terminal":
-
-            container.innerHTML = `
-                <div
-                    class="tool-result"
-                    id="terminalOutput"
-                    style="min-height:250px;background:#05070c;"
-                >
-                    NEXUS Terminal v4.0<br>
-                    Type "help" for commands.<br><br>
-                    nexus@az:~$
-                    <input
-                        id="terminalInput"
-                        style="
-                            background:transparent;
-                            border:0;
-                            outline:0;
-                            color:#8df2d1;
-                            width:70%;
-                            font-family:monospace;
-                        "
-                        autocomplete="off"
-                    >
-                </div>
-            `;
-
-            $("#terminalInput").addEventListener(
-                "keydown",
-                terminalCommand
-            );
-
-            break;
-
-
-        case "timestamp":
-
-            container.innerHTML = `
-                <div class="tool-field">
-
-                    <button
-                        class="tool-action"
-                        onclick="currentTimestamp()"
-                    >
-                        İndiki timestamp
-                    </button>
-
-                    <input
-                        class="tool-input"
-                        id="timestampInput"
-                        placeholder="Unix timestamp"
-                    >
-
-                    <button
-                        class="tool-action"
-                        onclick="convertTimestamp()"
-                    >
-                        Çevir
-                    </button>
-
-                </div>
-
-                <div
-                    class="tool-result"
-                    id="timestampResult"
-                >
-                    —
-                </div>
-            `;
-
-            break;
-
-
-        case "map":
-
-            container.innerHTML = `
-                <div
-                    style="
-                        border-radius:14px;
-                        overflow:hidden;
-                        border:1px solid rgba(255,255,255,.08);
-                    "
-                >
-                    <iframe
-                        src="https://www.openstreetmap.org/export/embed.html"
-                        style="
-                            width:100%;
-                            height:450px;
-                            border:0;
-                        "
-                    ></iframe>
-                </div>
-            `;
-
-            break;
-
-
-        case "navigator":
-
-            container.innerHTML = `
-                <input
-                    class="tool-input"
-                    id="navigationInput"
-                    placeholder="Hara getmək istəyirsən?"
-                >
-
-                <button
-                    class="tool-action"
-                    onclick="navigateToPlace()"
-                    style="margin-top:10px;"
-                >
-                    Naviqasiyanı aç
-                </button>
-            `;
-
-            break;
-
-
-        case "worldclock":
-
-            renderWorldClock(container);
-
-            break;
-
-
-        case "location":
-
-            container.innerHTML = `
-                <button
-                    class="tool-action"
-                    onclick="getLocation()"
-                >
-                    Mövqeyimi müəyyən et
-                </button>
-
-                <div
-                    class="tool-result"
-                    id="locationResult"
-                    style="margin-top:12px;"
-                >
-                    İcazə gözlənilir.
-                </div>
-            `;
-
-            break;
-
-
-        case "music":
-
-            container.innerHTML = `
-                <div class="tool-result">
-
-                    <strong>NEXUS Music</strong>
-
-                    <br><br>
-
-                    🎵 Azərbaycan Pop<br>
-                    🎤 Azərbaycan Rap<br>
-                    🎧 Türk Pop<br>
-                    🔥 Türk Rap<br><br>
-
-                    <small>
-                        Qeyd: müəllif hüquqları səbəbilə
-                        musiqi faylları bu frontend-ə yerləşdirilmir.
-                    </small>
-
-                </div>
-
-                <div class="tool-field">
-
-                    <button
-                        class="tool-action"
-                        onclick="searchMusic('Azərbaycan pop')"
-                    >
-                        Azərbaycan Pop
-                    </button>
-
-                    <button
-                        class="tool-action"
-                        onclick="searchMusic('Türk pop')"
-                    >
-                        Türk Pop
-                    </button>
-
-                    <button
-                        class="tool-action"
-                        onclick="searchMusic('Azərbaycan rap')"
-                    >
-                        Azərbaycan Rap
-                    </button>
-
-                    <button
-                        class="tool-action"
-                        onclick="searchMusic('Türk rap')"
-                    >
-                        Türk Rap
-                    </button>
-
-                </div>
-            `;
-
-            break;
-
-
-        case "audio":
-
-            container.innerHTML = `
-                <input
-                    type="file"
-                    id="audioFile"
-                    accept="audio/*"
-                    class="tool-input"
-                >
-
-                <audio
-                    id="audioPlayer"
-                    controls
-                    style="width:100%;margin-top:15px;"
-                ></audio>
-            `;
-
-            $("#audioFile").addEventListener("change", event => {
-
-                const file = event.target.files[0];
-
-                if (!file) return;
-
-                $("#audioPlayer").src =
-                    URL.createObjectURL(file);
-
-            });
-
-            break;
-
-
-        case "youtube":
-
-            container.innerHTML = `
-                <input
-                    class="tool-input"
-                    id="youtubeInput"
-                    placeholder="Musiqi, video və ya mövzu..."
-                >
-
-                <button
-                    class="tool-action"
-                    onclick="youtubeSearch()"
-                    style="margin-top:10px;"
-                >
-                    YouTube-da axtar
-                </button>
-            `;
-
-            break;
-
-
-        case "calculator":
-
-            renderCalculator(container);
-
-            break;
-
-
-        case "qr":
-
-            container.innerHTML = `
-                <input
-                    class="tool-input"
-                    id="qrInput"
-                    placeholder="Link və ya mətn..."
-                >
-
-                <button
-                    class="tool-action"
-                    onclick="generateQRReal()"
-                    style="margin-top:10px;"
-                >
-                    QR yarat
-                </button>
-
-                <div
-                    id="qrResult"
-                    style="margin-top:20px;text-align:center;"
-                ></div>
-            `;
-
-            break;
-
-
-        case "notes":
-
-            container.innerHTML = `
-                <textarea
-                    class="tool-textarea"
-                    id="notesInput"
-                    placeholder="Qeydlərini yaz..."
-                    style="min-height:350px;"
-                ></textarea>
-
-                <button
-                    class="tool-action"
-                    onclick="downloadNotes()"
-                >
-                    TXT kimi saxla
-                </button>
-            `;
-
-            break;
-
-
-        case "wordcount":
-
-            container.innerHTML = `
-                <textarea
-                    class="tool-textarea"
-                    id="wordInput"
-                    placeholder="Mətni buraya yaz..."
-                    oninput="countWords()"
-                ></textarea>
-
-                <div
-                    class="tool-result"
-                    id="wordResult"
-                >
-                    0 söz · 0 simvol
-                </div>
-            `;
-
-            break;
-
-
-        case "percent":
-
-            container.innerHTML = `
-                <div class="tool-field">
-
-                    <input
-                        class="tool-input"
-                        id="percentNumber"
-                        type="number"
-                        placeholder="Məbləğ"
-                    >
-
-                    <input
-                        class="tool-input"
-                        id="percentValue"
-                        type="number"
-                        placeholder="Faiz"
-                    >
-
-                    <button
-                        class="tool-action"
-                        onclick="calculatePercent()"
-                    >
-                        Hesabla
-                    </button>
-
-                </div>
-
-                <div
-                    class="tool-result"
-                    id="percentResult"
-                >
-                    —
-                </div>
-            `;
-
-            break;
-
-
-        case "datediff":
-
-            container.innerHTML = `
-                <div class="tool-field">
-
-                    <input
-                        class="tool-input"
-                        id="dateOne"
-                        type="date"
-                    >
-
-                    <input
-                        class="tool-input"
-                        id="dateTwo"
-                        type="date"
-                    >
-
-                    <button
-                        class="tool-action"
-                        onclick="calculateDateDifference()"
-                    >
-                        Hesabla
-                    </button>
-
-                </div>
-
-                <div
-                    class="tool-result"
-                    id="dateResult"
-                >
-                    —
-                </div>
-            `;
-
-            break;
-
-
-        case "device":
-
-            container.innerHTML = `
-                <div class="tool-result">
-                    ${getDeviceInfo()}
-                </div>
-            `;
-
-            break;
-
-
-        case "screen":
-
-            container.innerHTML = `
-                <div class="tool-result">
-                    Ekran:
-                    ${screen.width} × ${screen.height}
-
-                    <br><br>
-
-                    Pəncərə:
-                    ${window.innerWidth} × ${window.innerHeight}
-
-                    <br><br>
-
-                    Pixel Ratio:
-                    ${window.devicePixelRatio}
-                </div>
-            `;
-
-            break;
-
-
-        case "browser":
-
-            container.innerHTML = `
-                <div class="tool-result">
-                    ${escapeHTML(navigator.userAgent)}
-                </div>
-            `;
-
-            break;
-
-
-        case "storage":
-
-            container.innerHTML = `
-                <div class="tool-result">
-                    Local Storage elementləri:
-                    ${localStorage.length}
-
-                    <br><br>
-
-                    Session Storage elementləri:
-                    ${sessionStorage.length}
-                </div>
-            `;
-
-            break;
+        field.value =
+            password;
 
     }
 
 }
 
 
-/* =========================================================
-   IP
-========================================================= */
+function copyPassword() {
 
-async function fetchIP() {
+    const field =
+        $("#generatedPassword");
 
-    const result = $("#ipResult");
+    if (!field) return;
 
-    if (!result) return;
-
-    try {
-
-        const response =
-            await fetch("https://api.ipify.org?format=json");
-
-        const data = await response.json();
-
-        result.textContent =
-            `İctimai IP ünvanınız: ${data.ip}`;
-
-    } catch {
-
-        result.textContent =
-            "IP məlumatını əldə etmək mümkün olmadı.";
-
-    }
+    navigator.clipboard.writeText(
+        field.value
+    );
 
 }
 
 
 /* =========================================================
-   DNS
+   QR
 ========================================================= */
 
-async function checkDNS() {
+function qrGenerator(content) {
 
-    const domain =
-        $("#dnsInput").value.trim();
+    content.innerHTML = `
 
-    const result =
-        $("#dnsResult");
+        <div class="modal-inner">
 
-    if (!domain) {
-        result.textContent = "Domen daxil edin.";
-        return;
-    }
+            <h2>
+                QR Generator
+            </h2>
+
+            <input
+                id="qrInput"
+                class="field"
+                placeholder="Mətn və ya URL..."
+            >
+
+            <button
+                class="action"
+                onclick="generateQR()"
+            >
+                QR yarat
+            </button>
+
+            <div
+                id="qrOutput"
+                style="
+                    margin-top:25px;
+                    text-align:center;
+                "
+            ></div>
+
+        </div>
+
+    `;
+
+}
+
+
+function generateQR() {
+
+    const value =
+        $("#qrInput").value.trim();
+
+    if (!value) return;
+
+
+    $("#qrOutput").innerHTML = `
+
+        <img
+            src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(value)}"
+            alt="QR Code"
+            width="260"
+            height="260"
+        >
+
+    `;
+
+}
+
+
+/* =========================================================
+   SPEED TEST
+========================================================= */
+
+function speedTest(content) {
+
+    content.innerHTML = `
+
+        <div class="modal-inner speed">
+
+            <h2>
+                Internet Speed Test
+            </h2>
+
+            <p>
+                Bağlantının download sürətini ölç.
+            </p>
+
+
+            <div class="speed-ring">
+
+                <span id="speedValue">
+                    0
+                </span>
+
+            </div>
+
+
+            <div class="speed-value">
+
+                Mbps
+
+            </div>
+
+
+            <button
+                class="action"
+                onclick="runSpeedTest()"
+            >
+                TESTƏ BAŞLA
+            </button>
+
+
+            <p id="speedStatus">
+                Hazırdır.
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+
+async function runSpeedTest() {
+
+    const value =
+        $("#speedValue");
+
+    const status =
+        $("#speedStatus");
+
+    if (!value || !status) return;
+
+
+    status.textContent =
+        "Download ölçülür...";
+
+
+    value.textContent =
+        "…";
+
+
+    const bytes =
+        5 * 1024 * 1024;
+
+
+    const url =
+        "https://speed.cloudflare.com/__down?bytes=" +
+        bytes;
+
+
+    const start =
+        performance.now();
+
 
     try {
 
         const response =
             await fetch(
-                `https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=A`
+                url,
+                {
+                    cache: "no-store"
+                }
             );
 
-        const data = await response.json();
 
-        if (!data.Answer) {
+        await response.arrayBuffer();
 
-            result.textContent =
-                "A qeydiyyatı tapılmadı.";
 
-            return;
+        const seconds =
+            (performance.now() - start)
+            / 1000;
+
+
+        const mbps =
+            (
+                bytes *
+                8 /
+                seconds /
+                1000000
+            );
+
+
+        value.textContent =
+            mbps.toFixed(1);
+
+
+        status.textContent =
+            "Download testi tamamlandı.";
+
+    }
+
+    catch (error) {
+
+        value.textContent =
+            "—";
+
+        status.textContent =
+            "Speed test mümkün olmadı. Şəbəkə məhdudiyyəti ola bilər.";
+
+    }
+
+}
+
+
+/* =========================================================
+   WORLD CLOCKS
+========================================================= */
+
+const worldCities = [
+
+    ["🇦🇿", "Bakı", "Asia/Baku"],
+
+    ["🇹🇷", "Ankara", "Europe/Istanbul"],
+
+    ["🇬🇧", "London", "Europe/London"],
+
+    ["🇺🇸", "Vaşinqton", "America/New_York"],
+
+    ["🇩🇪", "Berlin", "Europe/Berlin"],
+
+    ["🇫🇷", "Paris", "Europe/Paris"],
+
+    ["🇯🇵", "Tokio", "Asia/Tokyo"],
+
+    ["🇦🇪", "Abu-Dabi", "Asia/Dubai"],
+
+    ["🇸🇦", "Ər-Riyad", "Asia/Riyadh"]
+
+];
+
+
+function worldClocks(content) {
+
+    content.innerHTML = `
+
+        <div class="modal-inner">
+
+            <h2>
+                Dünya saatları
+            </h2>
+
+            <div class="clocks">
+
+                ${worldCities.map(
+                    (city, index) => {
+
+                        return `
+
+                            <div class="clock-card">
+
+                                <div class="flag">
+                                    ${city[0]}
+                                </div>
+
+                                <b>
+                                    ${city[1]}
+                                </b>
+
+                                <strong
+                                    id="worldClock${index}"
+                                >
+                                    --:--:--
+                                </strong>
+
+                                <small>
+                                    ${city[2]}
+                                </small>
+
+                            </div>
+
+                        `;
+
+                    }
+                ).join("")}
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    updateWorldClocks();
+
+}
+
+
+function updateWorldClocks() {
+
+    worldCities.forEach(
+        (city, index) => {
+
+            const element =
+                $("#worldClock" + index);
+
+            if (!element) return;
+
+
+            element.textContent =
+                new Intl.DateTimeFormat(
+                    "az-AZ",
+                    {
+                        timeZone:
+                            city[2],
+
+                        hour:
+                            "2-digit",
+
+                        minute:
+                            "2-digit",
+
+                        second:
+                            "2-digit"
+
+                    }
+                ).format(
+                    new Date()
+                );
+
         }
+    );
 
-        result.textContent =
-            data.Answer
-                .map(item => item.data)
-                .join("\n");
+}
 
-    } catch {
 
-        result.textContent =
-            "DNS sorğusu uğursuz oldu.";
+setInterval(
+    updateWorldClocks,
+    1000
+);
 
-    }
+
+/* =========================================================
+   WORLD MAP
+========================================================= */
+
+function worldMap(content) {
+
+    content.innerHTML = `
+
+        <div class="modal-inner">
+
+            <h2>
+                Live World
+            </h2>
+
+            <div class="mapbox">
+
+                <div>
+
+                    <div
+                        style="
+                            font-size:70px;
+                            margin-bottom:15px;
+                        "
+                    >
+                        🌍
+                    </div>
+
+                    <p>
+                        Dünya xəritəsi və
+                        naviqasiya modulu.
+                    </p>
+
+                    <button
+                        onclick="
+                            window.open(
+                                'https://www.openstreetmap.org',
+                                '_blank'
+                            )
+                        "
+                    >
+                        Xəritəni aç →
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
 
 }
 
 
 /* =========================================================
-   URL ANALYZER
+   MUSIC PLAYER
 ========================================================= */
 
-function analyzeURLTool() {
+function musicPlayer(content) {
 
-    const input =
-        $("#urlToolInput").value.trim();
+    content.innerHTML = `
 
-    const result =
-        $("#urlToolResult");
+        <div class="modal-inner">
 
-    try {
+            <h2>
+                NEXUS Music Player
+            </h2>
 
-        const url = new URL(input);
-
-        result.textContent =
-`Protocol: ${url.protocol}
-Host: ${url.host}
-Hostname: ${url.hostname}
-Port: ${url.port || "default"}
-Path: ${url.pathname}
-Query: ${url.search || "none"}
-Hash: ${url.hash || "none"}`;
-
-    } catch {
-
-        result.textContent =
-            "Düzgün URL daxil edin.";
-
-    }
-
-}
+            <p>
+                Öz audio fayllarını seç.
+                Player onları növbə ilə səsləndirəcək.
+            </p>
 
 
-/* =========================================================
-   PING
-========================================================= */
+            <input
+                id="audioFiles"
+                type="file"
+                accept="audio/*"
+                multiple
+            >
 
-async function runPing() {
 
-    const input =
-        $("#pingInput").value.trim();
+            <div
+                id="playlist"
+                style="
+                    margin-top:20px;
+                    display:flex;
+                    flex-direction:column;
+                    gap:8px;
+                "
+            ></div>
 
-    const result =
-        $("#pingResult");
 
-    if (!input) return;
+            <audio
+                id="audioPlayer"
+                controls
+                style="
+                    width:100%;
+                    margin-top:20px;
+                "
+            ></audio>
 
-    const start = performance.now();
+        </div>
 
-    try {
+    `;
 
-        await fetch(
-            input,
-            {
-                mode: "no-cors",
-                cache: "no-store"
+
+    $("#audioFiles")
+        ?.addEventListener(
+            "change",
+            event => {
+
+                const files =
+                    [
+                        ...event.target.files
+                    ];
+
+
+                const playlist =
+                    $("#playlist");
+
+
+                playlist.innerHTML =
+                    files.map(
+                        (file, index) => {
+
+                            return `
+
+                                <button
+                                    class="action"
+                                    data-index="${index}"
+                                >
+                                    ${index + 1}.
+                                    ${file.name}
+                                </button>
+
+                            `;
+
+                        }
+                    ).join("");
+
+
+                $$("#playlist button")
+                    .forEach(button => {
+
+                        button.addEventListener(
+                            "click",
+                            () => {
+
+                                const file =
+                                    files[
+                                        button.dataset.index
+                                    ];
+
+
+                                $("#audioPlayer").src =
+                                    URL.createObjectURL(
+                                        file
+                                    );
+
+
+                                $("#audioPlayer").play();
+
+                            }
+                        );
+
+                    });
+
             }
         );
 
-        const latency =
-            Math.round(performance.now() - start);
-
-        result.textContent =
-            `Sorğu tamamlandı. Təxmini brauzer gecikməsi: ${latency} ms`;
-
-    } catch {
-
-        result.textContent =
-            "Sorğu göndərilə bilmədi. CORS və ya sayt məhdudiyyəti ola bilər.";
-
-    }
-
 }
 
 
 /* =========================================================
-   PASSWORD
+   WORD
 ========================================================= */
 
-function generateSecurePassword() {
+function word(content) {
 
-    const length =
-        Math.min(
-            64,
-            Math.max(
-                6,
-                Number($("#passwordLength").value) || 18
-            )
+    content.innerHTML = `
+
+        <div class="modal-inner">
+
+            <h2>
+                NEXUS Word
+            </h2>
+
+
+            <div class="office-actions">
+
+                <button
+                    onclick="newWordDocument()"
+                >
+                    Yeni sənəd
+                </button>
+
+                <button
+                    onclick="saveWordDocument()"
+                >
+                    DOCX saxla
+                </button>
+
+                <button
+                    onclick="window.print()"
+                >
+                    Çap / PDF
+                </button>
+
+            </div>
+
+
+            <div class="word-app">
+
+
+                <div class="word-toolbar">
+
+
+                    <select
+                        onchange="
+                            formatWord(
+                                'fontName',
+                                this.value
+                            )
+                        "
+                    >
+
+                        <option>
+                            Arial
+                        </option>
+
+                        <option>
+                            Calibri
+                        </option>
+
+                        <option>
+                            Georgia
+                        </option>
+
+                        <option>
+                            Times New Roman
+                        </option>
+
+                    </select>
+
+
+                    <select
+                        onchange="
+                            formatWord(
+                                'fontSize',
+                                this.value
+                            )
+                        "
+                    >
+
+                        <option value="3">
+                            12
+                        </option>
+
+                        <option value="4">
+                            14
+                        </option>
+
+                        <option value="5">
+                            18
+                        </option>
+
+                        <option value="6">
+                            24
+                        </option>
+
+                    </select>
+
+
+                    <button
+                        onclick="
+                            formatWord('bold')
+                        "
+                    >
+                        <b>B</b>
+                    </button>
+
+
+                    <button
+                        onclick="
+                            formatWord('italic')
+                        "
+                    >
+                        <i>I</i>
+                    </button>
+
+
+                    <button
+                        onclick="
+                            formatWord('underline')
+                        "
+                    >
+                        <u>U</u>
+                    </button>
+
+
+                    <button
+                        onclick="
+                            formatWord('justifyLeft')
+                        "
+                    >
+                        ⬅
+                    </button>
+
+
+                    <button
+                        onclick="
+                            formatWord('justifyCenter')
+                        "
+                    >
+                        ↔
+                    </button>
+
+
+                    <button
+                        onclick="
+                            formatWord('justifyRight')
+                        "
+                    >
+                        ➡
+                    </button>
+
+
+                    <button
+                        onclick="
+                            formatWord(
+                                'insertUnorderedList'
+                            )
+                        "
+                    >
+                        • List
+                    </button>
+
+
+                    <button
+                        onclick="
+                            formatWord(
+                                'insertOrderedList'
+                            )
+                        "
+                    >
+                        1. List
+                    </button>
+
+
+                    <button
+                        onclick="
+                            formatWord(
+                                'createLink',
+                                prompt(
+                                    'Link URL'
+                                )
+                            )
+                        "
+                    >
+                        🔗
+                    </button>
+
+
+                </div>
+
+
+                <div
+                    id="wordPage"
+                    class="word-page"
+                    contenteditable="true"
+                >
+
+                    <h1>
+                        Sənəd başlığı
+                    </h1>
+
+                    <p>
+                        Buradan yazmağa başla...
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+function formatWord(command, value = null) {
+
+    document.execCommand(
+        command,
+        false,
+        value
+    );
+
+
+    $("#wordPage")?.focus();
+
+}
+
+
+function newWordDocument() {
+
+    const page =
+        $("#wordPage");
+
+    if (!page) return;
+
+    page.innerHTML =
+        "<p></p>";
+
+    page.focus();
+
+}
+
+
+async function saveWordDocument() {
+
+    if (!window.docx) {
+
+        alert(
+            "DOCX sistemi yüklənmədi."
         );
 
-    const chars =
-        "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*_-+=";
-
-    const array =
-        new Uint32Array(length);
-
-    crypto.getRandomValues(array);
-
-    let password = "";
-
-    for (let i = 0; i < length; i++) {
-
-        password +=
-            chars[array[i] % chars.length];
+        return;
 
     }
 
-    $("#passwordResult").textContent =
-        password;
 
-}
+    const {
+        Document,
+        Packer,
+        Paragraph,
+        TextRun
+    } = window.docx;
 
-
-/* =========================================================
-   HASH
-========================================================= */
-
-async function generateHash() {
 
     const text =
-        $("#hashInput").value;
+        $("#wordPage")
+            ?.innerText || "";
 
-    const result =
-        $("#hashResult");
 
-    const bytes =
-        new TextEncoder().encode(text);
+    const paragraphs =
+        text.split("\n");
 
-    const hash =
-        await crypto.subtle.digest(
-            "SHA-256",
-            bytes
+
+    const documentFile =
+        new Document({
+
+            sections: [
+
+                {
+
+                    children:
+                        paragraphs.map(
+                            line => {
+
+                                return new Paragraph({
+
+                                    children: [
+
+                                        new TextRun(
+                                            line
+                                        )
+
+                                    ]
+
+                                });
+
+                            }
+                        )
+
+                }
+
+            ]
+
+        });
+
+
+    const blob =
+        await Packer.toBlob(
+            documentFile
         );
 
-    const hashArray =
-        Array.from(new Uint8Array(hash));
 
-    result.textContent =
-        hashArray
-            .map(byte => byte.toString(16).padStart(2, "0"))
-            .join("");
+    downloadBlob(
+        blob,
+        "NEXUS-Sened.docx"
+    );
+
+}
+
+
+/* =========================================================
+   EXCEL
+========================================================= */
+
+let currentWorkbook = null;
+
+
+function excel(content) {
+
+    content.innerHTML = `
+
+        <div class="modal-inner">
+
+            <h2>
+                NEXUS Excel
+            </h2>
+
+
+            <div class="office-actions">
+
+                <input
+                    id="excelFile"
+                    type="file"
+                    accept=".xlsx,.xls,.csv"
+                >
+
+
+                <button
+                    onclick="addExcelRow()"
+                >
+                    Sətir əlavə et
+                </button>
+
+
+                <button
+                    onclick="saveExcel()"
+                >
+                    XLSX saxla
+                </button>
+
+            </div>
+
+
+            <div
+                id="excelSheet"
+                class="sheet-wrap"
+            >
+
+                <p>
+                    Excel faylını seç.
+                </p>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    $("#excelFile")
+        ?.addEventListener(
+            "change",
+            loadExcel
+        );
+
+}
+
+
+function loadExcel(event) {
+
+    const file =
+        event.target.files[0];
+
+    if (!file) return;
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(e) {
+
+            currentWorkbook =
+                XLSX.read(
+                    e.target.result,
+                    {
+                        type: "array"
+                    }
+                );
+
+
+            const firstSheet =
+                currentWorkbook.Sheets[
+                    currentWorkbook.SheetNames[0]
+                ];
+
+
+            renderExcel(
+                firstSheet
+            );
+
+        };
+
+
+    reader.readAsArrayBuffer(
+        file
+    );
+
+}
+
+
+function renderExcel(sheet) {
+
+    const container =
+        $("#excelSheet");
+
+    if (!container) return;
+
+
+    container.innerHTML =
+        XLSX.utils.sheet_to_html(
+            sheet
+        );
+
+
+    const table =
+        container.querySelector(
+            "table"
+        );
+
+
+    if (!table) return;
+
+
+    table.querySelectorAll(
+        "td"
+    ).forEach(cell => {
+
+        cell.contentEditable =
+            "true";
+
+    });
+
+}
+
+
+function addExcelRow() {
+
+    const table =
+        $("#excelSheet table");
+
+    if (!table) {
+
+        alert(
+            "Əvvəl Excel faylı aç."
+        );
+
+        return;
+
+    }
+
+
+    const row =
+        document.createElement(
+            "tr"
+        );
+
+
+    for (
+        let i = 0;
+        i < 5;
+        i++
+    ) {
+
+        const cell =
+            document.createElement(
+                "td"
+            );
+
+
+        cell.contentEditable =
+            "true";
+
+
+        cell.textContent =
+            "";
+
+
+        row.appendChild(
+            cell
+        );
+
+    }
+
+
+    table.appendChild(
+        row
+    );
+
+}
+
+
+function saveExcel() {
+
+    const table =
+        $("#excelSheet table");
+
+    if (!table) {
+
+        alert(
+            "Əvvəl Excel faylı aç."
+        );
+
+        return;
+
+    }
+
+
+    const workbook =
+        XLSX.utils.book_new();
+
+
+    const sheet =
+        XLSX.utils.table_to_sheet(
+            table
+        );
+
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        sheet,
+        "NEXUS"
+    );
+
+
+    XLSX.writeFile(
+        workbook,
+        "NEXUS-Excel.xlsx"
+    );
+
+}
+
+
+/* =========================================================
+   JSON FORMATTER
+========================================================= */
+
+function jsonFormatter(content) {
+
+    content.innerHTML = `
+
+        <div class="modal-inner">
+
+            <h2>
+                JSON Formatter
+            </h2>
+
+
+            <textarea
+                id="jsonInput"
+                class="field"
+                rows="14"
+                placeholder='{"name":"NEXUS"}'
+            ></textarea>
+
+
+            <button
+                class="action"
+                onclick="formatJSON()"
+            >
+                Formatla
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+function formatJSON() {
+
+    const input =
+        $("#jsonInput");
+
+    try {
+
+        input.value =
+            JSON.stringify(
+                JSON.parse(
+                    input.value
+                ),
+                null,
+                4
+            );
+
+    }
+
+    catch {
+
+        alert(
+            "JSON düzgün deyil."
+        );
+
+    }
 
 }
 
@@ -1680,202 +2238,88 @@ async function generateHash() {
    BASE64
 ========================================================= */
 
+function base64Tool(content) {
+
+    content.innerHTML = `
+
+        <div class="modal-inner">
+
+            <h2>
+                Base64
+            </h2>
+
+
+            <textarea
+                id="base64Input"
+                class="field"
+                rows="10"
+            ></textarea>
+
+
+            <div class="office-actions">
+
+                <button
+                    onclick="encodeBase64()"
+                >
+                    Encode
+                </button>
+
+
+                <button
+                    onclick="decodeBase64()"
+                >
+                    Decode
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
 function encodeBase64() {
 
-    const text =
-        $("#base64Input").value;
+    const input =
+        $("#base64Input");
 
-    try {
-
-        $("#base64Result").textContent =
-            btoa(
-                unescape(
-                    encodeURIComponent(text)
+    input.value =
+        btoa(
+            unescape(
+                encodeURIComponent(
+                    input.value
                 )
-            );
-
-    } catch {
-
-        $("#base64Result").textContent =
-            "Encode xətası.";
-
-    }
+            )
+        );
 
 }
 
 
 function decodeBase64() {
 
-    const text =
-        $("#base64Input").value;
+    const input =
+        $("#base64Input");
 
     try {
 
-        $("#base64Result").textContent =
+        input.value =
             decodeURIComponent(
                 escape(
-                    atob(text)
+                    atob(
+                        input.value
+                    )
                 )
             );
 
-    } catch {
-
-        $("#base64Result").textContent =
-            "Düzgün Base64 məlumatı daxil edin.";
-
     }
 
-}
+    catch {
 
-
-/* =========================================================
-   PASSWORD STRENGTH
-========================================================= */
-
-function checkPasswordStrength() {
-
-    const password =
-        $("#strengthInput").value;
-
-    let score = 0;
-
-    if (password.length >= 8) score++;
-
-    if (password.length >= 12) score++;
-
-    if (/[A-Z]/.test(password)) score++;
-
-    if (/[a-z]/.test(password)) score++;
-
-    if (/[0-9]/.test(password)) score++;
-
-    if (/[^A-Za-z0-9]/.test(password)) score++;
-
-    let text = "";
-
-    if (score <= 2) {
-        text = "Zəif";
-    } else if (score <= 4) {
-        text = "Orta";
-    } else {
-        text = "Güclü";
-    }
-
-    $("#strengthResult").textContent =
-        `${text} — ${score}/6`;
-
-}
-
-
-/* =========================================================
-   JSON
-========================================================= */
-
-function formatJSON() {
-
-    const input =
-        $("#jsonInput").value;
-
-    try {
-
-        const object =
-            JSON.parse(input);
-
-        $("#jsonResult").textContent =
-            JSON.stringify(
-                object,
-                null,
-                2
-            );
-
-    } catch (error) {
-
-        $("#jsonResult").textContent =
-            "JSON xətası: " + error.message;
-
-    }
-
-}
-
-
-/* =========================================================
-   CODE PAD
-========================================================= */
-
-async function copyCode() {
-
-    const code =
-        $("#codePad").value;
-
-    await navigator.clipboard.writeText(code);
-
-    showToast("Kod kopyalandı.");
-
-}
-
-
-/* =========================================================
-   REGEX
-========================================================= */
-
-function testRegex() {
-
-    const pattern =
-        $("#regexPattern").value;
-
-    const text =
-        $("#regexText").value;
-
-    try {
-
-        const regex =
-            new RegExp(pattern, "g");
-
-        const matches =
-            text.match(regex);
-
-        $("#regexResult").textContent =
-            matches
-                ? `Tapıldı (${matches.length}):\n${matches.join("\n")}`
-                : "Heç bir uyğunluq tapılmadı.";
-
-    } catch {
-
-        $("#regexResult").textContent =
-            "Regex sintaksisində xəta var.";
-
-    }
-
-}
-
-
-/* =========================================================
-   URL ENCODE
-========================================================= */
-
-function encodeURL() {
-
-    $("#urlEncodeResult").textContent =
-        encodeURIComponent(
-            $("#urlEncodeInput").value
+        alert(
+            "Base64 düzgün deyil."
         );
-
-}
-
-
-function decodeURL() {
-
-    try {
-
-        $("#urlEncodeResult").textContent =
-            decodeURIComponent(
-                $("#urlEncodeInput").value
-            );
-
-    } catch {
-
-        $("#urlEncodeResult").textContent =
-            "Decode xətası.";
 
     }
 
@@ -1886,434 +2330,509 @@ function decodeURL() {
    TERMINAL
 ========================================================= */
 
-function terminalCommand(event) {
+function terminal(content) {
 
-    if (event.key !== "Enter") return;
+    content.innerHTML = `
 
-    const input =
-        event.target;
+        <div class="modal-inner">
 
-    const command =
-        input.value.trim().toLowerCase();
-
-    const output =
-        $("#terminalOutput");
-
-    const line =
-        document.createElement("div");
-
-    line.style.color = "#8df2d1";
-
-    line.textContent =
-        `nexus@az:~$ ${command}`;
-
-    output.insertBefore(
-        line,
-        input.parentElement
-    );
-
-    let response = "";
-
-    if (command === "help") {
-
-        response =
-`help      — əmrləri göstər
-clear     — ekranı təmizlə
-date      — tarix və saat
-whoami    — istifadəçi məlumatı
-status    — sistem statusu
-about     — NEXUS haqqında`;
-
-    } else if (command === "clear") {
-
-        output.innerHTML = "";
-
-        return;
-
-    } else if (command === "date") {
-
-        response =
-            new Date().toLocaleString("az-AZ");
-
-    } else if (command === "whoami") {
-
-        response =
-            "guest@nexus-az";
-
-    } else if (command === "status") {
-
-        response =
-            "NETWORK: ONLINE\nSYSTEM: STABLE\nNEXUS: READY";
-
-    } else if (command === "about") {
-
-        response =
-            "NEXUS // AZ — Digital Command Center v4.0";
-
-    } else {
-
-        response =
-            `command not found: ${command}`;
-
-    }
-
-    const responseElement =
-        document.createElement("div");
-
-    responseElement.style.color =
-        "#7d8aa3";
-
-    responseElement.style.whiteSpace =
-        "pre-wrap";
-
-    responseElement.textContent =
-        response;
-
-    output.insertBefore(
-        responseElement,
-        input.parentElement
-    );
-
-    input.value = "";
-
-}
+            <h2>
+                NEXUS Terminal
+            </h2>
 
 
-/* =========================================================
-   TIMESTAMP
-========================================================= */
-
-function currentTimestamp() {
-
-    const timestamp =
-        Math.floor(Date.now() / 1000);
-
-    $("#timestampResult").textContent =
-        timestamp;
-
-}
+            <p>
+                Brauzer təhlükəsizliyi səbəbilə
+                kompüterin real CMD/Terminalına
+                birbaşa çıxış verilmir.
+            </p>
 
 
-function convertTimestamp() {
+            <input
+                id="terminalInput"
+                class="field"
+                placeholder="help"
+            >
 
-    const timestamp =
-        Number(
-            $("#timestampInput").value
+
+            <pre id="terminalOutput">
+NEXUS OS 4.1
+
+Type "help"
+            </pre>
+
+        </div>
+
+    `;
+
+
+    $("#terminalInput")
+        ?.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key !== "Enter"
+                ) return;
+
+
+                const command =
+                    event.target.value
+                        .trim()
+                        .toLowerCase();
+
+
+                const output =
+                    $("#terminalOutput");
+
+
+                if (
+                    command === "help"
+                ) {
+
+                    output.textContent +=
+                        "\n\n> help\n" +
+                        "date\n" +
+                        "system\n" +
+                        "about\n" +
+                        "clear";
+
+                }
+
+                else if (
+                    command === "date"
+                ) {
+
+                    output.textContent +=
+                        "\n\n> date\n" +
+                        new Date()
+                            .toString();
+
+                }
+
+                else if (
+                    command === "system"
+                ) {
+
+                    output.textContent +=
+                        "\n\n> system\n" +
+                        "NEXUS OS 4.1\n" +
+                        "Browser environment";
+
+                }
+
+                else if (
+                    command === "about"
+                ) {
+
+                    output.textContent +=
+                        "\n\n> about\n" +
+                        "NEXUS // AZ";
+
+                }
+
+                else if (
+                    command === "clear"
+                ) {
+
+                    output.textContent =
+                        "";
+
+                }
+
+                else {
+
+                    output.textContent +=
+                        "\n\n> " +
+                        command +
+                        "\nUnknown command.";
+
+                }
+
+
+                event.target.value =
+                    "";
+
+            }
         );
 
-    if (!timestamp) return;
-
-    const date =
-        new Date(timestamp * 1000);
-
-    $("#timestampResult").textContent =
-        date.toLocaleString("az-AZ");
-
 }
 
 
 /* =========================================================
-   WORLD CLOCK
+   IP
 ========================================================= */
 
-function renderWorldClock(container) {
+async function ipTool(content) {
 
-    const cities = [
+    content.innerHTML = `
 
-        ["Bakı", "Asia/Baku"],
+        <div class="modal-inner">
 
-        ["İstanbul", "Europe/Istanbul"],
+            <h2>
+                IP & DNS
+            </h2>
 
-        ["London", "Europe/London"],
 
-        ["New York", "America/New_York"],
+            <p id="ipResult">
+                Yoxlanılır...
+            </p>
 
-        ["Tokyo", "Asia/Tokyo"],
-
-        ["Dubai", "Asia/Dubai"]
-
-    ];
-
-    container.innerHTML =
-        cities.map(city => {
-
-            const time =
-                new Intl.DateTimeFormat(
-                    "az-AZ",
-                    {
-                        timeZone: city[1],
-                        hour: "2-digit",
-                        minute: "2-digit"
-                    }
-                ).format(new Date());
-
-            return `
-                <div
-                    class="tool-result"
-                    style="margin-bottom:8px;"
-                >
-                    ${city[0]}
-                    <strong style="float:right;">
-                        ${time}
-                    </strong>
-                </div>
-            `;
-
-        }).join("");
-
-}
-
-
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
-function navigateToPlace() {
-
-    const place =
-        $("#navigationInput").value.trim();
-
-    if (!place) {
-
-        showToast("Məkan daxil et.");
-
-        return;
-    }
-
-    window.open(
-        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place)}`,
-        "_blank"
-    );
-
-}
-
-
-/* =========================================================
-   LOCATION
-========================================================= */
-
-function getLocation() {
-
-    const result =
-        $("#locationResult");
-
-    if (!navigator.geolocation) {
-
-        result.textContent =
-            "Brauzer geolokasiyanı dəstəkləmir.";
-
-        return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-
-        position => {
-
-            const lat =
-                position.coords.latitude;
-
-            const lon =
-                position.coords.longitude;
-
-            result.innerHTML =
-                `
-                Latitude: ${lat}
-                <br>
-                Longitude: ${lon}
-                <br><br>
-                <a
-                    href="https://www.google.com/maps?q=${lat},${lon}"
-                    target="_blank"
-                    style="color:#9da8ff;"
-                >
-                    Xəritədə aç →
-                </a>
-                `;
-
-        },
-
-        () => {
-
-            result.textContent =
-                "Mövqe icazəsi verilmədi.";
-
-        }
-
-    );
-
-}
-
-
-/* =========================================================
-   MUSIC SEARCH
-========================================================= */
-
-function searchMusic(query) {
-
-    window.open(
-        `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`,
-        "_blank"
-    );
-
-}
-
-
-/* =========================================================
-   YOUTUBE
-========================================================= */
-
-function youtubeSearch() {
-
-    const query =
-        $("#youtubeInput").value.trim();
-
-    if (!query) return;
-
-    searchMusic(query);
-
-}
-
-
-/* =========================================================
-   QR
-========================================================= */
-
-function generateQRReal() {
-
-    const text =
-        $("#qrInput").value.trim();
-
-    const result =
-        $("#qrResult");
-
-    if (!text) {
-
-        result.textContent =
-            "Mətn və ya link daxil et.";
-
-        return;
-
-    }
-
-    const img =
-        document.createElement("img");
-
-    img.src =
-        `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(text)}`;
-
-    img.alt = "QR kod";
-
-    img.style.width = "240px";
-
-    result.innerHTML = "";
-
-    result.appendChild(img);
-
-}
-
-
-/* =========================================================
-   WIFI QR
-========================================================= */
-
-function generateWiFiQR() {
-
-    const ssid =
-        $("#wifiName").value.trim();
-
-    const password =
-        $("#wifiPassword").value;
-
-    if (!ssid) return;
-
-    const data =
-        `WIFI:T:WPA;S:${ssid};P:${password};;`;
-
-    $("#wifiResult").innerHTML =
-        `
-        <img
-            src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(data)}"
-            style="width:240px;background:white;padding:8px;border-radius:8px;"
-            alt="Wi-Fi QR"
-        >
-        `;
-
-}
-
-
-/* =========================================================
-   CALCULATOR
-========================================================= */
-
-function renderCalculator(container) {
-
-    container.innerHTML = `
-        <input
-            class="tool-input"
-            id="calcInput"
-            placeholder="Məsələn: (25*4)+100/2"
-        >
-
-        <button
-            class="tool-action"
-            onclick="calculateExpression()"
-            style="margin-top:10px;"
-        >
-            Hesabla
-        </button>
-
-        <div
-            class="tool-result"
-            id="calcResult"
-            style="margin-top:12px;"
-        >
-            —
         </div>
+
+    `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "https://api.ipify.org?format=json"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        $("#ipResult").textContent =
+            "Public IP: " +
+            data.ip;
+
+    }
+
+    catch {
+
+        $("#ipResult").textContent =
+            "IP xidməti əlçatan deyil.";
+
+    }
+
+}
+
+
+/* =========================================================
+   PING
+========================================================= */
+
+async function pingTool(content) {
+
+    content.innerHTML = `
+
+        <div class="modal-inner">
+
+            <h2>
+                Ping Test
+            </h2>
+
+
+            <button
+                class="action"
+                onclick="runPing()"
+            >
+                TEST
+            </button>
+
+
+            <p id="pingResult">
+                Hazırdır.
+            </p>
+
+        </div>
+
     `;
 
 }
 
 
-function calculateExpression() {
-
-    const input =
-        $("#calcInput").value.trim();
+async function runPing() {
 
     const result =
-        $("#calcResult");
+        $("#pingResult");
 
-    if (!input) return;
 
-    /*
-       Sadə riyazi ifadələr üçün.
-       Hərf və təhlükəli simvollar bloklanır.
-    */
+    const start =
+        performance.now();
 
-    if (!/^[0-9+\-*/().%\s]+$/.test(input)) {
-
-        result.textContent =
-            "Yalnız riyazi simvollardan istifadə et.";
-
-        return;
-
-    }
 
     try {
 
-        const answer =
-            Function(
-                `"use strict"; return (${input})`
-            )();
+        await fetch(
+            "https://www.google.com/generate_204",
+            {
+                mode: "no-cors",
+                cache: "no-store"
+            }
+        );
+
+
+        const latency =
+            Math.round(
+                performance.now() -
+                start
+            );
+
 
         result.textContent =
-            String(answer);
-
-    } catch {
-
-        result.textContent =
-            "İfadə düzgün deyil.";
+            latency +
+            " ms";
 
     }
+
+    catch {
+
+        result.textContent =
+            "Ping ölçülmədi.";
+
+    }
+
+}
+
+
+/* =========================================================
+   URL ANALYZER
+========================================================= */
+
+function urlAnalyzer(content) {
+
+    content.innerHTML = `
+
+        <div class="modal-inner">
+
+            <h2>
+                URL Analyzer
+            </h2>
+
+
+            <input
+                id="urlInput"
+                class="field"
+                placeholder="https://example.com"
+            >
+
+
+            <button
+                class="action"
+                onclick="analyzeURL()"
+            >
+                Analiz et
+            </button>
+
+
+            <pre id="urlResult"></pre>
+
+        </div>
+
+    `;
+
+}
+
+
+function analyzeURL() {
+
+    const value =
+        $("#urlInput").value.trim();
+
+
+    const output =
+        $("#urlResult");
+
+
+    try {
+
+        const url =
+            new URL(value);
+
+
+        output.textContent =
+
+`Protocol: ${url.protocol}
+
+Host: ${url.host}
+
+Path: ${url.pathname}
+
+Port: ${url.port || "default"}
+
+Search: ${url.search || "none"}`;
+
+    }
+
+    catch {
+
+        output.textContent =
+            "URL düzgün deyil.";
+
+    }
+
+}
+
+
+/* =========================================================
+   SECURITY HEADERS
+========================================================= */
+
+function securityHeaders(content) {
+
+    content.innerHTML = `
+
+        <div class="modal-inner">
+
+            <h2>
+                Security Headers
+            </h2>
+
+
+            <input
+                id="headerUrl"
+                class="field"
+                placeholder="https://example.com"
+            >
+
+
+            <button
+                class="action"
+                onclick="checkHeaders()"
+            >
+                Yoxla
+            </button>
+
+
+            <pre id="headerResult">
+Nəticə gözlənilir...
+            </pre>
+
+        </div>
+
+    `;
+
+}
+
+
+async function checkHeaders() {
+
+    const result =
+        $("#headerResult");
+
+
+    const url =
+        $("#headerUrl")
+            .value
+            .trim();
+
+
+    if (!url) return;
+
+
+    result.textContent =
+        "Sorğu göndərilir...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                url,
+                {
+                    method: "HEAD",
+                    mode: "cors"
+                }
+            );
+
+
+        const headers =
+            response.headers;
+
+
+        const wanted = [
+
+            "content-security-policy",
+
+            "strict-transport-security",
+
+            "x-frame-options",
+
+            "x-content-type-options",
+
+            "referrer-policy"
+
+        ];
+
+
+        result.textContent =
+            wanted.map(
+                header => {
+
+                    return (
+                        header +
+                        ": " +
+                        (
+                            headers.get(
+                                header
+                            ) || "yoxdur"
+                        )
+                    );
+
+                }
+            ).join("\n");
+
+    }
+
+    catch {
+
+        result.textContent =
+            "Sayt CORS səbəbilə yoxlanıla bilmədi.";
+
+    }
+
+}
+
+
+/* =========================================================
+   GLOBAL SEARCH MODULE
+========================================================= */
+
+function globalSearchTool(content) {
+
+    content.innerHTML = `
+
+        <div class="modal-inner">
+
+            <h2>
+                Global Search
+            </h2>
+
+
+            <p>
+                İnternetdə Google vasitəsilə axtar.
+            </p>
+
+
+            <input
+                id="moduleSearch"
+                class="field"
+                placeholder="Nə axtarırsan?"
+            >
+
+
+            <button
+                class="action"
+                onclick="
+                    performGoogleSearch(
+                        document
+                        .getElementById(
+                            'moduleSearch'
+                        )
+                        .value
+                    )
+                "
+            >
+                Google-da axtar →
+            </button>
+
+        </div>
+
+    `;
 
 }
 
@@ -2322,516 +2841,671 @@ function calculateExpression() {
    NOTES
 ========================================================= */
 
-function downloadNotes() {
+function notesTool(content) {
 
-    const text =
-        $("#notesInput").value;
+    content.innerHTML = `
 
-    const blob =
-        new Blob(
-            [text],
-            {
-                type: "text/plain;charset=utf-8"
-            }
+        <div class="modal-inner">
+
+            <h2>
+                Quick Notes
+            </h2>
+
+
+            <textarea
+                id="notesInput"
+                class="field"
+                rows="18"
+                placeholder="Qeydini yaz..."
+            ></textarea>
+
+        </div>
+
+    `;
+
+
+    const notes =
+        $("#notesInput");
+
+
+    notes.value =
+        localStorage.getItem(
+            "nexus_notes"
+        ) || "";
+
+
+    notes.addEventListener(
+        "input",
+        () => {
+
+            localStorage.setItem(
+                "nexus_notes",
+                notes.value
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+let timerInterval = null;
+
+
+function timerTool(content) {
+
+    content.innerHTML = `
+
+        <div class="modal-inner">
+
+            <h2>
+                Timer
+            </h2>
+
+
+            <input
+                id="timerMinutes"
+                class="field"
+                type="number"
+                min="1"
+                value="5"
+            >
+
+
+            <div
+                id="timerDisplay"
+                class="speed-value"
+            >
+                05:00
+            </div>
+
+
+            <button
+                class="action"
+                onclick="startTimer()"
+            >
+                Başlat
+            </button>
+
+
+            <button
+                class="action"
+                onclick="stopTimer()"
+            >
+                Dayandır
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+function startTimer() {
+
+    stopTimer();
+
+
+    let seconds =
+        parseInt(
+            $("#timerMinutes").value
+        ) * 60;
+
+
+    updateTimerDisplay(
+        seconds
+    );
+
+
+    timerInterval =
+        setInterval(
+            () => {
+
+                seconds--;
+
+                updateTimerDisplay(
+                    seconds
+                );
+
+
+                if (
+                    seconds <= 0
+                ) {
+
+                    stopTimer();
+
+                    alert(
+                        "Timer tamamlandı."
+                    );
+
+                }
+
+            },
+            1000
         );
 
-    const url =
-        URL.createObjectURL(blob);
-
-    const a =
-        document.createElement("a");
-
-    a.href = url;
-
-    a.download =
-        "nexus-notes.txt";
-
-    a.click();
-
-    URL.revokeObjectURL(url);
-
 }
 
 
-/* =========================================================
-   WORD COUNT
-========================================================= */
+function stopTimer() {
 
-function countWords() {
+    if (timerInterval) {
 
-    const text =
-        $("#wordInput").value;
-
-    const words =
-        text.trim()
-            ? text.trim().split(/\s+/).length
-            : 0;
-
-    const chars =
-        text.length;
-
-    $("#wordResult").textContent =
-        `${words} söz · ${chars} simvol`;
-
-}
-
-
-/* =========================================================
-   PERCENT
-========================================================= */
-
-function calculatePercent() {
-
-    const number =
-        Number($("#percentNumber").value);
-
-    const percent =
-        Number($("#percentValue").value);
-
-    if (
-        Number.isNaN(number) ||
-        Number.isNaN(percent)
-    ) return;
-
-    const result =
-        number * percent / 100;
-
-    $("#percentResult").textContent =
-        `${percent}% = ${result}`;
-
-}
-
-
-/* =========================================================
-   DATE DIFFERENCE
-========================================================= */
-
-function calculateDateDifference() {
-
-    const one =
-        new Date($("#dateOne").value);
-
-    const two =
-        new Date($("#dateTwo").value);
-
-    if (
-        Number.isNaN(one.getTime()) ||
-        Number.isNaN(two.getTime())
-    ) return;
-
-    const difference =
-        Math.abs(
-            two - one
+        clearInterval(
+            timerInterval
         );
 
-    const days =
-        Math.round(
-            difference /
-            (1000 * 60 * 60 * 24)
+        timerInterval =
+            null;
+
+    }
+
+}
+
+
+function updateTimerDisplay(
+    seconds
+) {
+
+    const display =
+        $("#timerDisplay");
+
+
+    if (!display) return;
+
+
+    const minutes =
+        Math.floor(
+            seconds / 60
         );
 
-    $("#dateResult").textContent =
-        `${days} gün`;
+
+    const remaining =
+        seconds % 60;
+
+
+    display.textContent =
+        String(minutes)
+            .padStart(2,"0") +
+        ":" +
+        String(remaining)
+            .padStart(2,"0");
 
 }
 
 
 /* =========================================================
-   DEVICE
+   DEVICE INFO
 ========================================================= */
 
-function getDeviceInfo() {
+function deviceInfo(content) {
 
-    return `
-Platform: ${escapeHTML(navigator.platform)}
+    content.innerHTML = `
 
-Dil: ${escapeHTML(navigator.language)}
+        <div class="modal-inner">
+
+            <h2>
+                Device Info
+            </h2>
+
+
+            <pre>
+Browser:
+${navigator.userAgent}
+
+Language:
+${navigator.language}
+
+Screen:
+${screen.width} × ${screen.height}
 
 Online:
-${navigator.onLine ? "Bəli" : "Xeyr"}
+${navigator.onLine ? "YES" : "NO"}
 
-CPU nüvələri:
-${navigator.hardwareConcurrency || "Məlum deyil"}
+Platform:
+${navigator.platform}
+            </pre>
 
-RAM:
-${navigator.deviceMemory
-    ? navigator.deviceMemory + " GB"
-    : "Məlum deyil"}
+        </div>
 
-Touch:
-${navigator.maxTouchPoints || 0}
     `;
 
 }
 
 
 /* =========================================================
-   SEARCH
+   STORAGE
 ========================================================= */
 
-function getAllServices() {
+async function storageInfo(content) {
 
-    const list = [];
-
-    Object.entries(categories).forEach(
-        ([categoryKey, category]) => {
-
-            category.services.forEach(service => {
-
-                list.push({
-                    ...service,
-                    categoryKey,
-                    categoryTitle: category.title
-                });
-
-            });
-
-        }
-    );
-
-    return list;
-
-}
+    let estimate =
+        "Yoxlanılır...";
 
 
-function openSearch() {
+    if (
+        navigator.storage &&
+        navigator.storage.estimate
+    ) {
 
-    $("#searchModal").classList.add("active");
-
-    document.body.style.overflow = "hidden";
-
-    setTimeout(() => {
-
-        $("#searchInput").focus();
-
-    }, 50);
-
-    renderSearchResults("");
-
-}
+        const data =
+            await navigator
+                .storage
+                .estimate();
 
 
-function renderSearchResults(query) {
+        const used =
+            (
+                data.usage /
+                1024 /
+                1024
+            ).toFixed(2);
 
-    const results =
-        $("#searchResults");
 
-    const normalized =
-        query.trim().toLowerCase();
+        const quota =
+            (
+                data.quota /
+                1024 /
+                1024
+            ).toFixed(2);
 
-    const services =
-        getAllServices();
 
-    const filtered =
-        normalized
-            ? services.filter(service =>
-                (
-                    service.title +
-                    " " +
-                    service.description +
-                    " " +
-                    service.categoryTitle
-                )
-                .toLowerCase()
-                .includes(normalized)
-            )
-            : services.slice(0, 8);
+        estimate =
+            `İstifadə: ${used} MB
+Limit: ${quota} MB`;
 
-    if (!filtered.length) {
-
-        results.innerHTML =
-            `
-            <div
-                style="
-                    padding:25px;
-                    color:#68748b;
-                    text-align:center;
-                    font-size:11px;
-                "
-            >
-                Heç nə tapılmadı.
-            </div>
-            `;
-
-        return;
     }
 
-    results.innerHTML =
-        filtered.map(service => {
 
-            return `
+    content.innerHTML = `
+
+        <div class="modal-inner">
+
+            <h2>
+                Storage
+            </h2>
+
+
+            <pre>
+${estimate}
+            </pre>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   YOUTUBE
+========================================================= */
+
+function youtubeTool(content) {
+
+    content.innerHTML = `
+
+        <div class="modal-inner">
+
+            <h2>
+                YouTube
+            </h2>
+
+
+            <input
+                id="youtubeSearch"
+                class="field"
+                placeholder="Mahnı, video və ya kanal..."
+            >
+
+
+            <button
+                class="action"
+                onclick="searchYouTube()"
+            >
+                YouTube-da axtar →
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+function searchYouTube() {
+
+    const query =
+        $("#youtubeSearch")
+            .value
+            .trim();
+
+
+    if (!query) return;
+
+
+    window.open(
+        "https://www.youtube.com/results?search_query=" +
+        encodeURIComponent(query),
+        "_blank",
+        "noopener,noreferrer"
+    );
+
+}
+
+
+/* =========================================================
+   AI INTERFACE
+========================================================= */
+
+function openAI() {
+
+    openModal();
+
+
+    const content =
+        $("#modalContent");
+
+
+    content.innerHTML = `
+
+        <div class="chat">
+
+            <div class="chat-head">
+
+                <b>
+                    ✦ NEXUS AI
+                </b>
+
+                <small>
+                    AI Chat Interface
+                </small>
+
+            </div>
+
+
+            <div
+                id="chatBody"
+                class="chat-body"
+            >
+
+                <div class="msg ai">
+
+                    Salam! Mən NEXUS AI-yam.
+
+                    Sualını yaz və söhbətə başlayaq.
+
+                </div>
+
+            </div>
+
+
+            <div class="chat-input">
+
+                <textarea
+                    id="chatInput"
+                    rows="2"
+                    placeholder="Mesajını yaz..."
+                ></textarea>
+
+
                 <button
-                    class="search-result"
-                    data-action="${escapeHTML(service.action)}"
-                    data-title="${escapeHTML(service.title)}"
-                    data-category="${escapeHTML(service.categoryTitle)}"
+                    onclick="sendAIMessage()"
                 >
-
-                    <div class="search-result-icon">
-                        ${escapeHTML(service.icon)}
-                    </div>
-
-                    <div>
-
-                        <strong>
-                            ${escapeHTML(service.title)}
-                        </strong>
-
-                        <small>
-                            ${escapeHTML(service.categoryTitle)}
-                        </small>
-
-                    </div>
-
+                    Göndər
                 </button>
-            `;
 
-        }).join("");
+            </div>
+
+        </div>
+
+    `;
 
 
-    $$(".search-result").forEach(button => {
+    $("#chatInput")
+        ?.addEventListener(
+            "keydown",
+            event => {
 
-        button.addEventListener(
-            "click",
-            () => {
+                if (
+                    event.key === "Enter" &&
+                    !event.shiftKey
+                ) {
 
-                closeModal("searchModal");
+                    event.preventDefault();
 
-                openTool(
-                    button.dataset.action,
-                    button.dataset.title,
-                    button.dataset.category
-                );
+                    sendAIMessage();
+
+                }
 
             }
         );
 
-    });
-
 }
 
 
-/* Search button */
-
-$("#openSearch").addEventListener(
-    "click",
-    openSearch
-);
-
-$("#quickSearch").addEventListener(
-    "click",
-    openSearch
-);
-
-
-/* Search typing */
-
-$("#searchInput").addEventListener(
-    "input",
-    event => {
-
-        renderSearchResults(
-            event.target.value
-        );
-
-    }
-);
+$("#aiFab")
+    ?.addEventListener(
+        "click",
+        openAI
+    );
 
 
 /* =========================================================
-   KEYBOARD
+   AI MESSAGE
 ========================================================= */
 
-document.addEventListener(
-    "keydown",
-    event => {
+async function sendAIMessage() {
 
-        if (
-            (event.ctrlKey || event.metaKey) &&
-            event.key.toLowerCase() === "k"
-        ) {
-
-            event.preventDefault();
-
-            openSearch();
-
-        }
-
-        if (event.key === "Escape") {
-
-            $$(".modal-overlay.active").forEach(
-                modal => modal.classList.remove("active")
-            );
-
-            $("#aiModal").classList.remove("active");
-
-            document.body.style.overflow = "";
-
-        }
-
-    }
-);
+    const input =
+        $("#chatInput");
 
 
-/* =========================================================
-   NEXUS AI UI
-========================================================= */
-
-$("#openAI").addEventListener(
-    "click",
-    () => {
-
-        $("#aiModal").classList.add("active");
-
-        document.body.style.overflow =
-            "hidden";
-
-        setTimeout(
-            () => $("#aiInput").focus(),
-            100
-        );
-
-    }
-);
+    const body =
+        $("#chatBody");
 
 
-/* =========================================================
-   AI DEMO
-========================================================= */
+    if (!input || !body) return;
 
-$("#aiForm").addEventListener(
-    "submit",
-    event => {
-
-        event.preventDefault();
-
-        const input =
-            $("#aiInput");
-
-        const message =
-            input.value.trim();
-
-        if (!message) return;
-
-        addAIMessage(
-            message,
-            "user"
-        );
-
-        input.value = "";
-
-        /*
-          Hazırda frontend demo cavabıdır.
-          Real AI üçün sonrakı mərhələdə
-          təhlükəsiz backend/API bağlantısı əlavə olunacaq.
-        */
-
-        setTimeout(
-            () => {
-
-                addAIMessage(
-                    getDemoAIResponse(message),
-                    "bot"
-                );
-
-            },
-            500
-        );
-
-    }
-);
-
-
-function addAIMessage(text, type) {
-
-    const container =
-        $("#aiMessages");
 
     const message =
-        document.createElement("div");
-
-    message.className =
-        `ai-message ${type}`;
-
-    message.innerHTML =
-        `
-        <small>
-            ${type === "bot" ? "NEXUS AI" : "SƏN"}
-        </small>
-
-        <p>
-            ${escapeHTML(text)}
-        </p>
-        `;
-
-    container.appendChild(message);
-
-    container.scrollTop =
-        container.scrollHeight;
-
-}
+        input.value.trim();
 
 
-function getDemoAIResponse(message) {
+    if (!message) return;
 
-    const text =
-        message.toLowerCase();
 
-    if (
-        text.includes("salam") ||
-        text.includes("hello")
-    ) {
+    const userMessage =
+        document.createElement(
+            "div"
+        );
 
-        return "Salam! NEXUS AI hazırdır. Mənə sualını ver.";
+
+    userMessage.className =
+        "msg user";
+
+
+    userMessage.textContent =
+        message;
+
+
+    body.appendChild(
+        userMessage
+    );
+
+
+    input.value =
+        "";
+
+
+    const aiMessage =
+        document.createElement(
+            "div"
+        );
+
+
+    aiMessage.className =
+        "msg ai";
+
+
+    aiMessage.textContent =
+        "Cavab hazırlanır...";
+
+
+    body.appendChild(
+        aiMessage
+    );
+
+
+    body.scrollTop =
+        body.scrollHeight;
+
+
+    /*
+       REAL AI BACKEND
+
+       Burada API key saxlamırıq.
+
+       Frontend:
+           /api/chat
+
+       Backend:
+           OpenAI API
+
+       qoşulmalıdır.
+    */
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/chat",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            message
+                        })
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "AI backend yoxdur."
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        aiMessage.textContent =
+            data.reply ||
+            "AI cavab vermədi.";
 
     }
 
-    if (
-        text.includes("nexus")
-    ) {
+    catch {
 
-        return "NEXUS // AZ rəqəmsal alətləri bir mərkəzdə birləşdirən dashboard sistemidir.";
-
-    }
-
-    if (
-        text.includes("kömək") ||
-        text.includes("yardım")
-    ) {
-
-        return "Əlbəttə. Sualını və ya etmək istədiyin işi yaz, birlikdə baxaq.";
+        aiMessage.textContent =
+            "NEXUS AI frontend hazırdır, amma real AI backend hələ qoşulmayıb. API açarını GitHub-da təhlükəyə atmamaq üçün onu frontendə yerləşdirmirik.";
 
     }
 
-    return "Sualını qəbul etdim. Real AI backend bağlantısı aktivləşdirildikdə burada tam süni intellekt cavabı veriləcək.";
+
+    body.scrollTop =
+        body.scrollHeight;
 
 }
 
 
 /* =========================================================
-   ONLINE STATUS
+   DOWNLOAD HELPER
 ========================================================= */
 
-window.addEventListener(
-    "online",
-    () => showToast("İnternet bağlantısı bərpa edildi.")
-);
+function downloadBlob(
+    blob,
+    filename
+) {
 
-window.addEventListener(
-    "offline",
-    () => showToast("İnternet bağlantısı kəsildi.")
+    const link =
+        document.createElement(
+            "a"
+        );
+
+
+    link.href =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    link.download =
+        filename;
+
+
+    document.body.appendChild(
+        link
+    );
+
+
+    link.click();
+
+
+    link.remove();
+
+
+    setTimeout(
+        () => {
+
+            URL.revokeObjectURL(
+                link.href
+            );
+
+        },
+        1000
+    );
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+renderCategories();
+
+renderTools(
+    "network"
 );
 
 
 /* =========================================================
-   STARTUP
+   CONSOLE
 ========================================================= */
 
 console.log(
-    "%c NEXUS // AZ v4.0 ",
-    "background:#11172b;color:#9da8ff;padding:8px;border-radius:5px;"
+    "%c NEXUS // AZ 4.1 ",
+    "background:#10182d;color:#9db1ff;font-size:18px;padding:8px"
 );
 
 console.log(
-    "Digital Command Center initialized."
+    "System initialized."
 );
