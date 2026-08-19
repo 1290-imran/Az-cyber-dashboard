@@ -1,383 +1,287 @@
 ```html
 <!DOCTYPE html>
 <html lang="az">
-
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05060b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>NEXUS AZ 5.0</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-    <meta
-        name="theme-color"
-        content="#05060b"
-    >
-
-    <title>NEXUS // AZ</title>
-
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
-
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    >
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+AZ:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
-        rel="stylesheet"
-    >
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
-    <!-- Excel -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"
-    ></script>
-
-    <!-- DOCX -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"
-    ></script>
+<link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
-<!-- LOADER -->
-
 <div id="loader">
-
-    <div class="loader-logo">
-        NEXUS<span>//</span>AZ
-    </div>
-
-    <div class="loader-line">
-        <div></div>
-    </div>
-
-    <small>
-        SİSTEM BAŞLADILIR
-    </small>
-
+    <div class="loader-logo">NEXUS <span>AZ</span></div>
+    <div class="loader-line"><i></i></div>
+    <small>INITIALIZING SYSTEM</small>
 </div>
 
-
-<!-- BACKGROUND -->
-
-<div class="aurora"></div>
-<div class="noise"></div>
+<div class="ambient ambient-one"></div>
+<div class="ambient ambient-two"></div>
 <div class="grid"></div>
-
-
-<!-- HEADER -->
+<div class="noise"></div>
 
 <header>
-
-    <div class="brand">
-
-        <div class="brand-mark">
-            <span></span>
-            <span></span>
-            <span></span>
+    <a class="brand" href="#">
+        <div class="brand-icon">
+            <i></i><i></i><i></i>
         </div>
-
         <div>
-            <strong>
-                NEXUS<span>//</span>AZ
-            </strong>
-
-            <small>
-                RƏQƏMSAL KOMANDA MƏRKƏZİ
-            </small>
+            <strong>NEXUS <span>AZ</span></strong>
+            <small>SMART DIGITAL HUB</small>
         </div>
+    </a>
 
+    <div class="search">
+        <span>⌕</span>
+        <input id="globalSearch" type="search" placeholder="Xidmət axtar...">
+        <button id="searchBtn">SEARCH</button>
     </div>
-
-
-    <div class="header-search">
-
-        <div class="search-box">
-
-            <span>⌕</span>
-
-            <input
-                id="globalSearch"
-                type="search"
-                placeholder="İnternetdə axtar..."
-                autocomplete="off"
-            >
-
-            <button
-                id="searchBtn"
-                type="button"
-            >
-                AXTAR
-            </button>
-
-        </div>
-
-    </div>
-
 
     <div class="online">
-
-        <i></i>
-
-        SİSTEM ONLINE
-
+        <b></b>
+        SYSTEM ONLINE
     </div>
-
 </header>
-
-
-<!-- MAIN -->
 
 <main>
 
-    <!-- HERO -->
-
-    <section class="hero">
-
-        <div class="hero-text">
-
-            <div class="eyebrow">
-
-                <span></span>
-
-                TƏHLÜKƏSİZ RƏQƏMSAL MÜHİT
-
-            </div>
-
-
-            <h1>
-                Hər şey<br>
-                <span>bir mərkəzdə.</span>
-            </h1>
-
-
-            <p>
-                Gündəlik istifadə etdiyin internet,
-                ofis, təhlükəsizlik, dünya və
-                texnologiya alətləri — hamısı
-                bir mərkəzdə.
-            </p>
-
-
-            <div class="hero-buttons">
-
-                <button
-                    class="primary"
-                    type="button"
-                    onclick="scrollToCategories()"
-                >
-                    XİDMƏTLƏRƏ BAX
-                    <b>↘</b>
-                </button>
-
-
-                <button
-                    class="ghost"
-                    type="button"
-                    onclick="openAI()"
-                >
-                    ✦ NEXUS AI
-                </button>
-
-            </div>
-
+<section class="hero">
+    <div class="hero-content">
+        <div class="eyebrow">
+            <span></span>
+            NEXUS AZ 5.0
         </div>
 
+        <h1>
+            Everything<br>
+            <em>in one place.</em>
+        </h1>
 
-        <div class="hero-status">
+        <p>
+            AI, axtarış, hesablayıcı, sənədlər, cədvəllər,
+            xəritə, dünya saatları və internet alətləri —
+            hamısı bir Nexus interfeysində.
+        </p>
 
-            <div class="time-label">
-                YERLİ VAXT
-            </div>
+        <div class="hero-actions">
+            <button class="btn-primary" data-open="ai">
+                NEXUS AI <span>→</span>
+            </button>
+            <button class="btn-secondary" data-open="services">
+                XİDMƏTLƏR <span>⌄</span>
+            </button>
+        </div>
+    </div>
 
+    <div class="hero-card">
+        <small>LOCAL SYSTEM</small>
+        <strong id="heroClock">00:00:00</strong>
+        <span id="heroDate">---</span>
 
-            <div id="clock">
-                00:00:00
-            </div>
-
-
-            <div id="date">
-                Yüklənir...
-            </div>
-
-
-            <div class="status-bar">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-
-
-            <small>
-                TƏHLÜKƏSİZ BAĞLANTI QURULDU
-            </small>
-
+        <div class="signal">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
         </div>
 
-    </section>
+        <label>
+            <b></b>
+            ALL SYSTEMS OPERATIONAL
+        </label>
+    </div>
+</section>
 
 
-    <!-- CATEGORIES -->
+<!-- CATEGORY AREA -->
+<section id="services">
 
-    <section
-        class="categories-section"
-        id="categoriesSection"
-    >
+    <div class="section-head">
+        <div>
+            <small>01 / SERVICES</small>
+            <h2>Kateqoriyalar</h2>
+        </div>
+        <span>SELECT CATEGORY</span>
+    </div>
 
-        <div class="section-title">
+    <div class="categories">
 
+        <button class="category" data-category="ai">
+            <div class="category-icon">✦</div>
             <div>
-
-                <small>
-                    ƏSAS BÖLMƏLƏR
-                </small>
-
-                <h2>
-                    Kateqoriyalar
-                </h2>
-
+                <strong>AI & SEARCH</strong>
+                <small>AI, Web Search, Translator</small>
             </div>
+            <span>→</span>
+        </button>
 
-
-            <span>
-                08 BÖLMƏ
-            </span>
-
-        </div>
-
-
-        <div
-            id="categories"
-            class="categories-grid"
-        ></div>
-
-    </section>
-
-
-    <!-- MODULES -->
-
-    <section
-        id="modules"
-        class="modules-section"
-    >
-
-        <div class="section-title">
-
+        <button class="category" data-category="office">
+            <div class="category-icon">▤</div>
             <div>
-
-                <small>
-                    SEÇİLMİŞ XİDMƏTLƏR
-                </small>
-
-                <h2>
-                    Xidmətlər
-                </h2>
-
+                <strong>OFFICE</strong>
+                <small>Word, Excel, Notes</small>
             </div>
+            <span>→</span>
+        </button>
 
+        <button class="category" data-category="tools">
+            <div class="category-icon">⌘</div>
+            <div>
+                <strong>TOOLS</strong>
+                <small>Calculator, Speed Test</small>
+            </div>
+            <span>→</span>
+        </button>
 
-            <span id="moduleHint">
-                İNTERNET
-            </span>
+        <button class="category" data-category="world">
+            <div class="category-icon">◎</div>
+            <div>
+                <strong>WORLD</strong>
+                <small>Time, Map, Countries</small>
+            </div>
+            <span>→</span>
+        </button>
 
+    </div>
+
+    <div id="servicePanel" class="service-panel">
+
+        <div class="service-panel-head">
+            <div>
+                <small id="panelLabel">CATEGORY</small>
+                <h3 id="panelTitle">Services</h3>
+            </div>
+            <button id="closeServices">×</button>
         </div>
 
+        <div id="serviceGrid" class="service-grid"></div>
 
-        <!--
-            ƏSAS DÜZƏLİŞ:
-            JavaScript artıq məhz bu elementə
-            xidmət kartlarını yerləşdirir.
-        -->
+    </div>
+</section>
 
-        <div
-            id="moduleGrid"
-            class="module-grid"
-        ></div>
 
-    </section>
+<!-- QUICK -->
+<section class="quick">
+
+    <div class="section-head">
+        <div>
+            <small>02 / QUICK ACCESS</small>
+            <h2>Quick Tools</h2>
+        </div>
+    </div>
+
+    <div class="quick-grid">
+
+        <button class="quick-card" data-tool="calculator">
+            <span>＋</span>
+            <strong>Calculator</strong>
+            <small>iOS style</small>
+        </button>
+
+        <button class="quick-card" data-tool="speed">
+            <span>⌁</span>
+            <strong>Speed Test</strong>
+            <small>Internet</small>
+        </button>
+
+        <button class="quick-card" data-tool="world">
+            <span>◎</span>
+            <strong>World</strong>
+            <small>Global time</small>
+        </button>
+
+        <button class="quick-card" data-tool="map">
+            <span>⌖</span>
+            <strong>Map</strong>
+            <small>Explore</small>
+        </button>
+
+    </div>
+</section>
 
 </main>
 
 
-<!-- MODAL -->
-
-<div
-    id="modal"
-    class="modal"
-    aria-hidden="true"
->
-
+<!-- UNIVERSAL MODAL -->
+<div id="modal" class="modal">
     <div class="modal-window">
-
-        <button
-            id="closeModal"
-            class="modal-close"
-            type="button"
-            aria-label="Bağla"
-        >
-            ×
-        </button>
-
+        <button id="modalClose" class="modal-close">×</button>
         <div id="modalContent"></div>
-
     </div>
-
 </div>
 
 
-<!-- AI FLOATING BUTTON -->
+<!-- AI -->
+<div id="aiInterface" class="ai-interface hidden">
 
-<button
-    id="aiFab"
-    class="ai-fab"
-    type="button"
-    aria-label="NEXUS AI"
->
+    <div class="ai-window">
 
-    <span class="ai-star">
-        ✦
-    </span>
+        <div class="ai-header">
 
-    <span class="ai-pulse"></span>
+            <div class="ai-brand">
+                <div class="ai-logo">✦</div>
+                <div>
+                    <strong>NEXUS AI</strong>
+                    <small>INTELLIGENT ASSISTANT</small>
+                </div>
+            </div>
 
-</button>
+            <div class="ai-header-actions">
+                <button id="newChat">＋ Yeni söhbət</button>
+                <button id="aiClose">×</button>
+            </div>
 
+        </div>
 
-<!-- FOOTER -->
+        <div id="aiChat" class="ai-chat">
+
+            <div id="aiWelcome" class="ai-welcome">
+                <div class="ai-big-logo">✦</div>
+                <h1>Salam, necə kömək edim?</h1>
+                <p>
+                    Sual ver, mətn yaz, ideya yarat və ya
+                    Web Search ilə internetdə məlumat axtar.
+                </p>
+
+                <div class="suggestions">
+                    <button data-prompt="Mənə bu gün üçün faydalı bir şey təklif et">💡 Mənə fikir ver</button>
+                    <button data-prompt="Azərbaycan haqqında maraqlı fakt de">🇦🇿 Azərbaycan</button>
+                    <button data-prompt="Mənə kreativ biznes ideyası ver">🚀 Biznes ideyası</button>
+                    <button data-prompt="Mənə bir mövzunu sadə izah et">🧠 Sadə izah</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="ai-input-area">
+
+            <div class="ai-input">
+                <textarea id="aiInput" rows="1" placeholder="Nexus AI-a mesaj yaz..."></textarea>
+                <button id="aiSend">↑</button>
+            </div>
+
+            <div class="ai-bottom">
+                <button id="aiWebSearch">⌕ Web Search</button>
+                <span>AI responses may require an API connection</span>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
 
 <footer>
-
-    <strong>
-        NEXUS<span>//</span>AZ
-    </strong>
-
-
-    <div>
-        RƏQƏMSAL KOMANDA MƏRKƏZİ
-        <span>•</span>
-        SYSTEM v4.2
-    </div>
-
+    <strong>NEXUS <span>AZ</span></strong>
+    <span>SMART DIGITAL HUB · 5.0</span>
 </footer>
 
-
 <script src="script.js"></script>
-
 </body>
 </html>
 ```
