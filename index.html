@@ -1,77 +1,147 @@
 <!DOCTYPE html>
 <html lang="az">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        content="width=device-width, initial-scale=1.0"
     >
 
-    <meta name="theme-color" content="#070910">
+    <meta
+        name="theme-color"
+        content="#05060b"
+    >
 
-    <title>NEXUS // AZ 4.1</title>
+    <title>NEXUS // AZ</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Google Fonts -->
 
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+AZ:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
         rel="stylesheet"
     >
 
-    <link rel="stylesheet" href="style.css">
+
+    <!-- Main CSS -->
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+
+    <!-- Excel -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"
+    ></script>
+
+
+    <!-- DOCX -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"
+    ></script>
+
 </head>
+
 
 <body>
 
-<div class="bg-grid"></div>
+
+<!-- =========================================
+     LOADER
+========================================= -->
+
+<div id="loader">
+
+    <div class="loader-logo">
+        NEXUS<span>//</span>AZ
+    </div>
+
+    <div class="loader-line">
+        <div></div>
+    </div>
+
+    <small>
+        SİSTEM BAŞLADILIR
+    </small>
+
+</div>
+
+
+<!-- Background -->
+
 <div class="aurora"></div>
+<div class="noise"></div>
+<div class="grid"></div>
 
 
-<!-- =========================
-     TOP BAR
-========================= -->
+<!-- =========================================
+     HEADER
+========================================= -->
 
-<header class="topbar">
+<header>
 
-    <a class="brand" href="#">
+    <div class="brand">
 
-        <span class="brand-orb">
-            N
-        </span>
+        <div class="brand-mark">
 
-        <span class="brand-text">
+            <span></span>
+            <span></span>
+            <span></span>
 
-            <b>
+        </div>
+
+
+        <div>
+
+            <strong>
                 NEXUS<span>//</span>AZ
-            </b>
+            </strong>
 
             <small>
-                DIGITAL COMMAND CENTER
+                RƏQƏMSAL KOMANDA MƏRKƏZİ
             </small>
 
-        </span>
+        </div>
 
-    </a>
+    </div>
 
 
-    <!-- GLOBAL SEARCH -->
+    <div class="header-search">
 
-    <div class="global-search">
+        <div class="search-box">
 
-        <span>⌕</span>
+            <span>⌕</span>
 
-        <input
-            id="globalSearch"
-            type="text"
-            placeholder="Global axtarış..."
-            autocomplete="off"
-        >
+            <input
+                id="globalSearch"
+                type="search"
+                placeholder="İnternetdə axtar..."
+                autocomplete="off"
+            >
 
-        <button id="searchBtn">
-            Axtar
-        </button>
+            <button id="searchBtn">
+                AXTAR
+            </button>
+
+        </div>
 
     </div>
 
@@ -80,98 +150,152 @@
 
         <i></i>
 
-        ONLINE
+        SİSTEM ONLINE
 
     </div>
 
 </header>
 
 
-
-<!-- =========================
+<!-- =========================================
      MAIN
-========================= -->
+========================================= -->
 
 <main>
 
 
-<!-- HERO -->
+<!-- =========================================
+     HERO
+========================================= -->
 
 <section class="hero">
 
-    <div class="hero-content">
+
+    <div class="hero-text">
+
 
         <div class="eyebrow">
 
-            <i></i>
+            <span></span>
 
-            SECURE DIGITAL ENVIRONMENT
+            TƏHLÜKƏSİZ RƏQƏMSAL MÜHİT
 
         </div>
 
 
         <h1>
 
-            Hər şey
-            <em>bir mərkəzdə.</em>
+            Hər şey<br>
+
+            <span>bir mərkəzdə.</span>
 
         </h1>
 
 
         <p>
 
-            NEXUS gündəlik iş, developer, network,
-            təhlükəsizlik, dünya və ofis alətlərini
-            bir interfeysdə birləşdirir.
+            Gündəlik istifadə etdiyin internet,
+            ofis, təhlükəsizlik, dünya və
+            texnologiya alətləri — hamısı
+            bir mərkəzdə.
 
         </p>
 
+
+        <div class="hero-buttons">
+
+            <button
+                class="primary"
+                onclick="scrollToCategories()"
+            >
+
+                XİDMƏTLƏRƏ BAX
+
+                <b>↘</b>
+
+            </button>
+
+
+            <button
+                class="ghost"
+                onclick="openAI()"
+            >
+
+                ✦ NEXUS AI
+
+            </button>
+
+        </div>
+
     </div>
 
 
-    <div class="hero-clock">
+    <div class="hero-status">
+
+
+        <div class="time-label">
+            YERLİ VAXT
+        </div>
+
+
+        <div id="clock">
+            00:00:00
+        </div>
+
+
+        <div id="date">
+            Yüklənir...
+        </div>
+
+
+        <div class="status-bar">
+
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </div>
+
 
         <small>
-            YERLİ VAXT
+            TƏHLÜKƏSİZ BAĞLANTI QURULDU
         </small>
 
-        <strong id="clock">
-            00:00:00
-        </strong>
-
-        <span id="date">
-            —
-        </span>
-
     </div>
+
 
 </section>
 
 
-
-<!-- =========================
+<!-- =========================================
      CATEGORIES
-========================= -->
+========================================= -->
 
-<section class="category-shell">
+<section
+    class="categories-section"
+    id="categoriesSection"
+>
 
-    <div class="section-head">
+
+    <div class="section-title">
 
         <div>
 
             <small>
-                KATEQORİYALAR
+                ƏSAS BÖLMƏLƏR
             </small>
 
             <h2>
-                Xidmət mərkəzi
+                Kateqoriyalar
             </h2>
 
         </div>
 
 
         <span>
-            08 MODUL
+            08 BÖLMƏ
         </span>
 
     </div>
@@ -179,39 +303,40 @@
 
     <div
         id="categories"
-        class="categories"
+        class="categories-grid"
     ></div>
+
 
 </section>
 
 
-
-<!-- =========================
-     MODULE WORKSPACE
-========================= -->
+<!-- =========================================
+     MODULES
+========================================= -->
 
 <section
-    id="workspace"
-    class="workspace"
+    id="modules"
+    class="modules-section"
 >
 
-    <div class="welcome">
+
+    <div class="section-title">
 
         <div>
 
             <small>
-                MODUL SEÇ
+                SEÇİLMİŞ XİDMƏTLƏR
             </small>
 
             <h2>
-                Başlamaq üçün kateqoriya seç.
+                Xidmətlər
             </h2>
 
         </div>
 
 
         <span id="moduleHint">
-            NEXUS 4.1
+            NETWORK
         </span>
 
     </div>
@@ -222,51 +347,29 @@
         class="module-grid"
     ></div>
 
+
 </section>
+
 
 </main>
 
 
-
-<!-- =========================
-     FLOATING AI BUTTON
-========================= -->
-
-<button
-    class="ai-fab"
-    id="aiFab"
-    aria-label="NEXUS AI"
->
-
-    <span>
-        ✦
-    </span>
-
-    <small>
-        NEXUS AI
-    </small>
-
-</button>
-
-
-
-<!-- =========================
+<!-- =========================================
      MODAL
-========================= -->
+========================================= -->
 
 <div
-    class="modal"
     id="modal"
+    class="modal"
 >
 
-    <div
-        class="modal-card"
-        id="modalCard"
-    >
+
+    <div class="modal-window">
+
 
         <button
-            class="close"
             id="closeModal"
+            class="modal-close"
         >
             ×
         </button>
@@ -274,26 +377,66 @@
 
         <div id="modalContent"></div>
 
+
     </div>
 
 </div>
 
 
+<!-- =========================================
+     AI FLOATING BUTTON
+========================================= -->
 
-<!-- =========================
-     EXTERNAL LIBRARIES
-========================= -->
+<button
+    id="aiFab"
+    class="ai-fab"
+    aria-label="NEXUS AI"
+>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <span class="ai-star">
+        ✦
+    </span>
 
-<script src="https://cdn.jsdelivr.net/npm/docx@9.5.1/build/index.umd.js"></script>
+    <span class="ai-pulse"></span>
+
+</button>
 
 
+<!-- =========================================
+     FOOTER
+========================================= -->
 
-<!-- NEXUS SCRIPT -->
+<footer>
 
-<script src="script.js"></script>
+
+    <strong>
+        NEXUS<span>//</span>AZ
+    </strong>
+
+
+    <div>
+
+        RƏQƏMSAL KOMANDA MƏRKƏZİ
+
+        <span>•</span>
+
+        SYSTEM v4.1
+
+    </div>
+
+
+</footer>
+
+
+<!-- =========================================
+     SCRIPT
+========================================= -->
+
+<script
+    src="script.js"
+></script>
 
 
 </body>
+
 </html>
