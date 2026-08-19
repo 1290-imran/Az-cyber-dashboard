@@ -3075,144 +3075,125 @@ function generateQR() {
    NEXUS AI
 ========================================================= */
 
-function openAI() {
+async function sendAI() {
 
-    const modal =
-        $("#modal");
+    const input = $("#chatInput");
+    const body = $("#chatBody");
 
-    const content =
-        $("#modalContent");
+    if (!input || !body) return;
 
+    const message = input.value.trim();
 
-    modal.classList.add("show");
-
-
-    content.innerHTML = `
-
-        <div class="chat">
-
-            <div class="chat-head">
-
-                <b>
-                    ✦ NEXUS AI
-                </b>
-
-                <small>
-                    Sənin rəqəmsal köməkçin
-                </small>
-
-            </div>
+    if (!message) return;
 
 
-            <div
-                class="chat-body"
-                id="chatBody"
-            >
-
-                <div class="msg ai">
-
-                    Salam! Mən NEXUS AI-yam.
-                    Sənə nə ilə kömək edə bilərəm?
-
-                </div>
-
-            </div>
-
-
-            <div class="chat-input">
-
-                <textarea
-                    id="chatInput"
-                    rows="1"
-                    placeholder="Mesajını yaz..."
-                ></textarea>
-
-                <button
-                    onclick="sendAI()"
-                >
-                    GÖNDƏR
-                </button>
-
-            </div>
-
-        </div>
-
-    `;
-
-
-    setTimeout(
-        () =>
-            $("#chatInput")
-                ?.focus(),
-        100
-    );
-
-}
-
-
-function sendAI() {
-
-    const input =
-        $("#chatInput");
-
-    const body =
-        $("#chatBody");
-
-
-    if (!input || !body)
-        return;
-
-
-    const message =
-        input.value.trim();
-
-
-    if (!message)
-        return;
-
-
+    // İstifadəçinin mesajı
     body.insertAdjacentHTML(
         "beforeend",
         `
-            <div class="msg user">
-                ${escapeHTML(message)}
-            </div>
+        <div class="msg user">
+            ${escapeHTML(message)}
+        </div>
         `
     );
-
 
     input.value = "";
 
 
-    setTimeout(
-        () => {
+    // AI yazır göstəricisi
+    const loading = document.createElement("div");
 
-            body.insertAdjacentHTML(
-                "beforeend",
-                `
-                    <div class="msg ai">
+    loading.className = "msg ai";
+    loading.id = "aiLoading";
 
-                        Mən hazırda NEXUS-un
-                        frontend versiyasındayam.
-                        Real ChatGPT cavabları üçün
-                        təhlükəsiz server/API bağlantısı
-                        əlavə etmək lazımdır.
+    loading.innerHTML = `
+        <span class="ai-thinking">
+            NEXUS AI yazır...
+        </span>
+    `;
 
-                    </div>
-                `
+    body.appendChild(loading);
+
+    body.scrollTop = body.scrollHeight;
+
+
+    try {
+
+        const response = await fetch(
+            https://nexus-ai.imranvelizade98.workers.dev/,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    message: message
+                })
+            }
+        );
+
+
+        const data =
+            await response.json();
+
+
+        // Loading-i sil
+        loading.remove();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "AI server xətası"
             );
 
+        }
 
-            body.scrollTop =
-                body.scrollHeight;
 
-        },
-        500
-    );
+        const answer =
+            data.answer ||
+            "Cavab alınmadı.";
+
+
+        body.insertAdjacentHTML(
+            "beforeend",
+            `
+            <div class="msg ai">
+                ${formatAIResponse(answer)}
+            </div>
+            `
+        );
+
+
+    } catch (error) {
+
+        loading.remove();
+
+
+        body.insertAdjacentHTML(
+            "beforeend",
+            `
+            <div class="msg ai">
+                ❌ NEXUS AI-yə qoşulmaq mümkün olmadı.
+                <br><br>
+                <small>
+                    ${escapeHTML(error.message)}
+                </small>
+            </div>
+            `
+        );
+
+    }
 
 
     body.scrollTop =
         body.scrollHeight;
+
+}
+                        
 
 }
 
