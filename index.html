@@ -29,8 +29,14 @@
       </div>
     </a>
     <div class="head-right">
-      <button class="icon-btn" onclick="openSearchModal()">⌕ <span>Axtar</span></button>
-      <button class="action-btn ai-btn" onclick="openChatGPTModal()">✦ <span>NEXUS AI</span></button>
+      <button class="icon-btn" onclick="openSearchModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <span>Axtar</span>
+      </button>
+      <button class="action-btn ai-btn" onclick="openChatGPTModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <span>NEXUS AI</span>
+      </button>
       <div class="status-badge">
         <span class="pulse-dot"></span>
         <span>ONLINE</span>
@@ -57,7 +63,7 @@
       </aside>
     </section>
 
-    <!-- Categories Section Title -->
+    <!-- Section Header -->
     <div class="section-header">
       <div>
         <small class="sub-label">XİDMƏTLƏR</small>
@@ -66,13 +72,15 @@
       <span class="badge-count">08 KATEQORİYA</span>
     </div>
 
-    <!-- 4x2 Categories Grid -->
+    <!-- Interactive Categories Grid (Tam altında açılan kartlar) -->
     <div id="categoriesGrid" class="categories-grid"></div>
 
     <!-- Quick Bar -->
     <div class="quick-bar">
       <div class="quick-card" onclick="openSearchModal()">
-        <div class="q-icon">⌕</div>
+        <div class="q-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </div>
         <div class="q-info">
           <small>SÜRƏTLİ AXTARIŞ</small>
           <b>Bütün 25+ alət içində axtarış et</b>
@@ -80,7 +88,9 @@
         <button class="action-btn">Axtar →</button>
       </div>
       <div class="quick-card">
-        <div class="q-icon">◷</div>
+        <div class="q-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
         <div class="q-info">
           <small>SİSTEM SAATI</small>
           <b id="quickClock" class="q-clock-val">—</b>
@@ -94,20 +104,6 @@
     <span class="orb-sparkle">✦</span>
     <small>NEXUS AI</small>
   </button>
-
-  <!-- Category Modal (Pəncərə Şəklində Sub-Menyu) -->
-  <div id="categoryModal" class="overlay">
-    <div class="modal cat-modal">
-      <div class="modalhead">
-        <div>
-          <small id="catModalBadge" class="modal-badge">KATEQORİYA</small>
-          <h2 id="catModalTitle">Kateqoriya Alətləri</h2>
-        </div>
-        <button class="close-btn" onclick="closeAllModals()">×</button>
-      </div>
-      <div id="catModalBody" class="cat-modal-grid"></div>
-    </div>
-  </div>
 
   <!-- Tool Execution Modal -->
   <div id="toolModal" class="overlay">
